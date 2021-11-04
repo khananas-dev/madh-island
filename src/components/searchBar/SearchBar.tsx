@@ -32,7 +32,6 @@ function SearchBar(searchBarProps: SearchBarProps) {
   const [serviceType, setServiceType] = React.useState(
     searchBarProps.serviceType || 'FilmLocation'
   );
-  console.log(checkInState,checkOutState,serviceType)
 
   const handleChange = (type: any) => {
     switch (type) {
@@ -54,11 +53,9 @@ function SearchBar(searchBarProps: SearchBarProps) {
   };
 
 useEffect(() => {
-  console.log(searchBarProps,"searchBarProps")
   setCheckInState(searchBarProps.checkInDate || DEFAULT_FILTER.checkInDate)
   setCheckOutState(searchBarProps.checkOutDate || DEFAULT_FILTER.checkOutDate)
   setServiceType((searchBarProps.serviceType || DEFAULT_FILTER.serviceType))
-  console.log(location,window.history,'Router changed');
 
 }, [router])
 
@@ -66,7 +63,7 @@ useEffect(() => {
     <SearchBarWrapper>
       <LocalizationProvider dateAdapter={AdapterDateFns} locale={enIN}>
         <InputWrapper>
-          <DatePicker
+          <DatePicker 
             minDate={today}
             inputFormat="dd/MMM/yyyy"
             mask='__/__/____'
@@ -76,7 +73,7 @@ useEffect(() => {
             onChange={(newValue) => {
               newValue && setCheckInState(newValue);
             }}
-            renderInput={(params) => <TextField {...params} />}
+            renderInput={(params) => <TextField style={{width: '100%'}} {...params} />}
           />
         </InputWrapper>
         <InputWrapper>
@@ -90,11 +87,11 @@ useEffect(() => {
             onChange={(newValue) => {
               newValue && setCheckOutState(newValue);
             }}
-            renderInput={(params) => <TextField {...params} />}
+            renderInput={(params) => <TextField style={{width: '100%'}} {...params} />}
           />
         </InputWrapper>
         <InputWrapper>
-          <FormControl fullWidth>
+          <FormControl fullWidth={true}>
             <InputLabel id="demo-simple-select-label">Service</InputLabel>
             <Select
               labelId="demo-simple-select-label"
@@ -109,16 +106,16 @@ useEffect(() => {
             </Select>
           </FormControl>
         </InputWrapper>
-        <InputWrapper>
+     <InputWrapper>
           <Button
-            sx={{ width: `150px` }}
+            sx={{ width: `100%` }}
             onClick={() => handleChange("submit")}
             variant="contained"
             
           >
             Search
           </Button>
-        </InputWrapper>
+         </InputWrapper>
       </LocalizationProvider>
     </SearchBarWrapper>
   );

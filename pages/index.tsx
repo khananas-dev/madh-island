@@ -1,83 +1,91 @@
 import * as React from "react";
-import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
-import ProTip from "../src/ProTip";
-import Link from "../src/Link";
-import Copyright from "../src/Copyright";
-import SearchBar from "../src/components/searchBar/SearchBar";
+import SearchBar from "../src/components/SearchBar/SearchBar";
 import styled from "styled-components";
 import BackgroundImage from "../public/backgroundImage.png";
 import { Button, Grid } from "@mui/material";
-import PropertyCard from "../src/components/propertyCard/PropertyCard";
+import PropertyCard from "../src/components/PropertyCard/PropertyCard";
 import Image from "next/image";
 import GoogleMapReact from "google-map-react";
-
+import { DEFAULT_MAP_PROPS } from "../src/constants";
 // Graphql
 import { useQuery } from "@apollo/react-hooks";
 import { GET_ALL_PROPERTIES } from "../queries/property";
-
+import IconSvg from "../src/components/icon/IconSvg";
+import { PropertyCardFactory } from "../@types";
+import { useState } from "react";
+import router from "next/router";
 // const AnyReactComponent = ({ text : any }) => <div>{text}</div>;
+const APItopLocation: PropertyCardFactory[] = [
+  {
+    id: `1`,
+    img: `https://images.unsplash.com/photo-1512917774080-9991f1c4c750?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2070&q=80`,
+    propertyName: `Ravi Bunglows`,
+    serviceType: `Film Location`,
+    area: `211`,
+    amminityList: [
+      { id: `1`, name: `Gym` },
+      { id: `2`, name: `Fire` },
+      { id: `3`, name: `Pool` },
+    ],
+    buttonsList: [
+      {
+        name: `View Details`,
+        variant: `outlined`,
+      },
+    ],
+  },
+  {
+    id: `2`,
+    img: `https://images.unsplash.com/photo-1430285561322-7808604715df?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1170&q=80`,
+    propertyName: `Shyam Nivas`,
+    serviceType: `Film Location`,
+    area: `400`,
+    amminityList: [
+      { id: `1`, name: `Gym` },
+      { id: `2`, name: `Fire` },
+      { id: `3`, name: `Pool` },
+    ],
+    buttonsList: [
+      {
+        name: `View Details`,
+        variant: `outlined`,
+      },
+    ],
+  },
+  {
+    id: `3`,
+    img: `https://images.unsplash.com/photo-1523217582562-09d0def993a6?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2080&q=80`,
+    propertyName: `Jacobs`,
+    serviceType: `Film Location`,
+    area: `440`,
+    amminityList: [
+      { id: `1`, name: `Gym` },
+      { id: `2`, name: `Fire` },
+      { id: `3`, name: `Pool` },
+    ],
+    buttonsList: [
+      {
+        name: `View Details`,
+        variant: `outlined`,
+      },
+    ],
+  },
+];
 export default function Index() {
+  const [topLocations, setTopLocations] = useState(APItopLocation);
+
   const getAllProperties = useQuery(GET_ALL_PROPERTIES);
-  // console.log(getAllProperties)
-  // const { data, loading, error } = useQuery(QUERY_PROPERTY);
-  // if (error) {
-  //   return <p>:( an error happened</p>;
-  // }
-
-  const defaultProps = {
-    center: {
-      lat: 59.95,
-      lng: 30.33,
-    },
-    zoom: 11,
+  
+  const handleTopLocations = (ev: any,property: any) => {
+    router.push({
+      pathname: `/property/${property.id}`,
+      query: {
+        service: property.serviceType,
+      },
+    });   
   };
-
-  const Hero = styled(Box)`
-    background-image: url(${BackgroundImage.src});
-    height: calc(100vh - 300px);
-    background-repeat: no-repeat;
-    object-fit: contain;
-    width: 100%;
-    justify-content: center;
-    padding-top: 160px;
-    display: flex;
-    flex-direction: column;
-    background-size: 100% 100%;
-    @media screen and (max-width: 768px) {
-      padding-top: 40px;
-    }
-  `;
-  const UspWrapper = styled(Box)`
-    padding-top: 80px;
-    margin-left: 60px;
-    margin-right: 60px;
-    @media screen and (max-width: 768px) {
-      padding-top: 40px;
-      margin-left: 30px;
-      margin-right: 30px;
-    }
-  `;
-  const WhiteContainer = styled(Box)`
-    background: white;
-    max-width: fit-content;
-    margin: auto;
-  `;
-  const TalkToUsContainer = styled(Box)`
-    background: #eafcf7;
-    padding-top: 40px;
-    padding-left: 60px;
-    padding-right: 60px;
-    padding-bottom: 40px;
-    margin: 40px 0px;
-    @media screen and (max-width: 768px) {
-      padding-top: 40px;
-      padding-left: 30px;
-      padding-right: 30px;
-      padding-bottom: 40px;
-    }
-  `;
   return (
     <>
       <Hero>
@@ -99,7 +107,7 @@ export default function Index() {
           <SearchBar />
         </WhiteContainer>
       </Hero>
-      <UspWrapper>
+      <BodyWrapper>
         {/* All Services */}
         <Typography
           variant="h2"
@@ -187,15 +195,22 @@ export default function Index() {
           Top Locations
         </Typography>
         <Grid container spacing={2}>
-          <Grid item xs={12} md={4}>
-            <PropertyCard></PropertyCard>
-          </Grid>
-          <Grid item xs={12} md={4}>
-            <PropertyCard></PropertyCard>
-          </Grid>
-          <Grid item xs={12} md={4}>
-            <PropertyCard></PropertyCard>
-          </Grid>
+          {topLocations.map((property: PropertyCardFactory) => (
+            <Grid item xs={12} md={4}  key={property.id}>
+              <PropertyCard
+                id={property.id}
+                key={property.id}
+                img={property.img}
+                area={property.area}
+                amminityList={property.amminityList}
+                propertyName={property.propertyName}
+                serviceType={property.serviceType}
+                buttonsList={property.buttonsList}
+                action = {handleTopLocations}
+                
+              />
+            </Grid>
+          ))}
         </Grid>
         {/* About Us */}
         <Grid container spacing={2}>
@@ -274,7 +289,7 @@ export default function Index() {
             <span>Some Icon</span>
           </Grid>
         </Grid>
-      </UspWrapper>
+      </BodyWrapper>
       {/* Explore Locations */}
       <Typography
         variant="h2"
@@ -290,8 +305,8 @@ export default function Index() {
       <Box style={{ height: "600px", width: "100%" }}>
         <GoogleMapReact
           bootstrapURLKeys={{ key: `${process.env.GOOGLE_MAP_KEY}` }}
-          defaultCenter={defaultProps.center}
-          defaultZoom={defaultProps.zoom}
+          defaultCenter={DEFAULT_MAP_PROPS.center}
+          defaultZoom={DEFAULT_MAP_PROPS.zoom}
         >
           {/* <AnyReactComponent lat={59.955413} lng={30.337844} text="My Marker" /> */}
         </GoogleMapReact>
@@ -325,3 +340,48 @@ export default function Index() {
     </>
   );
 }
+
+const Hero = styled(Box)`
+  background-image: url(${BackgroundImage.src});
+  height: calc(100vh - 300px);
+  background-repeat: no-repeat;
+  object-fit: contain;
+  width: 100%;
+  justify-content: center;
+  padding-top: 160px;
+  display: flex;
+  flex-direction: column;
+  background-size: 100% 100%;
+  @media screen and (max-width: 768px) {
+    padding-top: 40px;
+  }
+`;
+const BodyWrapper = styled(Box)`
+  padding-top: 80px;
+  margin-left: 60px;
+  margin-right: 60px;
+  @media screen and (max-width: 768px) {
+    padding-top: 40px;
+    margin-left: 30px;
+    margin-right: 30px;
+  }
+`;
+const WhiteContainer = styled(Box)`
+  background: white;
+  max-width: fit-content;
+  margin: auto;
+`;
+const TalkToUsContainer = styled(Box)`
+  background: #eafcf7;
+  padding-top: 40px;
+  padding-left: 60px;
+  padding-right: 60px;
+  padding-bottom: 40px;
+  margin: 40px 0px;
+  @media screen and (max-width: 768px) {
+    padding-top: 40px;
+    padding-left: 30px;
+    padding-right: 30px;
+    padding-bottom: 40px;
+  }
+`;

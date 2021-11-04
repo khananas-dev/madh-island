@@ -1,12 +1,19 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Nav, NavMenu, NavBtn, Bars } from "./NavbarElements";
 import Link from "./Navlink";
 import NavLink from "./Navlink";
 import { SidebarProps } from "../props";
 import Image from "next/image";
 import logo from "../../../public/logo.png";
+import ProfileAvatar from "../ProfileAvatar/ProfileAvatar";
 
 function Navigation(sideBarProps: SidebarProps) {
+const [navState, setNavState] = useState([]);
+
+// ON INIT
+useEffect(() => {
+  setNavState([])
+}, [])
 
   return (
     <>
@@ -33,6 +40,7 @@ function Navigation(sideBarProps: SidebarProps) {
             Film Location
           </NavLink>
           <NavLink href="/shoot-permissions">Shoot Permissions</NavLink>
+
           <NavLink
             href={{
               pathname: "/propertieslist/EventVenues",
@@ -43,6 +51,7 @@ function Navigation(sideBarProps: SidebarProps) {
           >
             Event Venues
           </NavLink>
+          
           <NavLink
             href={{
               pathname: "/propertieslist/VillasandBunglow",
@@ -55,7 +64,7 @@ function Navigation(sideBarProps: SidebarProps) {
 
           </NavLink>
           <NavLink href="#">Search</NavLink>
-          <NavLink href="/history">Profile</NavLink>
+          <NavLink href="/history"><ProfileAvatar/></NavLink>
         </NavMenu>
         <NavBtn></NavBtn>
       </Nav>

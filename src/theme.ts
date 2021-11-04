@@ -9,20 +9,15 @@ const theme = createTheme({
       dark: '#007254',
       contrastText: '#fff',
     },
-    info: {
-      light: '#EAFCF7',
-      main: '#EAFCF7',
-      dark: '#007254',
-      contrastText: '#535353',
-    }
+
   },
 });
 
 theme.typography.h1 = {
-  fontSize: '34px',
+  fontSize: '40px',
   color: '#2E2E2E',
-  fontFamily: 'Roboto'
-
+  fontFamily: 'Roboto',
+  fontWeight: `normal`,
   // '@media (min-width:600px)': {
   //   fontSize: '1.5rem',
   // },
@@ -33,13 +28,13 @@ theme.typography.h1 = {
 theme.typography.h2 = {
   fontSize: '32px',
   fontFamily: 'Roboto',
-  fontWeight:`400`,
+  fontWeight: `normal`,
 
 };
 theme.typography.h3 = {
   fontSize: '24px',
-  fontFamily: 'Roboto'
-
+  fontFamily: 'Roboto',
+  fontWeight: 500,
 };
 theme.typography.h4 = {
   fontSize: '20px',
@@ -61,7 +56,9 @@ theme.typography.h6 = {
 };
 theme.typography.body1 = {
   fontSize: '14px',
-  fontFamily: 'Roboto'
+  fontFamily: 'Roboto',
+  fontWeight:`normal`,
+
 
 };
 theme.typography.body2 = {
