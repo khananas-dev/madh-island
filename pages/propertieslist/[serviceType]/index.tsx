@@ -3,11 +3,11 @@ import { Box } from "@mui/system";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { SearchBarProps } from "../../../src/components/props";
-import SearchBar from "../../../src/components/searchBar/SearchBar";
+import SearchBar from "../../../src/components/SearchBar/SearchBar";
 import { SearchWrapper, SortIcon } from "./propertyListElements";
 import { BodyWrapper } from "./propertyListElements";
 import { CgSortAz } from "react-icons/cg";
-import PropertyCard from "../../../src/components/propertyCard/PropertyCard";
+import PropertyCard from "../../../src/components/PropertyCard/PropertyCard";
 
 function index() {
   const today = new Date();
@@ -53,13 +53,13 @@ function index() {
         alignItems="center"
       >
         <Grid
-          sx={{ paddingTop: `32px`, paddingBottom: `32px` }}
+          
           item
           xs={12}
           sm={12}
           md={12}
         >
-          <SearchWrapper sx={{ margin: `auto` }}>
+          <SearchWrapper sx={{ margin: `32px auto`, }}>
             <SearchBar
               checkInDate={SearchObj.checkInDate}
               checkOutDate={SearchObj.checkOutDate}
@@ -114,7 +114,7 @@ function index() {
           justifyContent="space-between"
         >
           <Grid item xs={12} md={4}>
-            <PropertyCard></PropertyCard>
+            <PropertyCard id={`1`}></PropertyCard>
           </Grid>
         </Grid>
       </BodyWrapper>

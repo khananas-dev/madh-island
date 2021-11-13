@@ -9,7 +9,8 @@ import { ApolloClient, InMemoryCache } from "@apollo/client";
 import { ApolloProvider } from '@apollo/client';
 
 const client = new ApolloClient({
-  uri: "https://vmi-backend-server.herokuapp.com/graphql",
+  ssrMode: true,
+  uri: "https://vmi-api-backend.herokuapp.com/graphql",
   cache: new InMemoryCache(),
 });
 

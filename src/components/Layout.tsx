@@ -1,20 +1,22 @@
+import { Box } from "@mui/system";
 import React, { useState } from "react";
 import Navigation from "./navbar/Navbar";
-import Sidebar from "./sidebar/Sidebar";
+import Sidebar from "./Sidebar/Sidebar";
 
 function Layout({ children }: any) {
   const [isOpen, setisOpen] = useState(false);
   const toggleSidebar = () => {
-      console.log(isOpen)
     setisOpen(!isOpen);
   };
   return (
-    <div>
+    <Box sx={{height:`100%`}}>
       <Sidebar isOpen={isOpen} toggleSidebar={()=>(setisOpen(!isOpen))} />
-
       <Navigation isOpen={isOpen} toggleSidebar={()=>(setisOpen(!isOpen))} />
+      <Box sx={{height:`calc(100vh - 100px)`, overflow:`auto`}}>
       {children}
-    </div>
+      </Box>
+    
+    </Box>
   );
 }
 
