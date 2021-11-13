@@ -8,12 +8,12 @@ import logo from "../../../public/logo.png";
 import ProfileAvatar from "../ProfileAvatar/ProfileAvatar";
 
 function Navigation(sideBarProps: SidebarProps) {
-const [navState, setNavState] = useState([]);
+// const [navState, setNavState] = useState([]);
 
-// ON INIT
-useEffect(() => {
-  setNavState([])
-}, [])
+// // ON INIT
+// useEffect(() => {
+//   setNavState([])
+// }, [])
 
   return (
     <>
@@ -39,7 +39,7 @@ useEffect(() => {
           >
             Film Location
           </NavLink>
-          <NavLink href="/shoot-permissions">Shoot Permissions</NavLink>
+          {/* <NavLink href="/shoot-permissions">Shoot Permissions</NavLink> */}
 
           <NavLink
             href={{
@@ -64,7 +64,7 @@ useEffect(() => {
 
           </NavLink>
           <NavLink href="#">Search</NavLink>
-          <NavLink href="/history"><ProfileAvatar/></NavLink>
+          <NavLink href="/History"><ProfileAvatar/></NavLink>
         </NavMenu>
         <NavBtn></NavBtn>
       </Nav>

@@ -4,8 +4,6 @@ export const GET_ALL_PROPERTIES = gql`
   {
     projects {
       id,
-      
-      
     }
   }
 `;

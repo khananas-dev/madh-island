@@ -54,6 +54,7 @@ function PropertyDetails() {
 
 
   const BookProperty = () =>{
+  
     // check if user is already logged in
     const userAuthenticationStatus = isUserLoggedIn()
     if(!userAuthenticationStatus){

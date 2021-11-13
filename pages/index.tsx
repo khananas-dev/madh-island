@@ -4,90 +4,32 @@ import Box from "@mui/material/Box";
 import SearchBar from "../src/components/SearchBar/SearchBar";
 import styled from "styled-components";
 import BackgroundImage from "../public/backgroundImage.png";
+import HeroImage from "../public/demo1.jpg";
 import { Button, Grid } from "@mui/material";
 import PropertyCard from "../src/components/PropertyCard/PropertyCard";
 import Image from "next/image";
-import GoogleMapReact from "google-map-react";
-import { DEFAULT_MAP_PROPS } from "../src/constants";
 // Graphql
 import { useQuery } from "@apollo/react-hooks";
 import { GET_ALL_PROPERTIES } from "../queries/property";
+import { GET_ABOUT_US } from "../queries/content";
 import IconSvg from "../src/components/icon/IconSvg";
 import { PropertyCardFactory } from "../@types";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import router from "next/router";
-// const AnyReactComponent = ({ text : any }) => <div>{text}</div>;
-const APItopLocation: PropertyCardFactory[] = [
-  {
-    id: `1`,
-    img: `https://images.unsplash.com/photo-1512917774080-9991f1c4c750?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2070&q=80`,
-    propertyName: `Ravi Bunglows`,
-    serviceType: `Film Location`,
-    area: `211`,
-    amminityList: [
-      { id: `1`, name: `Gym` },
-      { id: `2`, name: `Fire` },
-      { id: `3`, name: `Pool` },
-    ],
-    buttonsList: [
-      {
-        name: `View Details`,
-        variant: `outlined`,
-      },
-    ],
-  },
-  {
-    id: `2`,
-    img: `https://images.unsplash.com/photo-1430285561322-7808604715df?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1170&q=80`,
-    propertyName: `Shyam Nivas`,
-    serviceType: `Film Location`,
-    area: `400`,
-    amminityList: [
-      { id: `1`, name: `Gym` },
-      { id: `2`, name: `Fire` },
-      { id: `3`, name: `Pool` },
-    ],
-    buttonsList: [
-      {
-        name: `View Details`,
-        variant: `outlined`,
-      },
-    ],
-  },
-  {
-    id: `3`,
-    img: `https://images.unsplash.com/photo-1523217582562-09d0def993a6?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2080&q=80`,
-    propertyName: `Jacobs`,
-    serviceType: `Film Location`,
-    area: `440`,
-    amminityList: [
-      { id: `1`, name: `Gym` },
-      { id: `2`, name: `Fire` },
-      { id: `3`, name: `Pool` },
-    ],
-    buttonsList: [
-      {
-        name: `View Details`,
-        variant: `outlined`,
-      },
-    ],
-  },
-];
-export default function Index() {
-  const [topLocations, setTopLocations] = useState(APItopLocation);
-
+import Footer from "../src/components/Footer/Footer";
+import { getDataFromTree } from "@apollo/client/react/ssr";
+import AboutUsSection from "../src/components/Sections/AboutUsSection";
+import TalkToUsSection from "../src/components/Sections/TalkToUsSection";
+import OurPropertyMap from "../src/components/Sections/OurPropertyMap";
+import OurServiceSection from "../src/components/Sections/OurServiceSection";
+import OurClients from "../src/components/Sections/OurClients";
+import TopLocations from "../src/components/Sections/TopLocations";
+export default function Index({ props }: any) {
+  const [cached, setCached] = useState(true);
   const getAllProperties = useQuery(GET_ALL_PROPERTIES);
-  
-  const handleTopLocations = (ev: any,property: any) => {
-    router.push({
-      pathname: `/property/${property.id}`,
-      query: {
-        service: property.serviceType,
-      },
-    });   
-  };
+  const aboutUsData = useQuery(GET_ABOUT_US, { ssr: true });
   return (
-    <>
+    <AppWrapper>
       <Hero>
         <WhiteContainer
           sx={{
@@ -109,241 +51,29 @@ export default function Index() {
       </Hero>
       <BodyWrapper>
         {/* All Services */}
-        <Typography
-          variant="h2"
-          component="h2"
-          color="primary"
-          textAlign="center"
-          sx={{
-            margin: "0px 0px 48px 0px",
-          }}
-        >
-          Services
-        </Typography>
-        <Grid container spacing={2}>
-          <Grid item xs={12} md={4}>
-            <Typography
-              variant="h5"
-              component="h5"
-              color="primary"
-              textAlign="center"
-            >
-              Services
-            </Typography>
-          </Grid>
-          <Grid item xs={12} md={4}>
-            <Typography
-              variant="h5"
-              component="h5"
-              color="primary"
-              textAlign="center"
-            >
-              Services
-            </Typography>
-          </Grid>
-          <Grid item xs={12} md={4}>
-            <Typography
-              variant="h5"
-              component="h5"
-              color="primary"
-              textAlign="center"
-            >
-              Services
-            </Typography>
-          </Grid>
-          <Grid item xs={12} md={4}>
-            <Typography
-              variant="h5"
-              component="h5"
-              color="primary"
-              textAlign="center"
-            >
-              Services
-            </Typography>
-          </Grid>
-          <Grid item xs={12} md={4}>
-            <Typography
-              variant="h5"
-              component="h5"
-              color="primary"
-              textAlign="center"
-            >
-              Services
-            </Typography>
-          </Grid>
-          <Grid item xs={12} md={4}>
-            <Typography
-              variant="h5"
-              component="h5"
-              color="primary"
-              textAlign="center"
-            >
-              Services
-            </Typography>
-          </Grid>
-        </Grid>
+        <OurServiceSection />
         {/* Top Location */}
-        <Typography
-          variant="h2"
-          component="h2"
-          color="primary"
-          textAlign="center"
-          sx={{
-            margin: "48px 0px 48px 0px",
-          }}
-        >
-          Top Locations
-        </Typography>
-        <Grid container spacing={2}>
-          {topLocations.map((property: PropertyCardFactory) => (
-            <Grid item xs={12} md={4}  key={property.id}>
-              <PropertyCard
-                id={property.id}
-                key={property.id}
-                img={property.img}
-                area={property.area}
-                amminityList={property.amminityList}
-                propertyName={property.propertyName}
-                serviceType={property.serviceType}
-                buttonsList={property.buttonsList}
-                action = {handleTopLocations}
-                
-              />
-            </Grid>
-          ))}
-        </Grid>
+        <TopLocations />
         {/* About Us */}
-        <Grid container spacing={2}>
-          <Grid item xs={12} md={8}>
-            <Typography
-              variant="h2"
-              component="h2"
-              color="primary"
-              textAlign="left"
-              sx={{
-                margin: "48px 0px 48px 0px",
-              }}
-            >
-              About Us
-            </Typography>
-            <Typography
-              variant="body2"
-              component="h2"
-              color="#1F1F1F"
-              textAlign="left"
-              sx={{
-                margin: "48px 0px 48px 0px",
-              }}
-            >
-              Visitmadhisland is the official Website of Madhisland related to
-              Tourism and its Business opportunity on the internet. Also,
-              Visitmadhisland provides helpful services related to the Film
-              industry, Travel, and Information etc. to become the most
-              preferred island of Mumbai (India) on its mission to promote
-              quality and sustainable growth in the local tourism industry to
-              deliver long term economic, social and cultural benefits in the
-              Madhisland.
-            </Typography>
-          </Grid>
-          <Grid
-            visibility={{ xs: "hidden", md: "visible" }}
-            sx={{
-              margin: "48px 0px 48px 0px",
-            }}
-            item
-            xs={12}
-            md={4}
-          >
-            <Image src={BackgroundImage}></Image>
-          </Grid>
-        </Grid>
+        <AboutUsSection />
         {/* Our Clients */}
-        <Typography
-          variant="h2"
-          component="h2"
-          color="primary"
-          textAlign="center"
-          sx={{
-            margin: "48px 0px 48px 0px",
-          }}
-        >
-          Our Clients
-        </Typography>
-        <Grid container spacing={2}>
-          <Grid item xs={4} md={2}>
-            <span>Some Icon</span>
-          </Grid>
-          <Grid item xs={4} md={2}>
-            <span>Some Icon</span>
-          </Grid>
-          <Grid item xs={4} md={2}>
-            <span>Some Icon</span>
-          </Grid>
-          <Grid item xs={4} md={2}>
-            <span>Some Icon</span>
-          </Grid>
-          <Grid item xs={4} md={2}>
-            <span>Some Icon</span>
-          </Grid>
-          <Grid item xs={4} md={2}>
-            <span>Some Icon</span>
-          </Grid>
-        </Grid>
+        <OurClients />
       </BodyWrapper>
       {/* Explore Locations */}
-      <Typography
-        variant="h2"
-        component="h2"
-        color="primary"
-        textAlign="center"
-        sx={{
-          margin: "48px 0px 48px 0px",
-        }}
-      >
-        Explore Our Locations
-      </Typography>
-      <Box style={{ height: "600px", width: "100%" }}>
-        <GoogleMapReact
-          bootstrapURLKeys={{ key: `${process.env.GOOGLE_MAP_KEY}` }}
-          defaultCenter={DEFAULT_MAP_PROPS.center}
-          defaultZoom={DEFAULT_MAP_PROPS.zoom}
-        >
-          {/* <AnyReactComponent lat={59.955413} lng={30.337844} text="My Marker" /> */}
-        </GoogleMapReact>
-      </Box>
+      <OurPropertyMap />
       {/* Talk to us */}
-      <TalkToUsContainer>
-        <Grid container spacing={2}>
-          <Grid item xs={12} sm={8} md={10}>
-            <Typography
-              variant="h2"
-              component="h2"
-              color="primary"
-              textAlign="left"
-            >
-              Have a specific location requirement?
-            </Typography>
-            <Typography
-              variant="h3"
-              component="h3"
-              color="primary"
-              textAlign="left"
-            >
-              Talk to us
-            </Typography>
-          </Grid>
-          <Grid item xs={12} sm={4} md={2}>
-            <Button variant="outlined">Tell Us</Button>
-          </Grid>
-        </Grid>
-      </TalkToUsContainer>
-    </>
+      <TalkToUsSection />
+      <Footer />
+    </AppWrapper>
   );
 }
-
+const AppWrapper =  styled(Box)`
+background: radial-gradient(circle, rgba(215,224,222,1) 0%, rgba(239,250,247,1) 50%, rgba(202,244,232,1) 100%);
+`;
 const Hero = styled(Box)`
-  background-image: url(${BackgroundImage.src});
-  height: calc(100vh - 300px);
+  background-image: url(${HeroImage.src});
+  
+  height: calc(100vh - 100px);
   background-repeat: no-repeat;
   object-fit: contain;
   width: 100%;
@@ -352,6 +82,7 @@ const Hero = styled(Box)`
   display: flex;
   flex-direction: column;
   background-size: 100% 100%;
+  
   @media screen and (max-width: 768px) {
     padding-top: 40px;
   }
@@ -370,18 +101,4 @@ const WhiteContainer = styled(Box)`
   background: white;
   max-width: fit-content;
   margin: auto;
-`;
-const TalkToUsContainer = styled(Box)`
-  background: #eafcf7;
-  padding-top: 40px;
-  padding-left: 60px;
-  padding-right: 60px;
-  padding-bottom: 40px;
-  margin: 40px 0px;
-  @media screen and (max-width: 768px) {
-    padding-top: 40px;
-    padding-left: 30px;
-    padding-right: 30px;
-    padding-bottom: 40px;
-  }
 `;
