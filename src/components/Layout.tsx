@@ -12,7 +12,7 @@ function Layout({ children }: any) {
     <Box sx={{height:`100%`}}>
       <Sidebar isOpen={isOpen} toggleSidebar={()=>(setisOpen(!isOpen))} />
       <Navigation isOpen={isOpen} toggleSidebar={()=>(setisOpen(!isOpen))} />
-      <Box sx={{height:`calc(100vh - 100px)`, overflow:`auto`}}>
+      <Box sx={{height:`calc(100vh - 80px)`, overflowX:`auto`}}>
       {children}
       </Box>
     

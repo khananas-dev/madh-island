@@ -23,6 +23,7 @@ const PropertyCard = ({
   propertyName,
   serviceType,
   area,
+  bedroom,
   amminityList,
   buttonsList,
   price,
@@ -34,37 +35,63 @@ const PropertyCard = ({
   };
   return (
     <Card sx={{ borderRadius: `8px` }}>
-      <CardMedia sx={{ height: "180px" }} title={"Card Tittle"}>
+      <CardMedia sx={{ height: "180px" }} title={propertyName}>
         <div style={{ position: "relative", width: "100%", height: "100%" }}>
-          <Image src={Logo.src} layout="fill" objectFit="cover" />
+          <Image src={`${img}`} layout="fill" objectFit="cover" />
         </div>
       </CardMedia>
       <CardContent>
         <Typography gutterBottom variant="h6" component="div">
           {propertyName}
         </Typography>
-        <MetaTagContainer>
-          <Typography gutterBottom variant="body2" component="p">
-            Service Type
-          </Typography>
-          <Typography gutterBottom align="right" variant="body1" component="p">
-            {serviceType}
-          </Typography>
-        </MetaTagContainer>
-        <MetaTagContainer>
-          <Typography gutterBottom variant="body2" component="p">
-            Area Size
-          </Typography>
-          <Typography gutterBottom align="right" variant="body1" component="p">
-            {area} Sq. Ft
-          </Typography>
-        </MetaTagContainer>
+        {bedroom && (
+          <MetaTagContainer>
+            <Typography gutterBottom variant="body2" component="p">
+              Bedrooms
+            </Typography>
+            <Typography
+              gutterBottom
+              align="right"
+              variant="body1"
+              component="p"
+            >
+              {bedroom}
+            </Typography>
+          </MetaTagContainer>
+        )}
+        {serviceType && (
+          <MetaTagContainer>
+            <Typography gutterBottom variant="body2" component="p">
+              Service Type
+            </Typography>
+            <Typography
+              gutterBottom
+              align="right"
+              variant="body1"
+              component="p"
+            >
+              {serviceType}
+            </Typography>
+          </MetaTagContainer>
+        )}
+        {area && (
+          <MetaTagContainer>
+            <Typography gutterBottom variant="body2" component="p">
+              Area Size
+            </Typography>
+            <Typography
+              gutterBottom
+              align="right"
+              variant="body1"
+              component="p"
+            >
+              {area} Sq. Ft
+            </Typography>
+          </MetaTagContainer>
+        )}
         <AmminityContainer>
           {amminityList?.map((amminity) => (
-            <Chips
-              key={amminity.id}
-              name={amminity.name}
-            />
+            <Chips key={amminity.id} name={amminity.name} />
           ))}
         </AmminityContainer>
       </CardContent>
@@ -79,7 +106,7 @@ const PropertyCard = ({
       >
         {buttonsList?.map((action, index) => (
           <Button
-          key={index}
+            key={index}
             onClick={(e) =>
               handleEvent(action.name, {
                 id,

@@ -4,6 +4,7 @@ export interface PropertyCardFactory {
     img?: string;
     propertyName?: string;
     serviceType?: string;
+    bedroom?: string;
     area?: string;
     amminityList?: Aminity[];
     buttonsList?: ButtonConfig[]

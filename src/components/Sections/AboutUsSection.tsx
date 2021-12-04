@@ -3,32 +3,22 @@ import { Grid, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { GET_ABOUT_US } from "../../../queries/content";
 import Image from "next/image";
+import { AboutUs } from "../../../_data/VMI_content";
 
 function AboutUsSection() {
-  const { data, loading, error } = useQuery(GET_ABOUT_US);
-
-  console.log({ data,loading, error });
-
-const [cached, setCached] = useState(true);
-useEffect(() => {
-    if (loading) setCached(false);
-  }, [loading]);
-
- 
   return (
     <Grid container spacing={2}>
-      <Grid item xs={12} md={8}>
+      <Grid item xs={12} md={7}>
         <Typography
           variant="h2"
           component="h2"
           color="primary"
           textAlign="left"
           sx={{
-            margin: "48px 0px 48px 0px",
+            margin: "40px 0px 20px 0px",
           }}
         >
-            About Us
-
+          About Us
         </Typography>
         <Typography
           variant="body2"
@@ -36,10 +26,10 @@ useEffect(() => {
           color="#1F1F1F"
           textAlign="left"
           sx={{
-            margin: "48px 0px 48px 0px",
+            margin: "20px 0px 0px 0px",
           }}
         >
-          {data && data.aboutUs.content}
+          {AboutUs && AboutUs.aboutUs}
         </Typography>
       </Grid>
       <Grid
@@ -49,9 +39,11 @@ useEffect(() => {
         }}
         item
         xs={12}
-        md={4}
+        md={5}
       >
-        {/* {data && <Image src={data.aboutUs.image}></Image>} */}
+        {AboutUs && (
+          <Image width={100} layout="responsive" height={100} src={AboutUs.image}></Image>
+        )}
       </Grid>
     </Grid>
   );

@@ -14,9 +14,7 @@ export const SidebarContainer = styled.aside`
   top: 0;
   left: 0;
   transition: 0.3 ease-in-out;
-  visibility: ${(props)=>(props.isOpen ? 'visible': 'hidden')};
-  /* opacity: ${(props)  => ( props.isOpen ? "100%" : "0")};
-  top: ${(props) => (props.isOpen ? "0" : "-100%")}; */
+ 
 `;
 export const Icon = styled.div`
 

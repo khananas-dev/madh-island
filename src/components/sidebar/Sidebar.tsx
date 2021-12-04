@@ -1,13 +1,33 @@
 import React from "react";
 import { SidebarProps } from "../props";
-import { CloseIcon, Icon, SidebarContainer, SidebarLink, SidebarMenu, SidebarWrapper } from "./SidebarElements";
+import {
+  CloseIcon,
+  Icon,
+  SidebarContainer,
+  SidebarLink,
+  SidebarMenu,
+  SidebarWrapper,
+} from "./SidebarElements";
 
-
-
-
-const  Sidebar = (props: SidebarProps) : JSX.Element => {
+const Sidebar = (props: SidebarProps): JSX.Element => {
   return (
-    <SidebarContainer  isOpen={props.isOpen} onClick={props.toggleSidebar} >
+    <aside
+      style={{
+        position: "fixed",
+        zIndex: 999,
+        width: "100vw",
+        height: "100vh",
+        backgroundColor: "#0C9B75",
+        display: `grid`,
+        alignItems: "center",
+        top: 0,
+        left: 0,
+        transition: "0.3 ease-in-out",
+        visibility: props.isOpen ? "visible" : "hidden",
+        // transition: 0.3 ease-in-out
+      }}
+      onClick={props.toggleSidebar}
+    >
       <Icon onClick={props.toggleSidebar}>
         <CloseIcon></CloseIcon>
       </Icon>
@@ -34,8 +54,8 @@ const  Sidebar = (props: SidebarProps) : JSX.Element => {
           <SidebarLink href="/about">Profile Name</SidebarLink>
         </SidebarMenu>
       </SidebarWrapper>
-    </SidebarContainer>
+    </aside>
   );
-}
+};
 
 export default Sidebar;

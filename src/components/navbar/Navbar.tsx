@@ -8,21 +8,17 @@ import logo from "../../../public/logo.png";
 import ProfileAvatar from "../ProfileAvatar/ProfileAvatar";
 
 function Navigation(sideBarProps: SidebarProps) {
-// const [navState, setNavState] = useState([]);
-
-// // ON INIT
-// useEffect(() => {
-//   setNavState([])
-// }, [])
 
   return (
     <>
-      <Nav>
+      <Nav
+      style={{height:80}}
+      >
         <NavLink href="/">
           <Image
             src={logo}
-            width="250"
-            height="80"
+            width="175"
+            height="60"
             alt="Logo of Visit Madh Island"
           />
         </NavLink>
@@ -51,7 +47,7 @@ function Navigation(sideBarProps: SidebarProps) {
           >
             Event Venues
           </NavLink>
-          
+
           <NavLink
             href={{
               pathname: "/propertieslist/VillasandBunglow",
@@ -61,10 +57,12 @@ function Navigation(sideBarProps: SidebarProps) {
             }}
           >
             Villas & Bungalows
-
           </NavLink>
-          <NavLink href="#">Search</NavLink>
-          <NavLink href="/History"><ProfileAvatar/></NavLink>
+          {/* <NavLink href="#">Search</NavLink> */}
+          <NavLink href="#">Login / Register</NavLink>
+          {/* <NavLink href="/History">
+            <ProfileAvatar />
+          </NavLink> */}
         </NavMenu>
         <NavBtn></NavBtn>
       </Nav>

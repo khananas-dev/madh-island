@@ -32,6 +32,7 @@
     "react-dom": "latest",
     "react-icons": "^4.3.1",
     "react-is": "latest",
+    "react-multi-carousel": "^2.6.5",
     "styled-components": "^5.3.1",
     "yup": "^0.32.11"
   },

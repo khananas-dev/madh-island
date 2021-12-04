@@ -23,25 +23,25 @@ import { DEFAULT_FILTER } from "../../constants";
 import moment from "moment";
 
 function SearchBar(searchBarProps: SearchBarProps) {
- const router = useRouter();
+  const router = useRouter();
   const today = new Date();
   const tomorrow = new Date(today);
   tomorrow.setDate(tomorrow.getDate() + 1);
-  const [checkInState, setCheckInState] = useState<Date>();
-  const [checkOutState, setCheckOutState] = useState<Date>();
+  const [checkInState, setCheckInState] = useState<Date>(  );
+  const [checkOutState, setCheckOutState] = useState<Date>( );
   const [serviceType, setServiceType] = React.useState(
-    searchBarProps.serviceType || 'FilmLocation'
+    searchBarProps.serviceType || "FilmLocation"
   );
 
   const handleChange = (type: any) => {
     switch (type) {
       case "submit":
         router.push({
-          pathname: `/propertieslist/${serviceType}`,
+          pathname: `/propertieslist/`,
           query: {
             service: serviceType,
-            checkin: checkInState?.toString(),
-            checkout: checkOutState?.toString(),
+            checkin: moment(checkInState).format("YYYY-MM-DD"),
+            checkout: moment(checkOutState).format("YYYY-MM-DD"),
           },
         });
 
@@ -52,42 +52,47 @@ function SearchBar(searchBarProps: SearchBarProps) {
     }
   };
 
-useEffect(() => {
-  setCheckInState(searchBarProps.checkInDate || DEFAULT_FILTER.checkInDate)
-  setCheckOutState(searchBarProps.checkOutDate || DEFAULT_FILTER.checkOutDate)
-  setServiceType((searchBarProps.serviceType || DEFAULT_FILTER.serviceType))
-
-}, [router])
+  useEffect(() => {
+    setCheckInState(searchBarProps.checkInDate || DEFAULT_FILTER.checkInDate);
+    setCheckOutState(
+      searchBarProps.checkOutDate || DEFAULT_FILTER.checkOutDate
+    );
+    setServiceType(searchBarProps.serviceType || DEFAULT_FILTER.serviceType);
+  }, [router]);
 
   return (
     <SearchBarWrapper>
       <LocalizationProvider dateAdapter={AdapterDateFns} locale={enIN}>
         <InputWrapper>
-          <DatePicker 
+          <DatePicker
             minDate={today}
             inputFormat="dd/MMM/yyyy"
-            mask='__/__/____'
+            mask="__/__/____"
             label="Check-in Date"
             value={checkInState?.toString()}
             orientation="portrait"
             onChange={(newValue) => {
               newValue && setCheckInState(newValue);
             }}
-            renderInput={(params) => <TextField style={{width: '100%'}} {...params} />}
+            renderInput={(params) => (
+              <TextField style={{ width: "100%" }} {...params} />
+            )}
           />
         </InputWrapper>
         <InputWrapper>
           <DatePicker
             minDate={checkInState}
             label="Check-out Date"
-            mask='__/__/____'
+            mask="__/__/____"
             value={checkOutState?.toString()}
             inputFormat="dd/MMM/yyyy"
             orientation="portrait"
             onChange={(newValue) => {
               newValue && setCheckOutState(newValue);
             }}
-            renderInput={(params) => <TextField style={{width: '100%'}} {...params} />}
+            renderInput={(params) => (
+              <TextField style={{ width: "100%" }} {...params} />
+            )}
           />
         </InputWrapper>
         <InputWrapper>
@@ -106,16 +111,13 @@ useEffect(() => {
             </Select>
           </FormControl>
         </InputWrapper>
-     <InputWrapper>
-          <Button
+        <Button
             sx={{ width: `100%` }}
             onClick={() => handleChange("submit")}
             variant="contained"
-            
           >
             Search
           </Button>
-         </InputWrapper>
       </LocalizationProvider>
     </SearchBarWrapper>
   );

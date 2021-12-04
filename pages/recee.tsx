@@ -3,8 +3,8 @@ import React from 'react'
 import PropertyCard from '../src/components/PropertyCard/PropertyCard'
 import RaceeCard from '../src/components/RaceeCard/RaceeCard'
 import SearchBar from '../src/components/SearchBar/SearchBar'
-import { SearchWrapper, BodyWrapper, SortIcon } from './propertieslist/[serviceType]/propertyListElements'
-
+import { BodyWrapper } from './propertieslist/propertyListElements'
+ 
 function Recee() {
     return (
         <Box>

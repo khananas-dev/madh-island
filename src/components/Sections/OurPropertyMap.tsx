@@ -1,17 +1,17 @@
-import { Typography, Box } from '@mui/material'
-import React from 'react'
-import { DEFAULT_MAP_PROPS } from '../../constants'
+import { Typography, Box } from "@mui/material";
+import React from "react";
+import { DEFAULT_MAP_PROPS } from "../../constants";
 import GoogleMapReact from "google-map-react";
- function OurPropertyMap() {
-    return (
-        <>
-                <Typography
+function OurPropertyMap() {
+  return (
+    <>
+      <Typography
         variant="h2"
         component="h2"
         color="primary"
         textAlign="center"
         sx={{
-          margin: "48px 0px 48px 0px",
+          margin: "40px 0px 20px 0px",
         }}
       >
         Explore Our Locations
@@ -22,11 +22,11 @@ import GoogleMapReact from "google-map-react";
           defaultCenter={DEFAULT_MAP_PROPS.center}
           defaultZoom={DEFAULT_MAP_PROPS.zoom}
         >
-          {/* <AnyReactComponent lat={59.955413} lng={30.337844} text="My Marker" /> */}
+          {/* <AnyReactComponent lat={59.955413} lng={30.337844} text="My Marker" />   */}
         </GoogleMapReact>
-      </Box>  
-        </>
-    )
+      </Box>
+    </>
+  );
 }
 
-export default OurPropertyMap
+export default OurPropertyMap;

@@ -10,7 +10,7 @@ function TalkToUsSection() {
             <Typography
               variant="h2"
               component="h2"
-              color="primary"
+              color="#191919"
               textAlign="left"
             >
               Have a specific location requirement?
