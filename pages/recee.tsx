@@ -3,8 +3,8 @@ import React from 'react'
 import PropertyCard from '../src/components/PropertyCard/PropertyCard'
 import RaceeCard from '../src/components/RaceeCard/RaceeCard'
 import SearchBar from '../src/components/SearchBar/SearchBar'
-import { BodyWrapper } from './propertieslist/propertyListElements'
- 
+import styled from 'styled-components';
+
 function Recee() {
     return (
         <Box>
@@ -33,3 +33,14 @@ function Recee() {
 }
 
 export default Recee
+
+const BodyWrapper = styled(Box)`
+ padding-top: 80px;
+ margin-left: 60px;
+ margin-right: 60px;
+ @media screen and (max-width: 768px) {
+   padding-top: 40px;
+   margin-left: 30px;
+   margin-right: 30px;
+ }
+`;
