@@ -4,7 +4,10 @@ export interface PropertyCardFactory {
     img?: string;
     propertyName?: string;
     serviceType?: string;
+    isPriceDivider?:boolean,
     bedroom?: string;
+    addressLine1?:string;
+    addressLine2?:string;
     area?: string;
     amminityList?: Aminity[];
     buttonsList?: ButtonConfig[]
@@ -27,3 +30,16 @@ export interface ButtonConfig{
     color?: string;
 
 }
+export interface PropertyFilter {
+    serviceType: string;
+    checkInDate: Date;
+    checkOutDate: Date;
+  }
+  
+  export interface SearchProps {
+    from: Date;
+    to: Date;
+    minDate?: Date;
+    maxDate?: Date;
+    serviceType: string;
+  }

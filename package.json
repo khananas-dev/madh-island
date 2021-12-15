@@ -18,6 +18,8 @@
     "@mui/lab": "^5.0.0-alpha.50",
     "@mui/material": "^5.0.3",
     "@mui/styled-engine-sc": "^5.0.3",
+    "axios": "^0.24.0",
+    "axios-hooks": "^3.0.0",
     "classnames": "^2.3.1",
     "date-fns": "latest",
     "formik": "^2.2.9",
@@ -34,6 +36,8 @@
     "react-is": "latest",
     "react-multi-carousel": "^2.6.5",
     "styled-components": "^5.3.1",
+    "swr": "^1.1.1",
+    "use-axios-client": "^2.0.0",
     "yup": "^0.32.11"
   },
   "devDependencies": {

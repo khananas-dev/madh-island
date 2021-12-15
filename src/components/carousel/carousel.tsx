@@ -26,42 +26,44 @@ const responsive = {
 
 function VMICarousel() {
   return (
-    <Box sx={{ width: "100%", height: 150 }}>
-      <Carousel
-        swipeable
-        infinite={true}
-        autoPlay={true}
-        autoPlaySpeed={12}
-        keyBoardControl={true}
-        customTransition="all .5"
-        transitionDuration={500}
-        containerClass="carousel-container"
-        arrows={false}
-        minimumTouchDrag={50}
-        dotListClass="custom-dot-list-style"
-        itemClass="carousel-item-padding-40-px"
-        draggable
-        responsive={responsive}
-      >
-        <Box
-        sx={{width:`100vw`}}>
-          <Image
-            src="https://a0.muscache.com/im/pictures/miso/Hosting-52177817/original/00bba230-ee6f-4a34-92d2-2cbe812a0ad1.jpeg?im_w=1200"
-            alt="Picture of the author"
-            width="100vw"
-            height="700px"
-          />
-        </Box>
-        <Box>
-          <Image
-            src="https://a0.muscache.com/im/pictures/929085db-c910-4332-a179-4134d259dfd8.jpg?im_w=1200"
-            alt="Picture of the author"
-            width="100vw"
-            height="700px"
-          />
-        </Box>
-      </Carousel>
-    </Box>
+    <Carousel
+      swipeable
+      infinite={true}
+      autoPlay={false}
+      autoPlaySpeed={12}
+      keyBoardControl={true}
+      customTransition="all .5"
+      transitionDuration={500}
+      containerClass="carousel-container"
+      arrows={false}
+      minimumTouchDrag={50}
+      dotListClass="custom-dot-list-style"
+      itemClass="carousel-item-padding-10-px"
+      draggable
+      responsive={responsive}
+    >
+      <Box
+      sx={{width:100,height:'250px'}}>
+
+      <Image
+        src="https://a0.muscache.com/im/pictures/929085db-c910-4332-a179-4134d259dfd8.jpg?im_w=1200"
+        alt="Picture of the author"
+        layout="fill"
+        objectFit="contain"
+        quality={100}
+      />
+      </Box>
+      <Box>
+      <Image
+        src="https://a0.muscache.com/im/pictures/929085db-c910-4332-a179-4134d259dfd8.jpg?im_w=1200"
+        alt="Picture of the author"
+        layout="fill"
+        objectFit="contain"
+        quality={100}
+      />
+      </Box>
+    
+    </Carousel>
   );
 }
 

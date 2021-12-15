@@ -3,39 +3,56 @@ import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { SearchBarProps } from "../../src/components/props";
 import SearchBar from "../../src/components/SearchBar/SearchBar";
-import styled from 'styled-components';
-import { FaBars } from 'react-icons/fa';
-import { Box } from '@mui/material';
+import styled from "styled-components";
+import { FaBars } from "react-icons/fa";
+import { Box } from "@mui/material";
 import PropertyCard from "../../src/components/PropertyCard/PropertyCard";
 import { CgSortAz } from "react-icons/cg";
+import { PropertyFilter } from "../../@types";
+import moment from "moment";
+import { DEFAULT_FILTER } from "../../src/constants";
+import { TOP_LOCATIONS } from "../../_data/topLocation";
+import { getStoreFilters } from "../../src/utils/localStorage";
 
+const fetchPropertiesByFilter = (filter: PropertyFilter) => {
+  console.log(filter, "Filters");
+};
 function index() {
   const router = useRouter();
+  const [propertyFilters, setPropertyFilters] = useState({} as PropertyFilter);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
-const [searchBarObj, setSearchBarObj] = useState<SearchBarProps>()
-   useEffect(() => {
-    console.log(populateSearchForm());
-  }, []);
+  const [topLocations, setTopLocations] = useState(TOP_LOCATIONS);
 
-  const populateSearchForm = () => {
-    const searchObj: SearchBarProps ={}
+  // const [searchBarObj, setSearchBarObj] = useState<SearchBarProps>();
+
+  // Trigger on Route Change
+  useEffect(() => {
     console.log(router.query)
-    if (router.query.checkin && router.query.checkout) {
-      searchObj.checkInDate = new Date(router.query.checkin.toString());
-      searchObj.checkOutDate = new Date(router.query.checkout.toString());
-    }
+    const searchFilters = getStoreFilters();
+    const service = searchFilters.serviceType;
+    const checkInDate = moment(searchFilters.checkInDate).toDate();
+    const checkOutDate = moment(searchFilters.checkOutDate).toDate();
+    const filters: PropertyFilter = {
+      serviceType: service as string,
+      checkInDate: checkInDate,
+      checkOutDate: checkOutDate,
+    };
+    setPropertyFilters(filters);
+    fetchPropertiesByFilter(propertyFilters);
+  }, [router.query]);
+  useEffect(() => {}, []);
 
-    if (router.query.service) {
-      searchObj.serviceType = router.query.service.toString();
-    }
-    return searchObj
-   };
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
   const handleClose = () => {
     setAnchorEl(null);
+  };
+  const handlePropertyDetails = (propertyid: any) => {
+    router.push({
+      pathname: `/property/${propertyid}`,
+    });
   };
   return (
     <Box>
@@ -50,26 +67,28 @@ const [searchBarObj, setSearchBarObj] = useState<SearchBarProps>()
       >
         <Grid item xs={12} sm={12} md={12}>
           <SearchWrapper sx={{ margin: `32px auto` }}>
-            <SearchBar
-              checkInDate={searchBarObj?.checkInDate}
-              checkOutDate={searchBarObj?.checkOutDate}
-              serviceType={searchBarObj?.serviceType}
-            />
+            {propertyFilters && (
+              <SearchBar
+                from={propertyFilters.checkInDate}
+                to={propertyFilters?.checkOutDate}
+                serviceType={propertyFilters?.serviceType}
+              />
+            )}
           </SearchWrapper>
         </Grid>
       </Grid>
       <BodyWrapper>
         <Grid container spacing={2} justifyContent="space-between">
           <Grid item xs={10} sm={10} md={6}>
-            <Typography variant="h2" color="primary" component="h2">
-            {searchBarObj?.serviceType}
-            </Typography>
-            {/* <Typography variant="h2" color="primary" component="h2">
-              {SearchObj.serviceType === "VillasandBunglow" &&
-                `Villas & Bungalows`}
-              {SearchObj.serviceType === "EventVenues" && `Event Venue`}
-              {SearchObj.serviceType === "FilmLocation" && `Film Location`}
-            </Typography> */}
+            {propertyFilters.serviceType && (
+              <Typography variant="h2" color="primary" component="h2">
+                {propertyFilters.serviceType === "VillasandBunglow" &&
+                  `Villas & Bungalows`}
+                {propertyFilters.serviceType === "EventVenues" && `Event Venue`}
+                {propertyFilters.serviceType === "FilmLocation" &&
+                  `Film Location`}
+              </Typography>
+            )}
           </Grid>
           <Grid item xs={2} sm={2} md={2} sx={{ textAlign: `right` }}>
             <Button
@@ -106,7 +125,25 @@ const [searchBarObj, setSearchBarObj] = useState<SearchBarProps>()
           sx={{ marginTop: `32px` }}
           justifyContent="space-between"
         >
-          <Grid item xs={12} md={4}></Grid>
+          {topLocations &&
+            topLocations.map((property: any) => (
+              <Grid item xs={12} md={4} key={property._id}>
+                <PropertyCard
+                  isPriceDivider
+                  id={property._id}
+                  key={property._id}
+                  img={property.images[0]}
+                  area={property.area}
+                  amminityList={property.amenities}
+                  addressLine1={property.addressLine1}
+                  bedroom={property.bedroom}
+                  propertyName={property.title}
+                  buttonsList={property.buttonsList}
+                  price={property.price}
+                  action={handlePropertyDetails}
+                />
+              </Grid>
+            ))}
         </Grid>
       </BodyWrapper>
     </Box>
@@ -115,25 +152,26 @@ const [searchBarObj, setSearchBarObj] = useState<SearchBarProps>()
 
 export default index;
 const SearchWrapper = styled(Box)`
-background: #FFFFFF;
-box-shadow: 0px 8px 16px rgba(110, 110, 110, 0.16);
-backdrop-filter: blur(24px);
-padding: 24px;
-max-width:1100px;
-width: min-content;`
+  background: #ffffff;
+  box-shadow: 0px 8px 16px rgba(110, 110, 110, 0.16);
+  backdrop-filter: blur(24px);
+  padding: 24px;
+  max-width: 1100px;
+  width: min-content;
+`;
 
 const BodyWrapper = styled(Box)`
- padding-top: 80px;
- margin-left: 60px;
- margin-right: 60px;
- @media screen and (max-width: 768px) {
-   padding-top: 40px;
-   margin-left: 30px;
-   margin-right: 30px;
- }
+  padding-top: 80px;
+  margin-left: 60px;
+  margin-right: 60px;
+  @media screen and (max-width: 768px) {
+    padding-top: 40px;
+    margin-left: 30px;
+    margin-right: 30px;
+  }
 `;
 const SortIcon = styled(CgSortAz)`
-  width:24px;
+  width: 24px;
   height: 24px;
-  color:#535353;
+  color: #535353;
 `;

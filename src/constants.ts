@@ -5,7 +5,6 @@ const tomorrow = new Date(today);
 tomorrow.setDate(tomorrow.getDate() + 1);
 
 export const DEFAULT_FILTER = {
-    
     checkInDate: today,
     checkOutDate: tomorrow,
     serviceType:`FilmLocation`
@@ -13,8 +12,8 @@ export const DEFAULT_FILTER = {
 
 export const DEFAULT_MAP_PROPS = {
     center: {
-      lat: 59.95,
-      lng: 30.33,
+      lat: 19.16249680843635, 
+      lng: 72.78985200327892,
     },
     zoom: 11,
   };

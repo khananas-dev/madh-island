@@ -5,14 +5,8 @@ import type { AppProps } from "next/app";
 import Head from "next/head";
 import theme from "../src/theme";
 import Layout from "../src/components/Layout";
-import { ApolloClient, InMemoryCache } from "@apollo/client";
-import { ApolloProvider } from '@apollo/client';
-
-const client = new ApolloClient({
-  ssrMode: true,
-  uri: "https://vmi-api-backend.herokuapp.com/graphql",
-  cache: new InMemoryCache(),
-});
+ 
+ 
 
 export default function MyApp(props: AppProps) {
   const { Component, pageProps } = props;
@@ -26,14 +20,12 @@ export default function MyApp(props: AppProps) {
           name="viewport"
         />
       </Head>
-      <ApolloProvider client={client}>
-        <ThemeProvider theme={theme}>
+         <ThemeProvider theme={theme}>
           <CssBaseline />
           <Layout>
             <Component {...pageProps} />
           </Layout>
         </ThemeProvider>
-      </ApolloProvider>
-    </React.Fragment>
+     </React.Fragment>
   );
 }

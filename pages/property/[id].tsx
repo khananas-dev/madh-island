@@ -2,13 +2,25 @@ import { Box } from "@mui/system";
 import React, { useEffect, useState } from "react";
 import ImageGallery from "../../src/components/imageGallery/ImageGallery";
 import styled from "styled-components";
-import { Button, Chip, Grid, Stack, Typography } from "@mui/material";
+import {
+  Breadcrumbs,
+  Button,
+  Chip,
+  Grid,
+  Link,
+  Stack,
+  Typography,
+} from "@mui/material";
 import FaceIcon from "@mui/icons-material/Face";
 import { useRouter } from "next/router";
 import { isUserLoggedIn } from "../../src/utils/utils";
 import Login from "../../src/components/Login/Login";
-import { Modal } from '@mui/material'
+import { Modal } from "@mui/material";
 import Chips from "../../src/components/Chips/Chips";
+import { getStoreFilters } from "../../src/utils/localStorage";
+import moment from "moment";
+import { PropertyFilter } from "../../@types";
+import CheckoutCard from "../../src/components/CheckoutCard";
 
 const propertyDetailsById = {
   id: `1`,
@@ -23,9 +35,24 @@ const propertyDetailsById = {
 };
 function PropertyDetails() {
   const router = useRouter();
-  const [serviceType, setServiceType] = useState(router.query.service);
+  const [propertyFilter, setPropertyFilter] = useState({} as PropertyFilter);
   const [loginModel, setLoginModel] = React.useState(false);
+  const [signupModel, setSignupModel] = React.useState(false);
+  useEffect(() => {
+    const searchFilters = getStoreFilters();
 
+    const service = searchFilters.serviceType;
+    const checkInDate = moment(searchFilters.checkInDate).toDate();
+    const checkOutDate = moment(searchFilters.checkOutDate).toDate();
+
+    const filters: PropertyFilter = {
+      serviceType: service as string,
+      checkInDate: checkInDate,
+      checkOutDate: checkOutDate,
+    };
+    console.log(filters);
+    setPropertyFilter(filters);
+  }, []);
   const selectedProperty = {
     id: `1`,
     images: [],
@@ -52,84 +79,93 @@ function PropertyDetails() {
     ],
   };
 
-
-  const BookProperty = () =>{
-  
+  const BookProperty = () => {
     // check if user is already logged in
-    const userAuthenticationStatus = isUserLoggedIn()
-    if(!userAuthenticationStatus){
+    const userAuthenticationStatus = isUserLoggedIn();
+    if (!userAuthenticationStatus) {
       OpenLoginForm();
     }
     // if Yes, than open Dialog
-    // Else Show toasty  
-  }
-  const OpenLoginForm = () =>{
-    console.log("Here")
-    setLoginModel(true)
+    // Else Show toasty
+  };
+  const OpenLoginForm = () => {
+     setLoginModel(true);
+  };
+  const OpenSignupForm = () => {
+     setLoginModel(false);
+     setSignupModel(true);
+  };
+  const handleCheckoutCard =( ) =>{
+    // Check if user is already logged in
+    // if logged in than resever api hit;
+    // if not loged in show login model
+    const userAuthenticationStatus = isUserLoggedIn();
+    if (!userAuthenticationStatus) {
+      OpenLoginForm();
+    }
   }
   const handleClose = () => setLoginModel(false);
 
   return (
-
     <Box sx={{ height: `inherit` }}>
-    
       <LayoutWrapper>
-        <ImageGallery></ImageGallery>
+        <ImageGallery/>
+        
         <BodyWrapper>
-          <Typography
-            variant="caption"
-            component="p"
-            color="#1F1F1F"
-            textAlign="left"
-          >
-            {serviceType}
-          </Typography>
+          <Breadcrumbs aria-label="breadcrumb">
+            <Link
+              underline="hover"
+              color="inherit"
+              href={`/propertieslist?serviceType=${propertyFilter.serviceType}`}
+            >
+              {propertyFilter.serviceType === "VillasandBunglow" &&
+                `Villas & Bungalows`}
+              {propertyFilter.serviceType === "EventVenues" && `Event Venue`}
+              {propertyFilter.serviceType === "FilmLocation" && `Film Location`}
+            </Link>
+            <Typography color="text.primary">Bunglow name</Typography>
+          </Breadcrumbs>
+        
           <Typography
             variant="h1"
             component="p"
             color="#1F1F1F"
             textAlign="left"
-            sx={{ marginTop: `24px` }}
+            sx={{ marginTop: `16px` }}
           >
             {selectedProperty.propertyName}
           </Typography>
-          <Typography
-            variant="body1"
-            component="p"
-            color="#1F1F1F"
-            textAlign="left"
-            sx={{ marginTop: `8px` }}
-          >
-            {selectedProperty.address}
-          </Typography>
-          <Grid container spacing={2}>
-            <Grid item xs={6}>
+          <Grid container sx={{flexDirection:{xs:`column-reverse`,md:'row'}}} spacing={2}>
+            {/* /Left */}
+            <Grid item xs={12} md={8}>
               <Typography
-                variant="h5"
+                variant="body1"
                 component="p"
                 color="#1F1F1F"
                 textAlign="left"
-                sx={{ marginTop: `24px` }}
+                sx={{ marginTop: `8px` }}
               >
-                Service Type
+                {selectedProperty.address}
               </Typography>
-            </Grid>
-            <Grid item xs={6}>
               <Typography
-                variant="h5"
+                variant="body1"
                 component="p"
                 color="#1F1F1F"
-                textAlign="right"
-                sx={{
-                  marginTop: `24px`,
-                  fontSize: `16px`,
-                  fontWeight: `normal`,
-                }}
+                textAlign="left"
+                sx={{ marginTop: `8px` }}
               >
-                {selectedProperty.serviceType}
+                {selectedProperty.address}
               </Typography>
-            </Grid>
-            <Grid item xs={6}>
+              <Typography
+                variant="body2"
+                component="p"
+                color="#1F1F1F"
+                textAlign="left"
+                sx={{ marginTop: `16px` }}
+              >
+                4 Bedrooms | 2000 Sq ft. | Max Guests 9
+              </Typography>
+
               <Typography
                 variant="h5"
                 component="p"
@@ -137,27 +173,24 @@ function PropertyDetails() {
                 textAlign="left"
                 sx={{ marginTop: `8px` }}
               >
-                Area
+                Amenities
               </Typography>
-            </Grid>
-            <Grid item xs={6}>
-              <Typography
-                variant="h5"
-                component="p"
-                color="#1F1F1F"
-                textAlign="right"
-                sx={{ marginTop: `8x`, fontSize: `16px`, fontWeight: `normal` }}
+              <Stack
+                sx={{ marginTop: `8px` }}
+                direction="row"
+                spacing={1}
+                justifyContent="flex-start"
               >
-                {selectedProperty.area} Sq cm
-              </Typography>
-            </Grid>
-            <Grid item xs={12} sm={6}>
+                {selectedProperty.amminityList.map((amminity: any) => (
+                  <Chips key={amminity.id} name={amminity.name} />
+                ))}
+              </Stack>
               <Typography
                 variant="h5"
                 component="p"
                 color="#1F1F1F"
                 textAlign="left"
-                sx={{ marginTop: `8px` }}
+                sx={{ marginTop: `16px` }}
               >
                 Details
               </Typography>
@@ -170,36 +203,56 @@ function PropertyDetails() {
               >
                 {selectedProperty.details}
               </Typography>
-            </Grid>
-            <Grid item xs={12} sm={6}>
+
               <Typography
                 variant="h5"
                 component="p"
                 color="#1F1F1F"
-                textAlign="right"
-                sx={{ marginTop: `8px` }}
+                textAlign="left"
+                sx={{ marginTop: `16px` }}
               >
-                Amenities
+                House Rules
               </Typography>
-              <Stack
+              <Typography
+                variant="body1"
+                component="p"
+                color="#1F1F1F"
+                textAlign="left"
                 sx={{ marginTop: `8px` }}
-                direction="row"
-                spacing={1}
-                justifyContent="flex-end"
               >
-                {selectedProperty.amminityList.map((amminity: any) => (
-                  <Chips
-                    key={amminity.id}
-                    name={amminity.name}
-
-                  />
-                ))}
-              </Stack>
+                {selectedProperty.details}
+              </Typography>
+              <Typography
+                variant="h5"
+                component="p"
+                color="#1F1F1F"
+                textAlign="left"
+                sx={{ marginTop: `16px` }}
+              >
+                Policies
+              </Typography>
+              <Typography
+                variant="body1"
+                component="p"
+                color="#1F1F1F"
+                textAlign="left"
+                sx={{ marginTop: `8px` }}
+              >
+                {selectedProperty.details}
+              </Typography>
+            </Grid>
+            {/* Right */}
+            <Grid item xs={12}md={4}>
+              <CheckoutCard
+              handleClick={(ev:any)=>handleCheckoutCard()} 
+              price={10000} />
             </Grid>
           </Grid>
+
+          <Grid container spacing={2}></Grid>
         </BodyWrapper>
       </LayoutWrapper>
-  
+
       <FooterWrapper>
         <Grid container spacing={2}>
           <Grid item xs={6}>
@@ -236,7 +289,7 @@ function PropertyDetails() {
           </Grid>
         </Grid>
       </FooterWrapper>
-  
+
       <Modal
         open={loginModel}
         onClose={handleClose}
@@ -244,7 +297,7 @@ function PropertyDetails() {
         aria-describedby="modal-modal-description"
       >
         <LoginWrapper>
-        <Login/>
+          <Login />
         </LoginWrapper>
       </Modal>
     </Box>
@@ -285,15 +338,14 @@ const FooterWrapper = styled(Box)`
     padding: 12px 30px;
     height: 100px;
   }
-  `
+`;
 
- 
 const LoginWrapper = styled(Box)`
- max-width: 510px;
-margin: 90px auto 0px auto;
-/* padding: 30px 20px; */
-border-radius: 16px;
-box-shadow: 0px 1px 1px rgba(110, 110, 110, 0.14), 0px 2px 1px rgba(110, 110, 110, 0.12), 0px 1px 3px rgba(110, 110, 110, 0.2);
-background: white;
-
+  max-width: 510px;
+  margin: 90px auto 0px auto;
+  /* padding: 30px 20px; */
+  border-radius: 16px;
+  box-shadow: 0px 1px 1px rgba(110, 110, 110, 0.14),
+    0px 2px 1px rgba(110, 110, 110, 0.12), 0px 1px 3px rgba(110, 110, 110, 0.2);
+  background: white;
 `;

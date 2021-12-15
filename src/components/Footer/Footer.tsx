@@ -1,9 +1,18 @@
 import { Box, Grid, Typography } from "@mui/material";
 import React from "react";
 import styled from "styled-components";
+import { useAxios } from "use-axios-client";
 
-function Footer() {
-  return (
+import axios from 'axios';
+
+
+
+
+
+function Footer(props:any) {
+   
+
+    return (
     <BodyWrapper>
       <Grid container spacing={2}>
         <Grid item xs={12} md={4}>
@@ -115,6 +124,9 @@ First Floor, Raheja Exotica
     </BodyWrapper>
   );
 }
+ 
+
+
 
 export default Footer;
 const BodyWrapper = styled(Box)`
@@ -127,3 +139,5 @@ const BodyWrapper = styled(Box)`
     padding-right: 30px;
   }
 `;
+ 
+

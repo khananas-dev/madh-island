@@ -29,6 +29,7 @@ export const propertyFullData = [
       "This Villa is a smart villa with beachside view, comes with rich interior ",
     area: 1100,
     bedroom: 3,
+    addressLine1:'Madh Island , Borivali, Mumbai',
     servicePrice: [
       { _id: "1", service: "Villa & Bunglow", price: 10000 },
       { _id: "2", service: "Film Location", price: 10000 },

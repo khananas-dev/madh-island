@@ -1,48 +1,47 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
-import enIN from "date-fns/locale/en-IN";
-import { format, compareAsc } from "date-fns";
+import DateRangePicker, { DateRange } from "@mui/lab/DateRangePicker";
 
-import { DatePicker } from "@mui/lab";
 import {
   Box,
   FormControl,
   InputLabel,
   MenuItem,
   Select,
-  SelectChangeEvent,
   TextField,
 } from "@mui/material";
 import Button from "@mui/material/Button";
-import { InputWrapper, SearchBarWrapper } from "./SearchBarElements";
-import { width } from "@mui/system";
-import router, { useRouter } from "next/router";
-import { SearchBarProps } from "../props";
-import { DEFAULT_FILTER } from "../../constants";
+import { SearchBarWrapper } from "./SearchBarElements";
+import router from "next/router";
 import moment from "moment";
+import { SearchProps } from "../../../@types";
+import { getStoreFilters, setStoreFilters } from "../../utils/localStorage";
 
-function SearchBar(searchBarProps: SearchBarProps) {
-  const router = useRouter();
-  const today = new Date();
-  const tomorrow = new Date(today);
-  tomorrow.setDate(tomorrow.getDate() + 1);
-  const [checkInState, setCheckInState] = useState<Date>(  );
-  const [checkOutState, setCheckOutState] = useState<Date>( );
-  const [serviceType, setServiceType] = React.useState(
-    searchBarProps.serviceType || "FilmLocation"
+function SearchBar(searchBarProps: SearchProps) {
+   const [value, setValue] = React.useState<DateRange<Date>>([searchBarProps.from,searchBarProps.to]);
+    const [serviceType, setServiceType] = React.useState(
+     ''
   );
+useEffect(() => {
+  const searchFilters = getStoreFilters();
+  setServiceType(searchFilters?.serviceType)
+  setValue([moment(searchFilters.checkInDate).toDate(),moment(searchFilters.checkOutDate).toDate()])
+ }, [searchBarProps])
+ 
 
   const handleChange = (type: any) => {
+    const filter = {
+      serviceType: serviceType,
+      checkInDate: moment(value[0]).format("YYYY-MM-DD"),
+      checkOutDate: moment(value[1]).format("YYYY-MM-DD"),
+    }
+    setStoreFilters(filter)
     switch (type) {
       case "submit":
         router.push({
           pathname: `/propertieslist/`,
-          query: {
-            service: serviceType,
-            checkin: moment(checkInState).format("YYYY-MM-DD"),
-            checkout: moment(checkOutState).format("YYYY-MM-DD"),
-          },
+
         });
 
         break;
@@ -51,74 +50,52 @@ function SearchBar(searchBarProps: SearchBarProps) {
         break;
     }
   };
-
-  useEffect(() => {
-    setCheckInState(searchBarProps.checkInDate || DEFAULT_FILTER.checkInDate);
-    setCheckOutState(
-      searchBarProps.checkOutDate || DEFAULT_FILTER.checkOutDate
-    );
-    setServiceType(searchBarProps.serviceType || DEFAULT_FILTER.serviceType);
-  }, [router]);
-
+ 
   return (
     <SearchBarWrapper>
-      <LocalizationProvider dateAdapter={AdapterDateFns} locale={enIN}>
-        <InputWrapper>
-          <DatePicker
-            minDate={today}
-            inputFormat="dd/MMM/yyyy"
-            mask="__/__/____"
-            label="Check-in Date"
-            value={checkInState?.toString()}
-            orientation="portrait"
-            onChange={(newValue) => {
-              newValue && setCheckInState(newValue);
-            }}
-            renderInput={(params) => (
-              <TextField style={{ width: "100%" }} {...params} />
-            )}
-          />
-        </InputWrapper>
-        <InputWrapper>
-          <DatePicker
-            minDate={checkInState}
-            label="Check-out Date"
-            mask="__/__/____"
-            value={checkOutState?.toString()}
-            inputFormat="dd/MMM/yyyy"
-            orientation="portrait"
-            onChange={(newValue) => {
-              newValue && setCheckOutState(newValue);
-            }}
-            renderInput={(params) => (
-              <TextField style={{ width: "100%" }} {...params} />
-            )}
-          />
-        </InputWrapper>
-        <InputWrapper>
-          <FormControl fullWidth={true}>
-            <InputLabel id="demo-simple-select-label">Service</InputLabel>
-            <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              value={serviceType}
-              label="Service"
-              onChange={(event) => setServiceType(event.target.value as string)}
-            >
-              <MenuItem value={`FilmLocation`}>Film Location</MenuItem>
-              <MenuItem value={`EventVenues`}>Event Venues</MenuItem>
-              <MenuItem value={`VillasandBunglow`}>Villas and Bunglow</MenuItem>
-            </Select>
-          </FormControl>
-        </InputWrapper>
-        <Button
-            sx={{ width: `100%` }}
-            onClick={() => handleChange("submit")}
-            variant="contained"
+      <LocalizationProvider dateAdapter={AdapterDateFns}>
+        <DateRangePicker
+          startText="Check-in"
+          endText="Check-out"
+          value={value}
+          inputFormat="dd/MMM/yyyy"
+           onChange={(newValue) => {
+            setValue(newValue);
+          }}
+          renderInput={(startProps, endProps) => (
+            <Box sx={{flexDirection:{
+              md: "row"
+            }}}>
+              <TextField {...startProps} />
+              <TextField sx={{marginLeft:2}} {...endProps} />
+            </Box>
+          )}
+        />
+
+        <FormControl sx={{ width: 150, marginLeft: 2 }}>
+          <InputLabel id="demo-simple-select-label">Service</InputLabel>
+          <Select
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            value={serviceType}
+            label="Service"
+            onChange={(event) => setServiceType(event.target.value as string)}
           >
-            Search
-          </Button>
+            <MenuItem value={`FilmLocation`}>Film Location</MenuItem>
+            <MenuItem value={`EventVenues`}>Event Venues</MenuItem>
+            <MenuItem value={`VillasandBunglow`}>Villas and Bunglow</MenuItem>
+            <MenuItem value={`Recee`}>Recee</MenuItem>
+          </Select>
+        </FormControl>
+        <Button
+          sx={{ marginLeft: 2 }}
+          onClick={() => handleChange("submit")}
+          variant="contained"
+        >
+          Search
+        </Button>
       </LocalizationProvider>
+     
     </SearchBarWrapper>
   );
 }

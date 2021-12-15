@@ -8,8 +8,10 @@ import {
   SidebarMenu,
   SidebarWrapper,
 } from "./SidebarElements";
+import { FaTimes } from "react-icons/fa";
 
 const Sidebar = (props: SidebarProps): JSX.Element => {
+  console.log(props.isOpen ? "visible" : "hidden")
   return (
     <aside
       style={{
@@ -29,7 +31,8 @@ const Sidebar = (props: SidebarProps): JSX.Element => {
       onClick={props.toggleSidebar}
     >
       <Icon onClick={props.toggleSidebar}>
-        <CloseIcon></CloseIcon>
+        
+        <FaTimes/>
       </Icon>
       <SidebarWrapper>
         <SidebarMenu>

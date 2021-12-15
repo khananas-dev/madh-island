@@ -2,6 +2,7 @@ import { Typography, Box } from "@mui/material";
 import React from "react";
 import { DEFAULT_MAP_PROPS } from "../../constants";
 import GoogleMapReact from "google-map-react";
+import Marker from "../../utils/marker";
 function OurPropertyMap() {
   return (
     <>
@@ -9,7 +10,7 @@ function OurPropertyMap() {
         variant="h2"
         component="h2"
         color="primary"
-        textAlign="center"
+        textAlign="left"
         sx={{
           margin: "40px 0px 20px 0px",
         }}
@@ -18,11 +19,12 @@ function OurPropertyMap() {
       </Typography>
       <Box style={{ height: "600px", width: "100%" }}>
         <GoogleMapReact
-          bootstrapURLKeys={{ key: `${process.env.GOOGLE_MAP_KEY}` }}
+        yesIWantToUseGoogleMapApiInternals ={true}
+          bootstrapURLKeys={{ }}
           defaultCenter={DEFAULT_MAP_PROPS.center}
           defaultZoom={DEFAULT_MAP_PROPS.zoom}
         >
-          {/* <AnyReactComponent lat={59.955413} lng={30.337844} text="My Marker" />   */}
+          {/* <Marker lat={DEFAULT_MAP_PROPS.center} lng={DEFAULT_MAP_PROPS.center} text="My Marker" />   */}
         </GoogleMapReact>
       </Box>
     </>

@@ -2,6 +2,7 @@ import { Chip } from "@mui/material";
 import React from "react";
 import FaceIcon from "@mui/icons-material/Face";
 import { ChipFactory } from "../../../@types";
+import SvgIcon from '@mui/material/SvgIcon';
 
 
 const Chips = (chipProps: ChipFactory) => {

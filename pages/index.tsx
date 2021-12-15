@@ -5,24 +5,25 @@ import SearchBar from "../src/components/SearchBar/SearchBar";
 import styled from "styled-components";
 import HeroImage from "../public/demo-2.jpg";
 // Graphql
-import { useQuery } from "@apollo/react-hooks";
-import { GET_ALL_PROPERTIES } from "../queries/property";
-import { GET_ABOUT_US } from "../queries/content";
 import { useState } from "react";
 import Footer from "../src/components/Footer/Footer";
 import AboutUsSection from "../src/components/Sections/AboutUsSection";
 import TalkToUsSection from "../src/components/Sections/TalkToUsSection";
 import OurPropertyMap from "../src/components/Sections/OurPropertyMap";
 import OurServiceSection from "../src/components/Sections/OurServiceSection";
-import OurClients from "../src/components/Sections/OurClients";
 import TopLocations from "../src/components/Sections/TopLocations";
-import VMICarousel from "../src/components/carousel/carousel";
+import { DEFAULT_FILTER } from "../src/constants";
+import { GetServerSideProps } from "next";
+import axios from 'axios';
+
+// axios.get('http://3.111.11.219:3000/').then(response => {
+//   console.log(response);
+// });
 
 export default function Index({ props }: any) {
+  console.log(props)
   const [cached, setCached] = useState(true);
-  const getAllProperties = useQuery(GET_ALL_PROPERTIES);
-  const aboutUsData = useQuery(GET_ABOUT_US, { ssr: true });
-  return (
+   return (
     <AppWrapper>
       <Hero>
         <WhiteContainer
@@ -40,7 +41,11 @@ export default function Index({ props }: any) {
           >
             Looking for a Location in Madh Island?
           </Typography>
-          <SearchBar />
+          <SearchBar
+              from={DEFAULT_FILTER.checkInDate}
+              to={DEFAULT_FILTER?.checkOutDate}
+              serviceType={DEFAULT_FILTER?.serviceType}
+            />
         </WhiteContainer>
       </Hero>
 
@@ -56,6 +61,9 @@ export default function Index({ props }: any) {
     </AppWrapper>
   );
 }
+  
+ 
+
 const AppWrapper = styled(Box)`
   background: radial-gradient(
     circle,

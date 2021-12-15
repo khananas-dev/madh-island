@@ -6,14 +6,24 @@ import { SidebarProps } from "../props";
 import Image from "next/image";
 import logo from "../../../public/logo.png";
 import ProfileAvatar from "../ProfileAvatar/ProfileAvatar";
-
+import { Autocomplete } from "@mui/lab";
+import { IconButton, TextField } from "@mui/material";
+import { Search } from "@mui/icons-material";
+import { getStoreFilters, setStoreFilters } from "../../utils/localStorage";
+const top100Films = [
+  { label: "The Shawshank Redemption", year: 1994 },
+  { label: "The Godfather", year: 1972 },
+];
 function Navigation(sideBarProps: SidebarProps) {
-
+  const [showAutocomplete, setShowAutocomplete] = useState(false);
+  const setFilter = (serviceType: string) => {
+    let searchFilters = getStoreFilters();
+    searchFilters.serviceType = serviceType;
+    setStoreFilters(searchFilters);
+  };
   return (
     <>
-      <Nav
-      style={{height:80}}
-      >
+      <Nav style={{ height: 80 }}>
         <NavLink href="/">
           <Image
             src={logo}
@@ -24,24 +34,35 @@ function Navigation(sideBarProps: SidebarProps) {
         </NavLink>
         <Bars onClick={sideBarProps.toggleSidebar} />
         <NavMenu>
-          <NavLink href="/recee">Recee</NavLink>
           <NavLink
+            onClick={() => setFilter("Recee")}
             href={{
-              pathname: "/propertieslist/FilmLocation",
+              pathname: "/propertieslist/",
               query: {
-                service: `FilmLocation`,
+                serviceType: `Recee`,
+              },
+            }}
+          >
+            Recee
+          </NavLink>
+          <NavLink
+            onClick={() => setFilter("FilmLocation")}
+            href={{
+              pathname: "/propertieslist/",
+              query: {
+                serviceType: `FilmLocation`,
               },
             }}
           >
             Film Location
           </NavLink>
-          {/* <NavLink href="/shoot-permissions">Shoot Permissions</NavLink> */}
-
+ 
           <NavLink
+            onClick={() => setFilter("EventVenues")}
             href={{
-              pathname: "/propertieslist/EventVenues",
+              pathname: "/propertieslist/",
               query: {
-                service: `EventVenues`,
+                serviceType: `EventVenues`,
               },
             }}
           >
@@ -49,17 +70,35 @@ function Navigation(sideBarProps: SidebarProps) {
           </NavLink>
 
           <NavLink
+            onClick={() => setFilter("VillasandBunglow")}
             href={{
-              pathname: "/propertieslist/VillasandBunglow",
+              pathname: "/propertieslist/",
               query: {
-                service: `VillasandBunglow`,
+                serviceType: `VillasandBunglow`,
               },
             }}
           >
             Villas & Bungalows
           </NavLink>
-          {/* <NavLink href="#">Search</NavLink> */}
-          <NavLink href="#">Login / Register</NavLink>
+
+          {showAutocomplete && (
+            <Autocomplete
+              style={{}}
+              id="combo-box-demo"
+              options={top100Films}
+              sx={{ width: 300 }}
+              renderInput={(params) => (
+                <TextField {...params} label="Search Property" />
+              )}
+            />
+          )}
+          <IconButton
+            color="primary"
+            aria-label="Search Property"
+             onClick={() => setShowAutocomplete(!showAutocomplete)}
+          >
+            <Search  style={{width:24}}/>
+          </IconButton>
           {/* <NavLink href="/History">
             <ProfileAvatar />
           </NavLink> */}

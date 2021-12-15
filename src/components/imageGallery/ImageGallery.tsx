@@ -1,59 +1,93 @@
-import React ,{ useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import Masonry from "@mui/lab/Masonry";
 import MasonryItem from "@mui/lab/MasonryItem";
 import Image from "next/image";
 import { Button, ImageList } from "@mui/material";
 import ImageListItem from "@mui/material/ImageListItem";
-import 'react-bnb-gallery/dist/style.css'
-import ReactBnbGallery from 'react-bnb-gallery';
+import "react-bnb-gallery/dist/style.css";
+import ReactBnbGallery from "react-bnb-gallery";
+import VMICarousel from "../carousel/carousel";
 
 function ImageGallery() {
   const [isOpen, setIsOpen] = useState(false);
   const [activePhoto, setActivePhoto] = useState(0);
-  const openLightbox = (index: number) =>{
+  const openLightbox = (index: number) => {
     setActivePhoto(index);
     setIsOpen(true);
-  }
+  };
   return (
     <Box sx={{ margin: `0px 64px`, height: `auto`, position: `relative` }}>
-      <ImageList variant="masonry" cols={6} gap={10} sx={{minHeight: `fit-content`,maxHeight: `400px`,overflow: `hidden`}}>
-   
+      <Box
+        sx={{
+          height: "250px",
+          display: {
+            md: "none",
 
-        {itemData.map((item, index) => (
-          <ImageListItem key={item.img}>
-            <img onClick={()=>{openLightbox(index)}}
-              src={`${item.img}`}
-              //   srcSet={`${item.img}?w=348&fit=crop&auto=format&dpr=2 2x`}
-              alt={item.title}
-              loading="lazy"
-            />
-          </ImageListItem>
-        ))}
-        <Button
-          variant="contained"
-          color="info"
+            xs: "block",
+          },
+        }}
+      >
+        <VMICarousel />
+      </Box>
+      <Box
+        sx={{
+          display: {
+            xs: "none",
+            md: "block",
+          },
+        }}
+      >
+        <ImageList
+          variant="masonry"
+          cols={6}
+          gap={10}
           sx={{
-            position: `absolute`,
-            background: '#EAFCF7',
-            bottom: 0,
-            color:"#191919",
-            ":hover":{
-              background: "#b9e2d6" 
-            },
-            width: `150px`,
-            right: `0px`,
+            minHeight: `fit-content`,
+            maxHeight: `400px`,
+            overflow: `hidden`,
           }}
-          onClick={() => setIsOpen(true)} >
-          View More
-        </Button>
-      </ImageList>
+        >
+          {itemData.map((item, index) => (
+            <ImageListItem key={item.img}>
+              <img
+                onClick={() => {
+                  openLightbox(index);
+                }}
+                src={`${item.img}`}
+                //   srcSet={`${item.img}?w=348&fit=crop&auto=format&dpr=2 2x`}
+                alt={item.title}
+                loading="lazy"
+              />
+            </ImageListItem>
+          ))}
+          <Button
+            variant="contained"
+            color="info"
+            sx={{
+              position: `absolute`,
+              background: "#EAFCF7",
+              bottom: 0,
+              color: "#191919",
+              ":hover": {
+                background: "#b9e2d6",
+              },
+              width: `150px`,
+              right: `0px`,
+            }}
+            onClick={() => setIsOpen(true)}
+          >
+            View More
+          </Button>
+        </ImageList>
+      </Box>
+
       <ReactBnbGallery
-          activePhotoIndex ={activePhoto}
-          show={isOpen}
-          photos={photosArray}
-          onClose={() => setIsOpen(false)}
-        />
+        activePhotoIndex={activePhoto}
+        show={isOpen}
+        photos={photosArray}
+        onClose={() => setIsOpen(false)}
+      />
     </Box>
   );
 }
@@ -66,7 +100,7 @@ const photosArray = [
   "https://images.unsplash.com/photo-1563298723-dcfebaa392e3",
   "https://images.unsplash.com/photo-1588436706487-9d55d73a39e3",
   "https://images.unsplash.com/photo-1574180045827-681f8a1a9622",
-]
+];
 const itemData = [
   {
     img: "https://images.unsplash.com/photo-1549388604-817d15aa0110",

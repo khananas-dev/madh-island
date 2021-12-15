@@ -1,5 +1,7 @@
 const withTM = require('next-transpile-modules')(['@mui/material', '@mui/system']); // pass the modules you would like to see transpiled
 module.exports = withTM({
+  distDir: 'build',
+
   images: {
     domains: ['a0.muscache.com','images.unsplash.com'],
   },
