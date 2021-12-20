@@ -13,18 +13,66 @@ import moment from "moment";
 import { DEFAULT_FILTER } from "../../src/constants";
 import { TOP_LOCATIONS } from "../../_data/topLocation";
 import { getStoreFilters } from "../../src/utils/localStorage";
+import { PropertyService } from "../../src/services/property/propertyService";
 
 const fetchPropertiesByFilter = (filter: PropertyFilter) => {
   console.log(filter, "Filters");
 };
 function index() {
-  const router = useRouter();
+  // States
   const [propertyFilters, setPropertyFilters] = useState({} as PropertyFilter);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
   const [topLocations, setTopLocations] = useState(TOP_LOCATIONS);
+  const [propertyList, setPropertyList] = useState<any>();
+  const [latestLocation, setLatesLocation] = useState<any>();
+
+  // Variables
+  const open = Boolean(anchorEl);
+  const router = useRouter();
+
+  const _propertyService = new PropertyService();
+
+
+  // Functions
+
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+  const handlePropertyDetails = (propertyid: any) => {
+    router.push({
+      pathname: `/property/${propertyid}`,
+    });
+  };
+  const _getAllPropertyList = () => {
+    const propertyListData = _propertyService.getPropertyDetail();
+
+    propertyListData.then((res) => {
+      if (res.status == 200) {
+        // console.log(res.data.data);
+        // #1. Saving data to the state of properList
+        setPropertyList(res.data.data);
+      }
+    })
+  }
+
+  const _getLatestLocation = ()=> {
+    const latestLocationData = _propertyService.getLastestLocation();
+    latestLocationData.then((res:any)=>{
+      if(!res?.data?.error){
+        console.log(res?.data?.data);
+        setLatesLocation(res?.data?.data);
+      }
+    })
+  }
+
+
 
   // const [searchBarObj, setSearchBarObj] = useState<SearchBarProps>();
+
+  // Effects
 
   // Trigger on Route Change
   useEffect(() => {
@@ -41,19 +89,13 @@ function index() {
     setPropertyFilters(filters);
     fetchPropertiesByFilter(propertyFilters);
   }, [router.query]);
-  useEffect(() => {}, []);
 
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-  const handlePropertyDetails = (propertyid: any) => {
-    router.push({
-      pathname: `/property/${propertyid}`,
-    });
-  };
+  useEffect(() => {
+    _getAllPropertyList();
+    _getLatestLocation();
+  }, []);
+
+
   return (
     <Box>
       <Grid
@@ -125,14 +167,14 @@ function index() {
           sx={{ marginTop: `32px` }}
           justifyContent="space-between"
         >
-          {topLocations &&
-            topLocations.map((property: any) => (
+          {latestLocation &&
+            latestLocation.map((property: any) => (
               <Grid item xs={12} md={4} key={property._id}>
                 <PropertyCard
                   isPriceDivider
                   id={property._id}
                   key={property._id}
-                  img={property.images[0]}
+                  img={property.images[0]?.imageUrl}
                   area={property.area}
                   amminityList={property.amenities}
                   addressLine1={property.addressLine1}

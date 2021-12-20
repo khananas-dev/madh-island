@@ -10,17 +10,44 @@ import { Autocomplete } from "@mui/lab";
 import { IconButton, TextField } from "@mui/material";
 import { Search } from "@mui/icons-material";
 import { getStoreFilters, setStoreFilters } from "../../utils/localStorage";
+import { ServiceCategory } from "../../services/serviceCategory/serviceCategory";
 const top100Films = [
   { label: "The Shawshank Redemption", year: 1994 },
   { label: "The Godfather", year: 1972 },
 ];
 function Navigation(sideBarProps: SidebarProps) {
+  // States
   const [showAutocomplete, setShowAutocomplete] = useState(false);
+  const [serviceList, setServiceList] = useState<any>();
+
+  // Variable
+  const serviceCategory = new ServiceCategory();
+
+  // Funciton
   const setFilter = (serviceType: string) => {
     let searchFilters = getStoreFilters();
     searchFilters.serviceType = serviceType;
     setStoreFilters(searchFilters);
   };
+
+  const _getAllServiceList = () => {
+    const serviceListData = serviceCategory.getServiceCategoryList();
+    serviceListData.then((res: any) => {
+      if (res.status == 200) {
+        console.log(res.data.data);
+        // #1. Adding data in state in the for catergoryList
+        setServiceList(res.data.data);
+      }
+
+    })
+  }
+
+  // Effects
+  useEffect(() => {
+    _getAllServiceList();
+  }, []);
+
+
   return (
     <>
       <Nav style={{ height: 80 }}>
@@ -34,7 +61,7 @@ function Navigation(sideBarProps: SidebarProps) {
         </NavLink>
         <Bars onClick={sideBarProps.toggleSidebar} />
         <NavMenu>
-          <NavLink
+          {/* <NavLink
             onClick={() => setFilter("Recee")}
             href={{
               pathname: "/propertieslist/",
@@ -67,19 +94,27 @@ function Navigation(sideBarProps: SidebarProps) {
             }}
           >
             Event Venues
-          </NavLink>
+          </NavLink> */}
 
-          <NavLink
-            onClick={() => setFilter("VillasandBunglow")}
-            href={{
-              pathname: "/propertieslist/",
-              query: {
-                serviceType: `VillasandBunglow`,
-              },
-            }}
-          >
-            Villas & Bungalows
-          </NavLink>
+
+          {
+            serviceList &&
+            serviceList.map((service:any, index:number) => (
+              <NavLink
+                key={index}
+                onClick={() => setFilter(service.route)}
+                href={{
+                  pathname: "/propertieslist/",
+                  query: {
+                    serviceType: service.route,
+                  },
+                }}
+              >
+                {service.title}
+              </NavLink>
+            ))
+          }
+
 
           {showAutocomplete && (
             <Autocomplete
@@ -95,9 +130,9 @@ function Navigation(sideBarProps: SidebarProps) {
           <IconButton
             color="primary"
             aria-label="Search Property"
-             onClick={() => setShowAutocomplete(!showAutocomplete)}
+            onClick={() => setShowAutocomplete(!showAutocomplete)}
           >
-            <Search  style={{width:24}}/>
+            <Search style={{ width: 24 }} />
           </IconButton>
           {/* <NavLink href="/History">
             <ProfileAvatar />
