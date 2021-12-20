@@ -19,8 +19,8 @@ function OurPropertyMap() {
       </Typography>
       <Box style={{ height: "600px", width: "100%" }}>
         <GoogleMapReact
-        yesIWantToUseGoogleMapApiInternals ={true}
-          bootstrapURLKeys={{ }}
+          yesIWantToUseGoogleMapApiInternals={true}
+          bootstrapURLKeys={{ key: `AIzaSyDLSXets8Lb-32VYPDYj-vEtKhDXBIBiy0` }}
           defaultCenter={DEFAULT_MAP_PROPS.center}
           defaultZoom={DEFAULT_MAP_PROPS.zoom}
         >
