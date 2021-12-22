@@ -108,7 +108,7 @@ function index() {
         alignItems="center"
       >
         <Grid item xs={12} sm={12} md={12}>
-          <SearchWrapper sx={{ margin: `32px auto` }}>
+          <SearchWrapper sx={{ margin: `32px auto`,width:'fit-content !important' }}>
             {propertyFilters && (
               <SearchBar
                 from={propertyFilters.checkInDate}
@@ -167,8 +167,8 @@ function index() {
           sx={{ marginTop: `32px` }}
           justifyContent="space-between"
         >
-          {latestLocation &&
-            latestLocation.map((property: any) => (
+          {propertyList &&
+            propertyList.map((property: any) => (
               <Grid item xs={12} md={4} key={property._id}>
                 <PropertyCard
                   isPriceDivider

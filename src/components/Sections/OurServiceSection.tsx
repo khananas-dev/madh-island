@@ -2,12 +2,12 @@ import { Typography, Grid, Box } from "@mui/material";
 import React from "react";
 import theme from "../../theme";
 import Image from "next/image";
-function OurServiceSection() {
+function OurServiceSection({ serviceList }: any) {
   return (
     <Box
 
       sx={{
-        borderRadius:8,
+        borderRadius: 8,
         [theme.breakpoints.down("md")]: {
           marginTop: `40px`,
         },
@@ -27,26 +27,31 @@ function OurServiceSection() {
       >
         Services
       </Typography>
-      
-      <Grid container spacing={2}>
 
-        <Grid item xs={12} md={3}>
-          <Image
-            src="https://images.unsplash.com/photo-1516156008625-3a9d6067fab5?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80"
-            width={150}
-            height={100}
-            layout="responsive"
-          />
-          <Typography
-            variant="h5"
-            component="h5"
-            color="primary"
-            textAlign="center"
-          >
-            Recee
-          </Typography>
-        </Grid>
-        <Grid item xs={12} md={3}>
+      <Grid container spacing={2}>
+        {
+          serviceList &&
+          serviceList.map((service: any, index: number) => (
+            <Grid key={`service-${index}`} item xs={12} md={3}>
+              <Image
+                src="https://images.unsplash.com/photo-1516156008625-3a9d6067fab5?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80"
+                width={150}
+                height={100}
+                layout="responsive"
+              />
+              <Typography
+                variant="h5"
+                component="h5"
+                color="primary"
+                textAlign="center"
+              >
+                {service.title}
+              </Typography>
+            </Grid>
+          ))
+        }
+
+        {/* <Grid item xs={12} md={3}>
           <Image
             src="https://images.unsplash.com/photo-1615574687763-200d8561284e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80"
             width={150}
@@ -78,7 +83,6 @@ function OurServiceSection() {
             Event Venues
           </Typography>
         </Grid>
-
         <Grid item xs={12} md={3}>
         <Image
             src="https://images.unsplash.com/photo-1623298317883-6b70254edf31?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80"
@@ -94,7 +98,7 @@ function OurServiceSection() {
           >
             Villa and Bunglows
           </Typography>
-        </Grid>
+        </Grid> */}
       </Grid>
     </Box>
   );

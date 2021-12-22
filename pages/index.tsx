@@ -5,7 +5,7 @@ import SearchBar from "../src/components/SearchBar/SearchBar";
 import styled from "styled-components";
 import HeroImage from "../public/demo-2.jpg";
 // Graphql
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Footer from "../src/components/Footer/Footer";
 import AboutUsSection from "../src/components/Sections/AboutUsSection";
 import TalkToUsSection from "../src/components/Sections/TalkToUsSection";
@@ -15,15 +15,76 @@ import TopLocations from "../src/components/Sections/TopLocations";
 import { DEFAULT_FILTER } from "../src/constants";
 import { GetServerSideProps } from "next";
 import axios from 'axios';
+import { PropertyService } from "../src/services/property/propertyService";
+import { ServiceCategory } from "../src/services/serviceCategory/serviceCategory";
+import { OrgInfoService } from "../src/services/orgInfo/orgInfoService";
+
 
 // axios.get('http://3.111.11.219:3000/').then(response => {
 //   console.log(response);
 // });
 
 export default function Index({ props }: any) {
+
+  // States
   console.log(props)
   const [cached, setCached] = useState(true);
-   return (
+  const [latestLocation, setLatesLocation] = useState<any>();
+  const [serviceList, setServiceList] = useState<any>();
+  const [aboutUs, setAboutUs] = useState<any>();
+
+  // Variables
+  const _propertyService = new PropertyService();
+  const serviceCategory = new ServiceCategory();
+  const _orgInfoService = new OrgInfoService();
+
+  // Functions
+  const _getLatestLocation = () => {
+    const latestLocationData = _propertyService.getLastestLocation();
+    latestLocationData.then((res: any) => {
+      if (!res?.data?.error) {
+        console.log(res?.data?.data);
+        setLatesLocation(res?.data?.data);
+      }
+    })
+  }
+
+  const _getAllServiceList = () => {
+    const serviceListData = serviceCategory.getServiceCategoryList();
+    serviceListData.then((res: any) => {
+      if (res.status == 200) {
+        console.log(res.data.data);
+        // #1. Adding data in state in the for catergoryList
+        setServiceList(res.data.data);
+        
+      }
+
+    })
+  }
+
+  const _getOrgInfo = () =>{
+    const orgInfoData = _orgInfoService.getOrgInfo();
+    orgInfoData.then((res:any) =>{
+      if(!res?.data?.error){
+        console.log(res?.data?.data);
+        setAboutUs(res?.data?.data);
+
+      }
+    })
+  }
+
+
+
+
+  // Effects
+
+  useEffect(() => {
+    _getLatestLocation();
+    _getAllServiceList();
+    _getOrgInfo();
+  }, []);
+
+  return (
     <AppWrapper>
       <Hero>
         <WhiteContainer
@@ -42,17 +103,17 @@ export default function Index({ props }: any) {
             Looking for a Location in Madh Island?
           </Typography>
           <SearchBar
-              from={DEFAULT_FILTER.checkInDate}
-              to={DEFAULT_FILTER?.checkOutDate}
-              serviceType={DEFAULT_FILTER?.serviceType}
-            />
+            from={DEFAULT_FILTER.checkInDate}
+            to={DEFAULT_FILTER?.checkOutDate}
+            serviceType={DEFAULT_FILTER?.serviceType}
+          />
         </WhiteContainer>
       </Hero>
 
       <BodyWrapper>
-        <OurServiceSection />
-        <TopLocations />
-        <AboutUsSection />
+        <OurServiceSection serviceList={serviceList} />
+        <TopLocations latestLocation={latestLocation} />
+        <AboutUsSection aboutUs={aboutUs} />
         {/* <OurClients /> */}
       </BodyWrapper>
       <OurPropertyMap />
@@ -61,8 +122,8 @@ export default function Index({ props }: any) {
     </AppWrapper>
   );
 }
-  
- 
+
+
 
 const AppWrapper = styled(Box)`
   background: radial-gradient(

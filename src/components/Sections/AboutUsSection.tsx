@@ -5,7 +5,7 @@ import { GET_ABOUT_US } from "../../../queries/content";
 import Image from "next/image";
 import { AboutUs } from "../../../_data/VMI_content";
 
-function AboutUsSection() {
+function AboutUsSection({aboutUs}:any) {
   return (
     <Grid container spacing={2}>
       <Grid item xs={12} md={7}>
@@ -29,7 +29,7 @@ function AboutUsSection() {
             margin: "20px 0px 0px 0px",
           }}
         >
-          {AboutUs && AboutUs.aboutUs}
+          {aboutUs && aboutUs.aboutUs}
         </Typography>
       </Grid>
       <Grid

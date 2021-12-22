@@ -6,10 +6,15 @@ import router from "next/router";
 import { TOP_PROPERTIES } from "../../constants";
 import { propertyFullData } from "../../../_data/propertyListData";
 import { TOP_LOCATIONS } from "../../../_data/topLocation";
-function TopLocations() {
+function TopLocations({ latestLocation }: any) {
+  // States
   // const [topLocations, setTopLocations] = useState(TOP_PROPERTIES);
   const [topLocations, setTopLocations] = useState(TOP_LOCATIONS);
-  console.log(topLocations);
+
+  // Variable
+
+  // Functions
+  // console.log(topLocations);
   const handleTopLocations = (ev: any, property: any) => {
     console.log(property)
     router.push({
@@ -17,6 +22,10 @@ function TopLocations() {
 
     });
   };
+
+  // Effects
+
+
   return (
     <>
       <Typography
@@ -30,7 +39,7 @@ function TopLocations() {
       >
         Top Locations
       </Typography>
-        <Grid container spacing={4}>
+      <Grid container spacing={4}>
         {topLocations && topLocations.map((property: any) => (
           <Grid item xs={12} md={4} key={property._id}>
             <PropertyCard
@@ -45,11 +54,11 @@ function TopLocations() {
               propertyName={property.title}
               // buttonsList={property.buttonsList}
               // price={property.price}
-              action={(ev: any)=>handleTopLocations(ev,property)}
+              action={(ev: any) => handleTopLocations(ev, property)}
             />
           </Grid>
         ))}
-      </Grid>  
+      </Grid>
     </>
   );
 }

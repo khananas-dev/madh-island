@@ -3,7 +3,7 @@ module.exports = withTM({
   distDir: 'build',
 
   images: {
-    domains: ['a0.muscache.com','images.unsplash.com','vmi-assets.s3.amazonaws.com'],
+    domains: ['a0.muscache.com','images.unsplash.com','vmi-assets.s3.amazonaws.com','vmi-assets.s3.us-east-2.amazonaws.com'],
   },
 
   reactStrictMode: true,
