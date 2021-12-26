@@ -7,7 +7,7 @@ import Image from "next/image";
 import logo from "../../../public/logo.png";
 import ProfileAvatar from "../ProfileAvatar/ProfileAvatar";
 import { Autocomplete } from "@mui/lab";
-import { IconButton, TextField } from "@mui/material";
+import { IconButton, TextField, Box } from "@mui/material";
 import { Search } from "@mui/icons-material";
 import { getStoreFilters, setStoreFilters } from "../../utils/localStorage";
 import { ServiceCategory } from "../../services/serviceCategory/serviceCategory";
@@ -61,42 +61,6 @@ function Navigation(sideBarProps: SidebarProps) {
         </NavLink>
         <Bars onClick={sideBarProps.toggleSidebar} />
         <NavMenu>
-          {/* <NavLink
-            onClick={() => setFilter("Recee")}
-            href={{
-              pathname: "/propertieslist/",
-              query: {
-                serviceType: `Recee`,
-              },
-            }}
-          >
-            Recee
-          </NavLink>
-          <NavLink
-            onClick={() => setFilter("FilmLocation")}
-            href={{
-              pathname: "/propertieslist/",
-              query: {
-                serviceType: `FilmLocation`,
-              },
-            }}
-          >
-            Film Location
-          </NavLink>
- 
-          <NavLink
-            onClick={() => setFilter("EventVenues")}
-            href={{
-              pathname: "/propertieslist/",
-              query: {
-                serviceType: `EventVenues`,
-              },
-            }}
-          >
-            Event Venues
-          </NavLink> */}
-
-
           {
             serviceList &&
             serviceList.map((service:any, index:number) => (
@@ -114,9 +78,13 @@ function Navigation(sideBarProps: SidebarProps) {
               </NavLink>
             ))
           }
-
-
-          {showAutocomplete && (
+          
+          {/* <NavLink href="/History">
+            <ProfileAvatar />
+          </NavLink> */}
+        </NavMenu>
+        <Box>
+        {showAutocomplete && (
             <Autocomplete
               style={{}}
               id="combo-box-demo"
@@ -134,10 +102,7 @@ function Navigation(sideBarProps: SidebarProps) {
           >
             <Search style={{ width: 24 }} />
           </IconButton>
-          {/* <NavLink href="/History">
-            <ProfileAvatar />
-          </NavLink> */}
-        </NavMenu>
+          </Box>
         <NavBtn></NavBtn>
       </Nav>
     </>

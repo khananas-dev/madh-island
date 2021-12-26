@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import Box from '@mui/material/Box'
 import DatePicker from "@mui/lab/DatePicker";
+import { FormControl, TextField } from "@mui/material";
 export const SearchBarWrapper = styled(Box)`
   background: #fff;
   display: flex;
@@ -23,4 +24,18 @@ export const InputWrapper = styled.div`
   }
 
 `;
+
+export const SearchTextField = styled(TextField)`
+@media (max-width: 576px) {
+    width: 100%;
+    margin: 0px 0px 15px 0px !important;
+}
+`
+
+export const SearchFormControl = styled(FormControl)`
+@media (max-width: 576px) {
+  width: 100%;
+  margin: 0px 0px 15px 0px !important;
+}
+`
  

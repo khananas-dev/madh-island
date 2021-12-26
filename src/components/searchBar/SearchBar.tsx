@@ -12,11 +12,11 @@ import {
   TextField,
 } from "@mui/material";
 import Button from "@mui/material/Button";
-import { SearchBarWrapper } from "./SearchBarElements";
 import router from "next/router";
 import moment from "moment";
 import { SearchProps } from "../../../@types";
 import { getStoreFilters, setStoreFilters } from "../../utils/localStorage";
+import { SearchBarWrapper,SearchFormControl,SearchTextField } from "./SearchBarElements";
 
 function SearchBar(searchBarProps: SearchProps) {
    const [value, setValue] = React.useState<DateRange<Date>>([searchBarProps.from,searchBarProps.to]);
@@ -50,6 +50,7 @@ useEffect(() => {
         break;
     }
   };
+
  
   return (
     <SearchBarWrapper>
@@ -66,13 +67,13 @@ useEffect(() => {
             <Box sx={{flexDirection:{
               md: "row"
             }}}>
-              <TextField {...startProps} />
-              <TextField sx={{marginLeft:2}} {...endProps} />
+              <SearchTextField {...startProps} />
+              <SearchTextField sx={{marginLeft:2}} {...endProps} />
             </Box>
           )}
         />
 
-        <FormControl sx={{ width: 150, marginLeft: 2 }}>
+        <SearchFormControl sx={{ width: 150, marginLeft: 2 }}>
           <InputLabel id="demo-simple-select-label">Service</InputLabel>
           <Select
             labelId="demo-simple-select-label"
@@ -86,7 +87,7 @@ useEffect(() => {
             <MenuItem value={`VillasandBunglow`}>Villas and Bunglow</MenuItem>
             <MenuItem value={`Recee`}>Recee</MenuItem>
           </Select>
-        </FormControl>
+        </SearchFormControl>
         <Button
           sx={{ marginLeft: 2 }}
           onClick={() => handleChange("submit")}
