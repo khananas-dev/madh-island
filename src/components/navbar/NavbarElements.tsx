@@ -2,13 +2,13 @@
 import styled from 'styled-components';
 import { FaBars } from 'react-icons/fa';
 import Link from './Navlink'
-import { Box } from '@mui/material';
+import { Box, Grid } from '@mui/material';
 export const Nav = styled.nav`
   background: #fff;
   height: 100px;
   display: flex;
   justify-content: space-between;
-  padding: 0.5rem calc((100vw - 1440px) / 2);
+  padding:0.5rem  60px;
   z-index: 10;
   box-shadow: 0px 6px 16px rgba(110, 110, 110, 0.16);
  
@@ -57,4 +57,39 @@ export const NavBtn = styled.nav`
 export const SearchBoxContainer = styled(Box)`
 display:flex;
 align-items:center;
+max-width:100%;
+`
+
+export const StartGrid = styled(Grid)`
+display:flex;
+justify-content:start;
+ a{
+   padding:0px 1rem 0px 0px
+ }
+`
+
+export const CenterGrid = styled(Grid)`
+display:flex;
+justify-content:center;
+@media (max-width:1100px ) {
+  a{
+    font-size:14px;
+  }
+}  
+@media (max-width:992px){
+  justify-content:end;
+}
+
+`
+
+export const EndGrid = styled(Grid)`
+display:flex;
+justify-content:end;
+@media (max-width:992px){
+  display:none;
+}
+`
+
+export const NavbarGridContainer = styled(Grid)`
+
 `
