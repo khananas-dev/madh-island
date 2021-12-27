@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Nav, NavMenu, NavBtn, Bars } from "./NavbarElements";
+import { Nav, NavMenu, NavBtn, Bars, SearchBoxContainer } from "./NavbarElements";
 import Link from "./Navlink";
 import NavLink from "./Navlink";
 import { SidebarProps } from "../props";
@@ -83,7 +83,7 @@ function Navigation(sideBarProps: SidebarProps) {
             <ProfileAvatar />
           </NavLink> */}
         </NavMenu>
-        <Box>
+        <SearchBoxContainer>
         {showAutocomplete && (
             <Autocomplete
               style={{}}
@@ -102,8 +102,8 @@ function Navigation(sideBarProps: SidebarProps) {
           >
             <Search style={{ width: 24 }} />
           </IconButton>
-          </Box>
-        <NavBtn></NavBtn>
+        </SearchBoxContainer>
+        {/* <NavBtn></NavBtn> */}
       </Nav>
     </>
   );

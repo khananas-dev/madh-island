@@ -2,6 +2,7 @@
 import styled from 'styled-components';
 import { FaBars } from 'react-icons/fa';
 import Link from './Navlink'
+import { Box } from '@mui/material';
 export const Nav = styled.nav`
   background: #fff;
   height: 100px;
@@ -19,10 +20,9 @@ export const Nav = styled.nav`
 `;
 export const Bars = styled(FaBars)`
     color: #1F1F1F;
-    visibility:hidden;
+    display:none;
     @media screen and (max-width: 768px) {
       display: block;
-      visibility:visible;
       color: #1F1F1F;
       top: 0;
       right: 0;
@@ -54,3 +54,7 @@ export const NavBtn = styled.nav`
   }
 `;
 
+export const SearchBoxContainer = styled(Box)`
+display:flex;
+align-items:center;
+`
