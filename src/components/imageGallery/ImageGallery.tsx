@@ -9,7 +9,7 @@ import "react-bnb-gallery/dist/style.css";
 import ReactBnbGallery from "react-bnb-gallery";
 import VMICarousel from "../carousel/carousel";
 
-function ImageGallery() {
+function ImageGallery({imageList}:any) {
   const [isOpen, setIsOpen] = useState(false);
   const [activePhoto, setActivePhoto] = useState(0);
   const openLightbox = (index: number) => {
@@ -48,13 +48,16 @@ function ImageGallery() {
             overflow: `hidden`,
           }}
         >
-          {itemData.map((item, index) => (
+         
+          {
+            imageList &&
+          imageList?.map((item:any, index:any) => (
             <ImageListItem key={item.img}>
               <img
                 onClick={() => {
                   openLightbox(index);
                 }}
-                src={`${item.img}`}
+                src={`${item.imageUrl}`}
                 //   srcSet={`${item.img}?w=348&fit=crop&auto=format&dpr=2 2x`}
                 alt={item.title}
                 loading="lazy"
@@ -81,11 +84,20 @@ function ImageGallery() {
           </Button>
         </ImageList>
       </Box>
+      {/* <pre>
+          {JSON.stringify(imageList)}
+          </pre> */}
 
       <ReactBnbGallery
         activePhotoIndex={activePhoto}
         show={isOpen}
-        photos={photosArray}
+        photos={
+          imageList &&
+          imageList?.map((item:any,index:any)=>(
+            item?.imageUrl
+          )
+          )
+        }
         onClose={() => setIsOpen(false)}
       />
     </Box>

@@ -11,6 +11,10 @@ export class PropertyService{
     getLastestLocation(){
         return axios.get(`${BASE_URL}/property/latest`)
     }
+
+    getPropertyDetailById(payload:any){
+        return axios.get(`${BASE_URL}/property/${payload}`)
+    }
 }
 
   

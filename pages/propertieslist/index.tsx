@@ -204,12 +204,14 @@ const SearchWrapper = styled(Box)`
 
 const BodyWrapper = styled(Box)`
   padding-top: 80px;
+  padding-bottom: 40px;
   margin-left: 60px;
   margin-right: 60px;
   @media screen and (max-width: 768px) {
     padding-top: 40px;
     margin-left: 30px;
     margin-right: 30px;
+    padding-bottom: 20px;
   }
 `;
 const SortIcon = styled(CgSortAz)`

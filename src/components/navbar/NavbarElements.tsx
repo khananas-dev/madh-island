@@ -12,7 +12,7 @@ export const Nav = styled.nav`
   z-index: 10;
   box-shadow: 0px 6px 16px rgba(110, 110, 110, 0.16);
  
-  @media screen and (max-width: 768px) {
+  @media screen and (max-width: 900px) {
     padding: 10px 20px;
   }
   /* Third Nav */
@@ -21,7 +21,7 @@ export const Nav = styled.nav`
 export const Bars = styled(FaBars)`
     color: #1F1F1F;
     display:none;
-    @media screen and (max-width: 768px) {
+    @media screen and (max-width: 900px) {
       display: block;
       color: #1F1F1F;
       top: 0;
@@ -39,7 +39,7 @@ export const NavMenu = styled.div`
   align-items: center;
   margin-right: -24px;
 
-  @media screen and (max-width: 768px) {
+  @media screen and (max-width: 900px) {
     display: none;
   }
 `;
@@ -49,7 +49,7 @@ export const NavBtn = styled.nav`
   align-items: center;
   margin-right: 24px;
  
-  @media screen and (max-width: 768px) {
+  @media screen and (max-width: 900px) {
     display: none;
   }
 `;
@@ -76,7 +76,7 @@ justify-content:center;
     font-size:14px;
   }
 }  
-@media (max-width:992px){
+@media (max-width:900px){
   justify-content:end;
 }
 
@@ -85,7 +85,7 @@ justify-content:center;
 export const EndGrid = styled(Grid)`
 display:flex;
 justify-content:end;
-@media (max-width:992px){
+@media (max-width:900px){
   display:none;
 }
 `

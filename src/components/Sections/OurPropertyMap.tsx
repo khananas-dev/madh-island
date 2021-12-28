@@ -3,9 +3,11 @@ import React from "react";
 import { DEFAULT_MAP_PROPS } from "../../constants";
 import GoogleMapReact from "google-map-react";
 import Marker from "../../utils/marker";
+import styled from "styled-components";
 function OurPropertyMap() {
   return (
     <>
+    <BodyWrapper>
       <Typography
         variant="h2"
         component="h2"
@@ -17,6 +19,7 @@ function OurPropertyMap() {
       >
         Explore Our Locations
       </Typography>
+      </BodyWrapper>
       <Box style={{ height: "600px", width: "100%" }}>
         <GoogleMapReact
           yesIWantToUseGoogleMapApiInternals={true}
@@ -32,3 +35,12 @@ function OurPropertyMap() {
 }
 
 export default OurPropertyMap;
+
+const BodyWrapper = styled(Box)`
+  margin-left: 60px;
+  margin-right: 60px;
+  @media screen and (max-width: 768px) {
+    margin-left: 30px;
+    margin-right: 30px;
+  }
+`;

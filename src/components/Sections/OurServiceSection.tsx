@@ -22,7 +22,7 @@ function OurServiceSection({ serviceList }: any) {
         color="primary"
         textAlign="left"
         sx={{
-          margin: "0px 0px 48px 0px",
+          margin: "0px 0px 20px 0px",
         }}
       >
         Services
@@ -44,6 +44,9 @@ function OurServiceSection({ serviceList }: any) {
                 component="h5"
                 color="primary"
                 textAlign="center"
+                sx={{
+                  margin: "20px 0px 30px 0px",
+                }}
               >
                 {service.title}
               </Typography>
