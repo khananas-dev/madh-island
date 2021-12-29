@@ -1,4 +1,4 @@
-import { DateRange, LocalizationProvider, DateRangePicker } from "@mui/lab";
+import { DateRange, LocalizationProvider, DateRangePicker, TimePicker, DateTimePicker } from "@mui/lab";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import {
   CardHeader,
@@ -13,21 +13,69 @@ import {
   InputLabel,
   MenuItem,
   Select,
+  ClickAwayListener,
 } from "@mui/material";
 import Card from "@mui/material/Card";
 import { red } from "@mui/material/colors";
-import React from "react";
+import React, { useState } from "react";
 import COLORS from "../../constants/color";
 import MobileTimePicker from '@mui/lab/MobileTimePicker';
+import { numberOfNights } from "../../utils/utils";
 
 interface SummaryCard {
-  price: number;
+  // price?: number | string;
+  price?: any;
   handleClick: Function;
   serviceType: any;
+  detail?: any
 }
 function index(cardProps: SummaryCard) {
-  const [value, setValue] = React.useState<DateRange<Date>>([null, null]);
+  const [value, setValue] = React.useState<DateRange<Date>>([cardProps?.serviceType?.checkInDate, cardProps?.serviceType?.checkOutDate]);
   const [bookingTime, setBookingTime] = React.useState<Date | null>(null);
+  const [noOfGuest, setNoOfGuest] = useState<any | number>(1);
+  const [additionalCharge, setAdditionalCharge] = useState<boolean>(false);
+  const [selectedDate, handleDateChange] = useState(null);
+  const [isOpen, setIsOpen] = useState(false);
+  const [reeceBooking, setReeceBooking] = useState<any>(null);
+
+  // Variable
+  const { detail } = cardProps;
+
+
+  // Functions
+  const handleInputChange = (e: any) => {
+    const { value } = e.target;
+    setNoOfGuest(value);
+    if (Number(value) < 1) {
+      setNoOfGuest(1);
+    } else if (Number(value) <= detail?.additionalChargeMin) {
+      setAdditionalCharge(false);
+    } else if (Number(value) > detail?.additionalChargeMin && Number(value) <= detail?.additionalChargeMax) {
+      setAdditionalCharge(true);
+    } else if (Number(value) > detail?.additionalChargeMax) {
+      setNoOfGuest(detail?.additionalChargeMax);
+    }
+
+  };
+
+  /* 
+  Calc Logic here
+  */
+  const noOfNight = () => {
+    return numberOfNights(cardProps?.serviceType?.checkInDate, cardProps?.serviceType?.checkOutDate)
+  }
+  const subTotal = () => {
+    return cardProps?.price * noOfNight();
+  }
+
+  const gstCalculatedPrice = () => {
+    return subTotal() * (18 / 100);
+  }
+
+  const grandTotal = () => {
+    return subTotal() + gstCalculatedPrice();
+  }
+
 
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -39,44 +87,57 @@ function index(cardProps: SummaryCard) {
           flexDirection: "column",
         }}
       >
-        {cardProps.price && (
-          <div style={{ display: `flex`, alignItems: "baseline" }}>
-            <Typography
-              variant="h3"
-              component="p"
-              color="#1F1F1F"
-              textAlign="left"
-            >
-              ₹ {cardProps.price.toLocaleString("en-IN")}
-            </Typography>
-            <Typography
-              variant="h5"
-              component="p"
-              color={COLORS.shade2}
-              textAlign="left"
-              sx={{ marginLeft: `8px` }}
-            >
-              /night
-            </Typography>
-          </div>
-        )}
-        <Box sx={{ marginTop: 2 }}>
-          <DateRangePicker
-            startText="Check-in"
-            endText="Check-out"
-            value={value}
-            onChange={(newValue) => {
-              setValue(newValue);
-            }}
-            renderInput={(startProps, endProps) => (
-              <React.Fragment>
-                <TextField {...startProps} />
-                <Box sx={{ mx: 2 }}> to </Box>
-                <TextField {...endProps} />
-              </React.Fragment>
-            )}
-          />
-        </Box>
+        {
+          cardProps?.serviceType &&
+            cardProps?.serviceType?.serviceType == 'VillasandBunglow' || cardProps?.serviceType?.serviceType == 'EventVenues'
+            ?
+            cardProps?.price && (
+              <div style={{ display: `flex`, alignItems: "baseline" }}>
+                <Typography
+                  variant="h3"
+                  component="p"
+                  color="#1F1F1F"
+                  textAlign="left"
+                >
+                  ₹ {cardProps?.price?.toLocaleString("en-IN")}
+                </Typography>
+                <Typography
+                  variant="h5"
+                  component="p"
+                  color={COLORS.shade2}
+                  textAlign="left"
+                  sx={{ marginLeft: `8px` }}
+                >
+                  /night
+                </Typography>
+              </div>
+            )
+            : null
+        }
+        {
+          cardProps?.serviceType &&
+            cardProps?.serviceType?.serviceType != 'Reece'
+            ?
+            <Box sx={{ marginTop: 2 }}>
+              <DateRangePicker
+                startText="Check-in"
+                endText="Check-out"
+                value={value}
+                onChange={(newValue) => {
+                  setValue(newValue);
+                }}
+                renderInput={(startProps, endProps) => (
+                  <React.Fragment>
+                    <TextField {...startProps} />
+                    <Box sx={{ mx: 2 }}> to </Box>
+                    <TextField {...endProps} />
+                  </React.Fragment>
+                )}
+              />
+            </Box>
+            : null
+        }
+        {`No of Guest: ${noOfGuest} ${JSON.stringify(additionalCharge)}`}
         {
           cardProps?.serviceType &&
             cardProps?.serviceType?.serviceType == 'VillasandBunglow'
@@ -87,15 +148,41 @@ function index(cardProps: SummaryCard) {
               label="No. of Guests"
               variant="filled"
               placeholder="14"
+              onInput={handleInputChange}
+              value={noOfGuest}
+              type="number"
             />
             : null
         }
 
         {
           cardProps?.serviceType &&
-            cardProps?.serviceType?.serviceType == 'FilmLocation'
+            cardProps?.serviceType?.serviceType == 'FilmLocation' || cardProps?.serviceType?.serviceType == 'Reece'
             ?
             <Box>
+              {
+                cardProps?.serviceType &&
+                  cardProps?.serviceType?.serviceType == 'Reece'
+                  ?
+                  <LocalizationProvider dateAdapter={AdapterDateFns}>
+                    <DateTimePicker
+                      label="Date&Time picker"
+                      value={reeceBooking}
+                      onChange={(newValue: any) => {
+                        setReeceBooking(newValue);
+                      }}
+                      PopperProps={{
+                        placement: 'top'
+                      }}
+                      renderInput={(params) => <TextField {...params} onClick={(e) => setIsOpen(true)} sx={{ marginTop: 3 }} fullWidth />}
+                      open={isOpen}
+                      onClose={() => (setIsOpen(false))}
+                      onOpen={() => (setIsOpen(true))}
+                      views={['day', 'hours']}
+                    />
+                  </LocalizationProvider>
+                  : null
+              }
               <TextField sx={{ marginTop: 3 }} id="Production Name" label="Production Name" fullWidth variant="outlined" />
               <FormControl fullWidth sx={{ marginTop: 3 }} >
                 <InputLabel id="production-house-type-lable">Production House Type</InputLabel>
@@ -111,17 +198,31 @@ function index(cardProps: SummaryCard) {
                   <MenuItem value={30}>Thirty</MenuItem>
                 </Select>
               </FormControl>
-              <LocalizationProvider dateAdapter={AdapterDateFns}>
-                <MobileTimePicker
-                  label="Time"
-                  minutesStep={60}
-                  value={bookingTime}
-                  onChange={(newValue: any) => {
-                    setBookingTime(newValue);
-                  }}
-                  renderInput={(params) => <TextField sx={{ marginTop: 3 }} fullWidth {...params} />}
-                />
-              </LocalizationProvider>
+              {
+                cardProps?.serviceType &&
+                  cardProps?.serviceType?.serviceType == 'FilmLocation'
+                  ?
+                  <LocalizationProvider dateAdapter={AdapterDateFns}>
+                    <ClickAwayListener onClickAway={() => (setIsOpen(false))}>
+                      <TimePicker
+                        label="Time"
+                        views={['hours']}
+                        value={bookingTime}
+                        onChange={(newValue: any) => {
+                          setBookingTime(newValue);
+                        }}
+                        renderInput={(params) => <TextField
+                          onClick={(e) => setIsOpen(true)}
+                          sx={{ marginTop: 3 }} fullWidth {...params} />}
+                        open={isOpen}
+                        onClose={() => (setIsOpen(false))}
+                        onOpen={() => (setIsOpen(true))}
+                      />
+                    </ClickAwayListener>
+                  </LocalizationProvider>
+                  : null
+              }
+
             </Box>
             : null
         }
@@ -136,7 +237,7 @@ function index(cardProps: SummaryCard) {
               ?
               'Book'
               :
-              cardProps?.serviceType?.serviceType == 'FilmLocation' || cardProps?.serviceType?.serviceType == 'reece'
+              cardProps?.serviceType?.serviceType == 'FilmLocation' || cardProps?.serviceType?.serviceType == 'Reece'
                 ?
                 'Reserve'
                 : null
@@ -165,7 +266,7 @@ function index(cardProps: SummaryCard) {
                   textAlign="left"
                   sx={{ marginTop: `16px` }}
                 >
-                  ₹ {cardProps.price.toLocaleString("en-IN")} x 5 nights
+                  ₹ {cardProps?.price?.toLocaleString("en-IN")} x {noOfNight()} nights
                 </Typography>
                 <Typography
                   variant="body2"
@@ -174,7 +275,10 @@ function index(cardProps: SummaryCard) {
                   textAlign="right"
                   sx={{ marginTop: `16px` }}
                 >
-                  50,000
+                  {/* 50,000 */}
+                  {
+                    (subTotal()).toLocaleString("en-IN")
+                  }
                 </Typography>
               </Box>
               {
@@ -190,7 +294,10 @@ function index(cardProps: SummaryCard) {
                       textAlign="left"
                       sx={{ marginTop: `16px` }}
                     >
-                      Extra Guests 3 - 1,000/person
+                      {
+                        ` Extra Guests 3 - ${(detail?.additionalChargePerPerson || 0).toLocaleString("en-IN")}/person`
+                      }
+
                     </Typography>
                     <Typography
                       variant="body2"
@@ -221,7 +328,8 @@ function index(cardProps: SummaryCard) {
                   textAlign="right"
                   sx={{ marginTop: `16px` }}
                 >
-                  9,785
+                  {/* 9,785 */}
+                  {(gstCalculatedPrice()).toLocaleString("en-IN")}
                 </Typography>
               </Box>
               <Divider />
@@ -242,7 +350,8 @@ function index(cardProps: SummaryCard) {
                   textAlign="right"
                   sx={{ marginTop: `16px` }}
                 >
-                  60,785
+                  {/* 60,785 */}
+                  {(grandTotal()).toLocaleString("en-IN")}
                 </Typography>
               </Box>
             </Box>

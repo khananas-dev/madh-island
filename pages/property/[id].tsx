@@ -155,6 +155,8 @@ function PropertyDetails() {
                 `Villas & Bungalows`}
               {propertyFilter.serviceType === "EventVenues" && `Event Venue`}
               {propertyFilter.serviceType === "FilmLocation" && `Film Location`}
+              {propertyFilter.serviceType === "Reece" &&
+                `Reece`}
             </Link>
             <Typography color="text.primary">{propertyDetail?.title}</Typography>
           </Breadcrumbs>
@@ -329,7 +331,19 @@ function PropertyDetails() {
             <Grid item xs={12} md={4}>
               <CheckoutCard
                 handleClick={(ev: any) => handleCheckoutCard()}
-                price={10000}
+                detail={propertyDetail}
+                price={
+                  propertyFilter?.serviceType &&
+                  propertyFilter?.serviceType == 'VillasandBunglow'
+                  ?
+                  propertyDetail?.villaBunglowPrice
+                  :
+                  propertyFilter?.serviceType == 'EventVenues'
+                  ?
+                  propertyDetail?.eventVenuePrice
+                  : null
+                  
+                }
                 serviceType={propertyFilter}
                 />
             </Grid>
@@ -342,15 +356,27 @@ function PropertyDetails() {
       <FooterWrapper>
         <Grid container spacing={2}>
           <Grid item xs={6}>
-            <Typography
+            {
+              propertyFilter.serviceType &&
+              propertyFilter.serviceType != 'Reece'
+              ?
+              <Typography
               variant="h3"
               component="h3"
               color="#1F1F1F"
               textAlign="left"
               sx={{}}
             >
-              21-Oct-2021 - 30-Oct-2021
+              {
+                `
+                ${moment(propertyFilter?.checkInDate).format('DD MMM YYYY')} - ${moment(propertyFilter?.checkOutDate).format('DD MMM YYYY')}
+                `
+              }
+              {/* 21-Oct-2021 - 30-Oct-2021 */}
             </Typography>
+            :null
+            }
+           
             <Typography
               variant="h4"
               component="h4"
@@ -371,8 +397,27 @@ function PropertyDetails() {
               alignItems: "center",
             }}
           >
-            <Button>Download PDF</Button>
-            <Button onClick={BookProperty}>Book Now</Button>
+            {
+              propertyFilter.serviceType &&
+              propertyFilter.serviceType == 'FilmLocation'
+              ?
+              <Button>Download PDF</Button>
+              :null
+            }
+
+            <Button onClick={BookProperty}>
+            {
+            propertyFilter?.serviceType &&
+            propertyFilter?.serviceType == 'VillasandBunglow' || propertyFilter?.serviceType == 'EventVenues'
+              ?
+              'Book Now'
+              :
+              propertyFilter?.serviceType == 'FilmLocation' || propertyFilter?.serviceType == 'Reece'
+                ?
+                'Reserve'
+                : null
+          }
+            </Button>
           </Grid>
         </Grid>
       </FooterWrapper>

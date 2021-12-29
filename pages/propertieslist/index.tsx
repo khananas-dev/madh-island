@@ -122,6 +122,7 @@ function index() {
       <BodyWrapper>
         <Grid container spacing={2} justifyContent="space-between">
           <Grid item xs={10} sm={10} md={6}>
+            {JSON.stringify(propertyFilters)}
             {propertyFilters.serviceType && (
               <Typography variant="h2" color="primary" component="h2">
                 {propertyFilters.serviceType === "VillasandBunglow" &&
@@ -129,6 +130,8 @@ function index() {
                 {propertyFilters.serviceType === "EventVenues" && `Event Venue`}
                 {propertyFilters.serviceType === "FilmLocation" &&
                   `Film Location`}
+                {propertyFilters.serviceType === "Reece" &&
+                `Reece`}
               </Typography>
             )}
           </Grid>
