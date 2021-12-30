@@ -17,10 +17,12 @@ import {
 } from "@mui/material";
 import Card from "@mui/material/Card";
 import { red } from "@mui/material/colors";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import COLORS from "../../constants/color";
 import MobileTimePicker from '@mui/lab/MobileTimePicker';
 import { numberOfNights } from "../../utils/utils";
+import moment from "moment";
+import { getStoreFilters } from "../../utils/localStorage";
 
 interface SummaryCard {
   // price?: number | string;
@@ -37,9 +39,14 @@ function index(cardProps: SummaryCard) {
   const [selectedDate, handleDateChange] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
   const [reeceBooking, setReeceBooking] = useState<any>(null);
+  const [bookingDetail, setBookingDetail] = useState<any>();
+  const [productionName, setProductionName] = useState<any>('');
+  const [productionHouseType, setProductionHouseType] = useState<any>('');
 
   // Variable
   const { detail } = cardProps;
+
+
 
 
   // Functions
@@ -64,16 +71,55 @@ function index(cardProps: SummaryCard) {
   const noOfNight = () => {
     return numberOfNights(cardProps?.serviceType?.checkInDate, cardProps?.serviceType?.checkOutDate)
   }
+  const subTotalNight = () => {
+    return (cardProps?.price * noOfNight());
+  }
   const subTotal = () => {
-    return cardProps?.price * noOfNight();
+    return (subTotalNight()) + Number(additionalCharge && guestTotalPrice());
   }
 
   const gstCalculatedPrice = () => {
     return subTotal() * (18 / 100);
   }
 
+  const guestTotalPrice = () => {
+    return noOfGuest * detail?.additionalChargePerPerson;
+  }
+
   const grandTotal = () => {
     return subTotal() + gstCalculatedPrice();
+  }
+
+  // creating json for the post request
+  // useEffect(() => {
+  //   const searchFilters = getStoreFilters();
+  //   setValue([moment(searchFilters.checkInDate).toDate(), moment(searchFilters.checkOutDate).toDate()])
+  // }, [value])
+
+  const handleClick = () => {
+    const payload = {
+      checkInDate: cardProps?.serviceType?.checkInDate,
+      checkOutDate: cardProps?.serviceType?.checkOutDate,
+      totalAmount: grandTotal(),
+      noOfGuest,
+      productionName,
+      productionHouseType,
+      bookingTime
+      // noOfGuest: noOfGuest,
+      // productionName: productionName,
+      // productionHouseType: productionHouseType
+    };
+    console.log(payload);
+
+    cardProps.handleClick(payload);
+  }
+
+  const handleProdcutionName = (ev: any) => {
+    setProductionName(ev.target.value);
+
+  }
+  const handleProdcutionHouseType = (ev: any) => {
+    setProductionHouseType(ev.target.value);
   }
 
 
@@ -137,7 +183,7 @@ function index(cardProps: SummaryCard) {
             </Box>
             : null
         }
-        {`No of Guest: ${noOfGuest} ${JSON.stringify(additionalCharge)}`}
+        {/* {`No of Guest: ${noOfGuest} ${JSON.stringify(additionalCharge)}`} */}
         {
           cardProps?.serviceType &&
             cardProps?.serviceType?.serviceType == 'VillasandBunglow'
@@ -183,15 +229,16 @@ function index(cardProps: SummaryCard) {
                   </LocalizationProvider>
                   : null
               }
-              <TextField sx={{ marginTop: 3 }} id="Production Name" label="Production Name" fullWidth variant="outlined" />
+              <TextField sx={{ marginTop: 3 }} id="Production Name" value={productionName} onInput={handleProdcutionName} label="Production Name" fullWidth variant="outlined" />
               <FormControl fullWidth sx={{ marginTop: 3 }} >
                 <InputLabel id="production-house-type-lable">Production House Type</InputLabel>
                 <Select
                   labelId="production-house-type-lable"
                   id="production-house-type"
-                  // value={age}
+                  value={productionHouseType}
                   label="Production House Type"
-                // onChange={handleChange}
+                  // onChange={handleChange}
+                  onChange={handleProdcutionHouseType}
                 >
                   <MenuItem value={10}>Ten</MenuItem>
                   <MenuItem value={20}>Twenty</MenuItem>
@@ -229,7 +276,8 @@ function index(cardProps: SummaryCard) {
 
 
         <Button
-          onClick={(ev: any) => cardProps.handleClick(ev)}
+          onClick={handleClick}
+          // onClick={(ev: any) => cardProps.handleClick(ev)}
           sx={{ marginTop: 3 }} size="large" variant="contained">
           {
             cardProps?.serviceType &&
@@ -277,7 +325,7 @@ function index(cardProps: SummaryCard) {
                 >
                   {/* 50,000 */}
                   {
-                    (subTotal()).toLocaleString("en-IN")
+                    (subTotalNight()).toLocaleString("en-IN")
                   }
                 </Typography>
               </Box>
@@ -285,30 +333,34 @@ function index(cardProps: SummaryCard) {
                 cardProps?.serviceType &&
                   cardProps?.serviceType?.serviceType == 'VillasandBunglow'
                   ?
-                  <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                  additionalCharge &&
+                  (
+                    <Box sx={{ display: "flex", justifyContent: "space-between" }}>
 
-                    <Typography
-                      variant="body2"
-                      component="span"
-                      color={COLORS.shade2}
-                      textAlign="left"
-                      sx={{ marginTop: `16px` }}
-                    >
-                      {
-                        ` Extra Guests 3 - ${(detail?.additionalChargePerPerson || 0).toLocaleString("en-IN")}/person`
-                      }
+                      <Typography
+                        variant="body2"
+                        component="span"
+                        color={COLORS.shade2}
+                        textAlign="left"
+                        sx={{ marginTop: `16px` }}
+                      >
+                        {
+                          ` Extra Guests ${(detail?.additionalChargeMin - noOfGuest)} - ${(detail?.additionalChargePerPerson || 0).toLocaleString("en-IN")}/person`
+                        }
 
-                    </Typography>
-                    <Typography
-                      variant="body2"
-                      component="span"
-                      color={COLORS.shade2}
-                      textAlign="right"
-                      sx={{ marginTop: `16px` }}
-                    >
-                      50,000
-                    </Typography>
-                  </Box>
+                      </Typography>
+                      <Typography
+                        variant="body2"
+                        component="span"
+                        color={COLORS.shade2}
+                        textAlign="right"
+                        sx={{ marginTop: `16px` }}
+                      >
+                        {/* 50,000 */}
+                        {(guestTotalPrice())?.toLocaleString("en-IN")}
+                      </Typography>
+                    </Box>
+                  )
                   : null
               }
               <Box sx={{ display: "flex", marginBottom: 2, justifyContent: "space-between" }}>

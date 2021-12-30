@@ -94,13 +94,21 @@ function PropertyDetails() {
     setLoginModel(false);
     setSignupModel(true);
   };
-  const handleCheckoutCard = () => {
+  const handleCheckoutCard = (value: any) => {
+    console.log('Form Value: ');
+    console.log(value);
+    
     // Check if user is already logged in
     // if logged in than resever api hit;
     // if not loged in show login model
-    const userAuthenticationStatus = isUserLoggedIn();
-    if (!userAuthenticationStatus) {
-      OpenLoginForm();
+    // const userAuthenticationStatus = isUserLoggedIn();
+    // if (!userAuthenticationStatus) {
+    //   OpenLoginForm();
+    // }
+    if (propertyFilter.serviceType === "VillasandBunglow") {
+      console.log('value');
+
+
     }
   };
   const handleClose = () => setLoginModel(false);
@@ -214,19 +222,19 @@ function PropertyDetails() {
                   propertyDetail?.noOfBedrooms &&
                   `${propertyDetail?.noOfBedrooms} Bedrooms `
                 }
-                
+
                 {propertyDetail?.sizeOfProperty && (` | ${propertyDetail?.sizeOfProperty} Sq ft.`)}
                 {
                   propertyFilter &&
-                  propertyFilter.serviceType == 'VillasandBunglow'
-                  ?
-                propertyDetail?.additionalChargeMax && (` | Max Guests ${propertyDetail?.additionalChargeMax}`)
-                :
-                propertyFilter.serviceType == 'EventVenues'
-                ?
-                propertyDetail?.eventVenueMaxCapacity && (` | Max Guests ${propertyDetail?.eventVenueMaxCapacity}`)
-                : 
-                null
+                    propertyFilter.serviceType == 'VillasandBunglow'
+                    ?
+                    propertyDetail?.additionalChargeMax && (` | Max Guests ${propertyDetail?.additionalChargeMax}`)
+                    :
+                    propertyFilter.serviceType == 'EventVenues'
+                      ?
+                      propertyDetail?.eventVenueMaxCapacity && (` | Max Guests ${propertyDetail?.eventVenueMaxCapacity}`)
+                      :
+                      null
                 }
               </Typography>
 
@@ -330,22 +338,22 @@ function PropertyDetails() {
             {/* Right */}
             <Grid item xs={12} md={4}>
               <CheckoutCard
-                handleClick={(ev: any) => handleCheckoutCard()}
+                handleClick={(handleClick: any) => handleCheckoutCard(handleClick)}
                 detail={propertyDetail}
                 price={
                   propertyFilter?.serviceType &&
-                  propertyFilter?.serviceType == 'VillasandBunglow'
-                  ?
-                  propertyDetail?.villaBunglowPrice
-                  :
-                  propertyFilter?.serviceType == 'EventVenues'
-                  ?
-                  propertyDetail?.eventVenuePrice
-                  : null
-                  
+                    propertyFilter?.serviceType == 'VillasandBunglow'
+                    ?
+                    propertyDetail?.villaBunglowPrice
+                    :
+                    propertyFilter?.serviceType == 'EventVenues'
+                      ?
+                      propertyDetail?.eventVenuePrice
+                      : null
+
                 }
                 serviceType={propertyFilter}
-                />
+              />
             </Grid>
           </Grid>
 
@@ -358,25 +366,25 @@ function PropertyDetails() {
           <Grid item xs={6}>
             {
               propertyFilter.serviceType &&
-              propertyFilter.serviceType != 'Reece'
-              ?
-              <Typography
-              variant="h3"
-              component="h3"
-              color="#1F1F1F"
-              textAlign="left"
-              sx={{}}
-            >
-              {
-                `
+                propertyFilter.serviceType != 'Reece'
+                ?
+                <Typography
+                  variant="h3"
+                  component="h3"
+                  color="#1F1F1F"
+                  textAlign="left"
+                  sx={{}}
+                >
+                  {
+                    `
                 ${moment(propertyFilter?.checkInDate).format('DD MMM YYYY')} - ${moment(propertyFilter?.checkOutDate).format('DD MMM YYYY')}
                 `
-              }
-              {/* 21-Oct-2021 - 30-Oct-2021 */}
-            </Typography>
-            :null
+                  }
+                  {/* 21-Oct-2021 - 30-Oct-2021 */}
+                </Typography>
+                : null
             }
-           
+
             <Typography
               variant="h4"
               component="h4"
@@ -399,24 +407,24 @@ function PropertyDetails() {
           >
             {
               propertyFilter.serviceType &&
-              propertyFilter.serviceType == 'FilmLocation'
-              ?
-              <Button>Download PDF</Button>
-              :null
+                propertyFilter.serviceType == 'FilmLocation'
+                ?
+                <Button>Download PDF</Button>
+                : null
             }
 
             <Button onClick={BookProperty}>
-            {
-            propertyFilter?.serviceType &&
-            propertyFilter?.serviceType == 'VillasandBunglow' || propertyFilter?.serviceType == 'EventVenues'
-              ?
-              'Book Now'
-              :
-              propertyFilter?.serviceType == 'FilmLocation' || propertyFilter?.serviceType == 'Reece'
-                ?
-                'Reserve'
-                : null
-          }
+              {
+                propertyFilter?.serviceType &&
+                  propertyFilter?.serviceType == 'VillasandBunglow' || propertyFilter?.serviceType == 'EventVenues'
+                  ?
+                  'Book Now'
+                  :
+                  propertyFilter?.serviceType == 'FilmLocation' || propertyFilter?.serviceType == 'Reece'
+                    ?
+                    'Reserve'
+                    : null
+              }
             </Button>
           </Grid>
         </Grid>
