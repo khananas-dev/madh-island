@@ -1,0 +1,125 @@
+@font-face {
+  font-family: 'vmi-icons';
+  src:
+    url('../fonts/vmi-icons.ttf') format('truetype'),
+    url('../fonts/vmi-icons.woff') format('woff'),
+    url('../fonts/vmi-icons.svg') format('svg');
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
+[class^="vmi-icons__"], [class*=" vmi-icons__"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'vmi-icons' !important;
+  speak: never;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.vmi-icons__semiFurnished:before {
+  content: "\e918";
+  color: #535353;
+}
+.vmi-icons__ac:before {
+  content: "\e900";
+  color: #535353;
+}
+.vmi-icons__bathroom:before {
+  content: "\e901";
+  color: #535353;
+}
+.vmi-icons__bedroom:before {
+  content: "\e902";
+  color: #535353;
+}
+.vmi-icons__catering:before {
+  content: "\e903";
+  color: #535353;
+}
+.vmi-icons__crewMember:before {
+  content: "\e904";
+  color: #535353;
+}
+.vmi-icons__electricity:before {
+  content: "\e905";
+  color: #535353;
+}
+.vmi-icons__entirePlace:before {
+  content: "\e906";
+}
+.vmi-icons__firdge:before {
+  content: "\e907";
+  color: #535353;
+}
+.vmi-icons__furnished:before {
+  content: "\e908";
+  color: #535353;
+}
+.vmi-icons__infinityPool:before {
+  content: "\e909";
+  color: #535353;
+}
+.vmi-icons__kitchen:before {
+  content: "\e90a";
+  color: #535353;
+}
+.vmi-icons__lawn:before {
+  content: "\e90b";
+  color: #535353;
+}
+.vmi-icons__locationStaff:before {
+  content: "\e90c";
+  color: #535353;
+}
+.vmi-icons__makeUpRooms:before {
+  content: "\e90d";
+  color: #535353;
+}
+.vmi-icons__musicSystem:before {
+  content: "\e90e";
+  color: #535353;
+}
+.vmi-icons__owen:before {
+  content: "\e90f";
+  color: #535353;
+}
+.vmi-icons__parking:before {
+  content: "\e910";
+  color: #535353;
+}
+.vmi-icons__petFriendly:before {
+  content: "\e911";
+  color: #535353;
+}
+.vmi-icons__props:before {
+  content: "\e912";
+  color: #535353;
+}
+.vmi-icons__seaView:before {
+  content: "\e913";
+  color: #535353;
+}
+.vmi-icons__swimmingPool:before {
+  content: "\e914";
+  color: #535353;
+}
+.vmi-icons__television:before {
+  content: "\e915";
+  color: #535353;
+}
+.vmi-icons__waterHeater:before {
+  content: "\e916";
+  color: #535353;
+}
+.vmi-icons__wifi:before {
+  content: "\e917";
+  color: #535353;
+}

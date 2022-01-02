@@ -1,12 +1,10 @@
 import { Typography, Grid, Box } from "@mui/material";
 import React, { useState } from "react";
-import { PropertyCardFactory } from "../../../@types";
-import PropertyCard from "../PropertyCard/PropertyCard";
+// import PropertyCard from "../PropertyCard/PropertyCard";
 import router from "next/router";
-import { TOP_PROPERTIES } from "../../constants";
-import { propertyFullData } from "../../../_data/propertyListData";
 import { TOP_LOCATIONS } from "../../../_data/topLocation";
 import theme from "../../theme";
+import PropertyCard from "../PropertyCard/PropertyCard";
 function TopLocations({ latestLocation }: any) {
   // States
   // const [topLocations, setTopLocations] = useState(TOP_PROPERTIES);
@@ -49,21 +47,21 @@ function TopLocations({ latestLocation }: any) {
             margin: "0px 0px 20px 0px",
           }}
         >
-          Top Locations
+          Latest Locations
         </Typography>
         <Grid container spacing={4}>
-          {topLocations && topLocations.map((property: any) => (
+          {latestLocation && latestLocation.map((property: any) => (
             <Grid item xs={12} md={4} key={property._id}>
               <PropertyCard
                 // isPriceDivider
-                id={property._id}
-                key={property._id}
-                img={property.images[0]}
-                area={property.area}
-                amminityList={property.amenities}
-                addressLine1={property.addressLine1}
-                bedroom={property.bedroom}
-                propertyName={property.title}
+                id={property?._id}
+                key={property?._id}
+                img={property?.images[0]?.imageUrl}
+                area={property?.sizeOfProperty}
+                amminityList={property?.amenities}
+                addressLine1={property?.addressLine1}
+                bedroom={property?.noOfBedrooms}
+                propertyName={property?.title}
                 // buttonsList={property.buttonsList}
                 // price={property.price}
                 action={(ev: any) => handleTopLocations(ev, property)}

@@ -1,0 +1,57 @@
+.service-img {
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.about-description {
+  text-align: justify;
+  font-weight: 300 !important;
+  font-size: 20px !important;
+  line-height: 40px;
+  max-width: 95%;
+}
+
+/* SECTION CLIENTS */
+.section-client {
+  padding: 0px 0px 50px 0px;
+}
+.client-card:focus-visible {
+  outline: none;
+}
+.client-card img {
+  max-width: 120px;
+  margin: 0 auto;
+  height: auto;
+}
+/* SECTION CLIENTS */
+
+.chip {
+  display: inline-flex;
+  padding: 6px 12px;
+  background: #eafcf7;
+  border-radius: 16px;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: 0.25px;
+  color: #535353;
+  align-items: center;
+  margin-bottom: 15px;
+
+}
+.chip i{
+  display: inline-block;
+  margin-right: 10px;
+  font-size: 20px;
+}
+.chip:not(:last-of-type){
+  margin-right: 20px;
+}
+
+.property-card{
+  cursor: pointer;
+  height:100%;
+}
+
+.property-card .MuiPaper-root{
+  height:100%;
+}

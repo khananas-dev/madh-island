@@ -33,13 +33,8 @@ function AboutUsSection({ aboutUs }: any) {
             About Us
           </Typography>
           <Typography
-            variant="body2"
-            component="h2"
-            color="#1F1F1F"
-            textAlign="left"
-            sx={{
-              margin: "20px 0px 0px 0px",
-            }}
+            className="about-description"
+            component="p"
           >
             {aboutUs && aboutUs.aboutUs}
           </Typography>

@@ -18,6 +18,9 @@ import axios from 'axios';
 import { PropertyService } from "../src/services/property/propertyService";
 import { ServiceCategory } from "../src/services/serviceCategory/serviceCategory";
 import { OrgInfoService } from "../src/services/orgInfo/orgInfoService";
+import OurClients from "../src/components/Sections/OurClients";
+import Aminites from '../public/json/aminites.json'
+import Chips from "../src/components/Chips/Chips";
 
 
 // axios.get('http://3.111.11.219:3000/').then(response => {
@@ -114,9 +117,16 @@ export default function Index({ props }: any) {
         <OurServiceSection serviceList={serviceList} />
         <TopLocations latestLocation={latestLocation} />
         <AboutUsSection aboutUs={aboutUs} />
-        {/* <OurClients /> */}
+        <OurClients />
+        {/* {
+          Aminites && 
+          Aminites.map((item:any)=>(
+            <Chips title={item.title} className={item.className}/>
+          ))
+        } */}
+      
       </BodyWrapper>
-      <OurPropertyMap />
+      <OurPropertyMap latestLocation={latestLocation} />
       <TalkToUsSection />
       <Footer />
     </AppWrapper>

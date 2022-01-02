@@ -12,10 +12,10 @@ export const DEFAULT_FILTER = {
 
 export const DEFAULT_MAP_PROPS = {
     center: {
-      lat: 19.16249680843635, 
-      lng: 72.78985200327892,
+      lat: 19.148360204126508, 
+      lng: 72.78976224016589,
     },
-    zoom: 11,
+    zoom: 15,
   };
 export const PRODUCTION_HOUSE_TYPES_LIST = [
   "Action Film",

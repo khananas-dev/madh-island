@@ -104,7 +104,8 @@ function index(cardProps: SummaryCard) {
       noOfGuest,
       productionName,
       productionHouseType,
-      bookingTime
+      bookingTime,
+      reeceBooking
       // noOfGuest: noOfGuest,
       // productionName: productionName,
       // productionHouseType: productionHouseType
@@ -213,6 +214,8 @@ function index(cardProps: SummaryCard) {
                   <LocalizationProvider dateAdapter={AdapterDateFns}>
                     <DateTimePicker
                       label="Date&Time picker"
+                      disablePast
+                      inputFormat="do MMMM yyyy hh"
                       value={reeceBooking}
                       onChange={(newValue: any) => {
                         setReeceBooking(newValue);

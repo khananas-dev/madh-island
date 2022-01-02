@@ -39,7 +39,8 @@ const PropertyCard = ({
     action(propertyId);
   };
   return (
-    <Card sx={{ borderRadius: `8px`,color:COLORS.black}} onClick={(ev)=>handleEvent(id)}>
+    <div className="property-card">
+       <Card  sx={{ borderRadius: `8px`,color:COLORS.black}} onClick={(ev)=>handleEvent(id)}>
       <CardMedia sx={{ height: "220px" }} title={propertyName}>
         <div style={{ position: "relative", width: "100%", height: "100%" }}>
           <Image src={`${img}`} layout="fill" objectFit="cover" />
@@ -69,8 +70,8 @@ const PropertyCard = ({
           )}
         </Typography>
         <AmminityContainer>
-          {amminityList?.map((amminity) => (
-            <Chips key={amminity.id} name={amminity.name} />
+          {amminityList?.map((amminity:any) => (
+            <Chips key={amminity?.id} title={amminity?.title} className={amminity?.className} />
           ))}
         </AmminityContainer>
         {isPriceDivider &&  <Divider />}
@@ -173,6 +174,7 @@ const PropertyCard = ({
         ))}
       </CardActions> */}
     </Card>
+    </div>
   );
 };
 

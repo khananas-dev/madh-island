@@ -2,15 +2,9 @@ import { Box, Grid, Typography } from "@mui/material";
 import React from "react";
 import styled from "styled-components";
 import { useAxios } from "use-axios-client";
-
 import axios from 'axios';
 
-
-
-
-
 function Footer(props:any) {
-   
 
     return (
     <BodyWrapper>
@@ -89,7 +83,7 @@ First Floor, Raheja Exotica
           >
             Talk to us
           </Typography>
-          <Typography
+          {/* <Typography
             variant="body1"
             component="h3"
             color="#535353"
@@ -98,7 +92,7 @@ First Floor, Raheja Exotica
 
           >
             About Us
-          </Typography>
+          </Typography> */}
           <Typography
             variant="body1"
             component="h3"

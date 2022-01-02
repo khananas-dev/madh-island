@@ -5,6 +5,10 @@ import type { AppProps } from "next/app";
 import Head from "next/head";
 import theme from "../src/theme";
 import Layout from "../src/components/Layout";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import '../public/css/style.css'
+import '../src/global.css'
  
  
 

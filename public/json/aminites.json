@@ -1,0 +1,106 @@
+[
+  {
+    "title": "Electricity kW",
+    "className": "electricity"
+  },
+  {
+    "title": "Location staff",
+    "className": "crewMember"
+  },
+  {
+    "title": "Ac",
+    "className": "ac"
+  },
+  {
+    "title": "Bedroom",
+    "className": "bedroom"
+  },
+  {
+    "title": "Lawn",
+    "className": "lawn"
+  },
+  {
+    "title": "Bathroom",
+    "className": "bathroom"
+  },
+  {
+    "title": "Swimming pool",
+    "className": "swimmingPool"
+  },
+  {
+    "title": "Parking",
+    "className": "parking"
+  },
+  {
+    "title": "Make-up rooms",
+    "className": "makeUpRooms"
+  },
+  {
+    "title": "Kitchen",
+    "className": "kitchen"
+  },
+  {
+    "title": "Props",
+    "className": "props"
+  },
+  {
+    "title": "Furnished",
+    "className": "furnished"
+  },
+  {
+    "title": "Semi furnished",
+    "className": "semiFurnished"
+  },
+  {
+    "title": "Catering area",
+    "className": "catering"
+  },
+  {
+    "title": "Crew members",
+    "className": "crewMember"
+  },
+  {
+    "title": "Entire Place",
+    "className": "entirePlace"
+  },
+  {
+    "title": "Sea view",
+    "className": "seaView"
+  },
+  {
+    "title": "WiFi",
+    "className": "wifi"
+  },
+  {
+    "title": "Infinite pool",
+    "className": "infinityPool"
+  },
+  {
+    "title": "Fridge",
+    "className": "firdge"
+  },
+  {
+    "title": "Oven",
+    "className": "owen"
+  },
+  {
+    "title": "Staff",
+    "className": "crewMember"
+  },
+  {
+    "title": "Television",
+    "className": "television"
+  },
+  {
+    "title": "Music system",
+    "className": "musicSystem"
+  },
+  {
+    "title": "Water heater",
+    "className": "waterHeater"
+  },
+  {
+    "title": "pet-friendly space",
+    "className": "petFriendly"
+  }
+]
