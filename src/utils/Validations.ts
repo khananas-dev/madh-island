@@ -8,7 +8,7 @@ export const LoginFormValidationSchema = Yup.object().shape({
 export const SignupFormValidationSchema = Yup.object().shape({
   firstName: Yup.string().required(),
   lastName: Yup.string().required(),
-  phone: Yup.string().matches(phoneRegExp, "Phone number is not valid").required(),
-  email: Yup.string().email("Email must be valid").required(),
+  phoneNumber: Yup.string().matches(phoneRegExp, "Phone number is not valid").required(),
+  emailId: Yup.string().email("Email must be valid").required(),
 });
 

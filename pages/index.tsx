@@ -32,7 +32,7 @@ export default function Index({ props }: any) {
   // States
   console.log(props)
   const [cached, setCached] = useState(true);
-  const [latestLocation, setLatesLocation] = useState<any>();
+  const [latestLocation, setLatestLocation] = useState<any>();
   const [serviceList, setServiceList] = useState<any>();
   const [aboutUs, setAboutUs] = useState<any>();
 
@@ -47,7 +47,7 @@ export default function Index({ props }: any) {
     latestLocationData.then((res: any) => {
       if (!res?.data?.error) {
         console.log(res?.data?.data);
-        setLatesLocation(res?.data?.data);
+        setLatestLocation(res?.data?.data);
       }
     })
   }
@@ -128,7 +128,7 @@ export default function Index({ props }: any) {
       </BodyWrapper>
       <OurPropertyMap latestLocation={latestLocation} />
       <TalkToUsSection />
-      <Footer />
+      <Footer about={aboutUs} />
     </AppWrapper>
   );
 }

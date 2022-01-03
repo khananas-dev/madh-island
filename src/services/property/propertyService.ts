@@ -2,17 +2,17 @@ import axios from "axios";
 import { BASE_URL } from "../../constants/apiConfig";
 
 export class PropertyService{
-    getAllPropertyImage(){
+    async getAllPropertyImage(){
         return axios.get(`${BASE_URL}/propertyImage`)
     }
-    getPropertyDetail(){
+    async getPropertyDetail(){
         return axios.get(`${BASE_URL}/property`)
     }
-    getLastestLocation(){
+    async getLastestLocation(){
         return axios.get(`${BASE_URL}/property/latest`)
     }
 
-    getPropertyDetailById(payload:any){
+    async getPropertyDetailById(payload:any){
         return axios.get(`${BASE_URL}/property/${payload}`)
     }
 }

@@ -3,7 +3,8 @@ import { Box, Grid, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { GET_ABOUT_US } from "../../../queries/content";
 import Image from "next/image";
-import { AboutUs } from "../../../_data/VMI_content";
+// import { AboutUs } from "../../../_data/VMI_content";
+import AboutUs from '../../../public/about-us.jpg';
 import theme from "../../theme";
 
 function AboutUsSection({ aboutUs }: any) {
@@ -19,19 +20,20 @@ function AboutUsSection({ aboutUs }: any) {
         },
       }}
     >
+      <Typography
+        variant="h2"
+        component="h2"
+        color="primary"
+        textAlign="left"
+        sx={{
+          margin: "0px 0px 20px 0px",
+        }}
+      >
+        About Us
+      </Typography>
       <Grid container spacing={2}>
-        <Grid item xs={12} md={7}>
-          <Typography
-            variant="h2"
-            component="h2"
-            color="primary"
-            textAlign="left"
-            sx={{
-              margin: "0px 0px 20px 0px",
-            }}
-          >
-            About Us
-          </Typography>
+        <Grid className="about-col-1" item xs={12} md={4}>
+
           <Typography
             className="about-description"
             component="p"
@@ -40,17 +42,16 @@ function AboutUsSection({ aboutUs }: any) {
           </Typography>
         </Grid>
         <Grid
-          visibility={{ xs: "hidden", md: "visible" }}
+          // visibility={{ xs: "hidden", md: "visible" }}
           // display={{ xs: "none", md: "block" }}
-          sx={{
-            margin: "0px 0px 48px 0px",
-          }}
+          className="about-col-2"
           item
           xs={12}
-          md={5}
+          md={8}
         >
           {AboutUs && (
-            <Image width={100} layout="responsive" height={100} src={AboutUs.image}></Image>
+            // <Image className="about-us-img" width={100} layout="responsive" height={100} src={AboutUs}></Image>
+            <img className="about-us-img" src={AboutUs.src}/>
           )}
         </Grid>
       </Grid>

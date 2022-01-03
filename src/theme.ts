@@ -8,11 +8,9 @@ const theme = createTheme({
       main: '#0C9B75',
       dark: '#007254',
       contrastText: '#fff',
-    },
-
+    }
   },
 });
-
 theme.typography.h1 = {
   fontSize: '40px',
   color: '#2E2E2E',
@@ -38,37 +36,37 @@ theme.typography.h3 = {
 };
 theme.typography.h4 = {
   fontSize: '20px',
-  fontWeight:500,
+  fontWeight: 500,
   fontFamily: 'Roboto'
 
 };
 theme.typography.h5 = {
   fontSize: '18px',
-  fontWeight:500,
+  fontWeight: 500,
   fontFamily: 'Roboto'
 
 };
 theme.typography.h6 = {
   fontSize: '16px',
-  fontWeight:500,
+  fontWeight: 500,
   fontFamily: 'Roboto'
 
 };
 theme.typography.body1 = {
   fontSize: '14px',
   fontFamily: 'Roboto',
-  fontWeight:`normal`,
+  fontWeight: `normal`,
 
 
 };
 theme.typography.body2 = {
   fontSize: '14px',
   fontFamily: 'Roboto',
-  fontWeight:500,
+  fontWeight: 500,
 };
 theme.typography.caption = {
   fontSize: '12px',
   fontFamily: 'Roboto'
-  
+
 };
 export default theme;

@@ -2,7 +2,22 @@ import { Typography, Grid, Box } from "@mui/material";
 import React from "react";
 import theme from "../../theme";
 import Image from "next/image";
+import { getStoreFilters, setStoreFilters } from "../../utils/localStorage";
+import NavLink from "../../components/navbar/Navlink";
+import { useRouter } from 'next/router'
 function OurServiceSection({ serviceList }: any) {
+
+  // States
+
+  // Variables
+  const router = useRouter()
+
+  // Functions
+  const setFilter = (serviceType: string) => {
+    let searchFilters = getStoreFilters();
+    searchFilters.serviceType = serviceType;
+    setStoreFilters(searchFilters);
+  };
   return (
     <Box
 
@@ -32,25 +47,46 @@ function OurServiceSection({ serviceList }: any) {
         {
           serviceList &&
           serviceList.map((service: any, index: number) => (
-            <Grid key={`service-${index}`} item xs={12} md={3}>
-              <Image
-              className="service-img"
-              src={service?.imageUrl || "https://images.unsplash.com/photo-1516156008625-3a9d6067fab5?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80"}
-              width={150}
-              height={100}
-              layout="responsive"
-              />
-              <Typography
-                variant="h5"
-                component="h5"
-                color="primary"
-                textAlign="center"
-                sx={{
-                  margin: "20px 0px 30px 0px",
-                }}
-              >
-                {service.title}
-              </Typography>
+            <Grid
+              key={`service-${index}`}
+              item
+              xs={12}
+              md={3}
+            >
+              <div
+              className="service-card"
+                onClick={
+                  () => {
+                    setFilter(service.route);
+                    router.push({
+                      pathname: "/propertieslist/",
+                        query: {
+                          serviceType: service.route,
+                        }
+                    })
+                  }
+                }
+                >
+                <Image
+                  className="service-img"
+                  src={service?.imageUrl || "https://images.unsplash.com/photo-1516156008625-3a9d6067fab5?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80"}
+                  width={150}
+                  height={100}
+                  layout="responsive"
+                />
+                <Typography
+                  variant="h5"
+                  component="h5"
+                  color="primary"
+                  textAlign="center"
+                  sx={{
+                    margin: "20px 0px 30px 0px",
+                  }}
+                >
+                  {service.title}
+                </Typography>
+              </div>
+
             </Grid>
           ))
         }

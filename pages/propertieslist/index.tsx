@@ -43,7 +43,9 @@ function index() {
   };
   const handlePropertyDetails = (propertyid: any) => {
     router.push({
-      pathname: `/property/${propertyid}`,
+      // pathname: `/property/${propertyid}`,
+      pathname: "/property/" + `${propertyid}`,
+      query: { id: `${propertyid}` }
     });
   };
   const _getAllPropertyList = () => {
@@ -176,11 +178,11 @@ function index() {
                   isPriceDivider
                   id={property._id}
                   key={property._id}
-                  img={property.images[0]?.imageUrl}
-                  area={property.area}
-                  amminityList={property.amenities}
+                  img={property.images[0]?.imageUrl || "https://images.unsplash.com/photo-1516156008625-3a9d6067fab5?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80"}
+                  area={property?.sizeOfProperty}
+                  amminityList={property?.amenities}
                   addressLine1={property.addressLine1}
-                  bedroom={property.bedroom}
+                  bedroom={property?.noOfBedrooms}
                   propertyName={property.title}
                   buttonsList={property.buttonsList}
                   price={property.price}

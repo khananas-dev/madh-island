@@ -72,7 +72,7 @@ function PropertyDetails() {
   };
 
   const propertyService = new PropertyService();
-  const { id } = router.query
+  const { id } = router?.query
 
 
 
@@ -95,16 +95,15 @@ function PropertyDetails() {
     setSignupModel(true);
   };
   const handleCheckoutCard = (value: any) => {
-    console.log('Form Value: ');
     console.log(value);
     
     // Check if user is already logged in
     // if logged in than resever api hit;
     // if not loged in show login model
-    // const userAuthenticationStatus = isUserLoggedIn();
-    // if (!userAuthenticationStatus) {
-    //   OpenLoginForm();
-    // }
+    const userAuthenticationStatus = isUserLoggedIn();
+    if (!userAuthenticationStatus) {
+      return OpenLoginForm();
+    }
     if (propertyFilter.serviceType === "VillasandBunglow") {
       console.log('value');
 
@@ -143,8 +142,10 @@ function PropertyDetails() {
   }, []);
 
   useEffect(() => {
-    _getPropertyDetailById(id);
-  }, []);
+    if(id){
+      _getPropertyDetailById(id);
+    }
+  }, [id]);
 
 
   return (

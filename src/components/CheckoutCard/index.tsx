@@ -122,6 +122,10 @@ function index(cardProps: SummaryCard) {
   const handleProdcutionHouseType = (ev: any) => {
     setProductionHouseType(ev.target.value);
   }
+  const todayDate = ()=>{
+    const d = new Date();
+    return d;
+  }
 
 
   return (
@@ -169,8 +173,10 @@ function index(cardProps: SummaryCard) {
               <DateRangePicker
                 startText="Check-in"
                 endText="Check-out"
+                disablePast
+                minDate={todayDate}
                 value={value}
-                onChange={(newValue) => {
+                onChange={(newValue:any) => {
                   setValue(newValue);
                 }}
                 renderInput={(startProps, endProps) => (

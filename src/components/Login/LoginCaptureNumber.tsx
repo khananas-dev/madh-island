@@ -9,21 +9,38 @@ import {
   SignupFormValidationSchema,
 } from "../../utils/Validations";
 import { useState } from "react";
+import { AuthenticationService } from "../../services/authentication/authenticationService";
 
-const LoginNumber = ({ userPhone }: any) => {
+const LoginNumber = ({ userPhone, setSignUpDetail }: any) => {
+
+  // States
+  const [loginView, setLoginView] = useState(true);
+
+  // Variables
   const loginFormInitialValues = {
-    phone: "",
+    phoneNumber: "",
   };
   const signupFormInitialValues = {
     firstName: "",
     lastName: "",
-    phone: "",
-    email: "",
+    phoneNumber: "",
+    emailId: ""
   };
-  const [loginView, setLoginView] = useState(true);
-
   const loginFormValidationSchema = LoginFormValidationSchema;
   const signupFormValidationSchema = SignupFormValidationSchema;
+
+  // Functions
+
+  const handleSignUpSubmit = (values: any, onSubmitProps: any) => {
+    userPhone(values.phoneNumber);
+    onSubmitProps.resetForm();
+    console.log(values);
+    setSignUpDetail(values);
+  }
+
+  // Effects
+
+
 
   return (
     <LoginCard>
@@ -72,7 +89,7 @@ const LoginNumber = ({ userPhone }: any) => {
             initialValues={loginFormInitialValues}
             validationSchema={loginFormValidationSchema}
             onSubmit={(values, onSubmitProps) => {
-              userPhone(values.phone);
+              userPhone(values.phoneNumber);
               onSubmitProps.resetForm();
             }}
           >
@@ -82,8 +99,8 @@ const LoginNumber = ({ userPhone }: any) => {
                   type="tel"
                   fullWidth
                   label="Mobile Number"
-                  name="phone"
-                  value={props.values.phone}
+                  name="phoneNumber"
+                  value={props.values.phoneNumber}
                   onChange={props.handleChange}
                   variant="outlined"
                   sx={{
@@ -140,10 +157,7 @@ const LoginNumber = ({ userPhone }: any) => {
           <Formik
             initialValues={signupFormInitialValues}
             validationSchema={signupFormValidationSchema}
-            onSubmit={(values, onSubmitProps) => {
-              userPhone(values.phone);
-              onSubmitProps.resetForm();
-            }}
+            onSubmit={handleSignUpSubmit}
           >
             {(props) => (
               <Form>
@@ -175,8 +189,8 @@ const LoginNumber = ({ userPhone }: any) => {
                   type="tel"
                   fullWidth
                   label="Mobile Number"
-                  name="phone"
-                  value={props.values.phone}
+                  name="phoneNumber"
+                  value={props.values.phoneNumber}
                   onChange={props.handleChange}
                   variant="outlined"
                   sx={{
@@ -187,8 +201,8 @@ const LoginNumber = ({ userPhone }: any) => {
                   type="text"
                   fullWidth
                   label="Email"
-                  name="email"
-                  value={props.values.email}
+                  name="emailId"
+                  value={props.values.emailId}
                   onChange={props.handleChange}
                   variant="outlined"
                   sx={{

@@ -56,7 +56,7 @@ function TopLocations({ latestLocation }: any) {
                 // isPriceDivider
                 id={property?._id}
                 key={property?._id}
-                img={property?.images[0]?.imageUrl}
+                img={property?.images[0]?.imageUrl || 'http://www.exoticamadhisland.com/img/2.jpg'}
                 area={property?.sizeOfProperty}
                 amminityList={property?.amenities}
                 addressLine1={property?.addressLine1}

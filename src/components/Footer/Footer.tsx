@@ -1,13 +1,29 @@
 import { Box, Grid, Typography } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { useAxios } from "use-axios-client";
 import axios from 'axios';
+import PhoneIcon from '../../../public/phone.svg'
+import locationIcon from '../../../public/location.svg'
+import emailIcon from '../../../public/email.svg'
+import instagramIcon from '../../../public/instagram.svg'
+import facebookIcon from '../../../public/facebook.svg'
+import twitterIcon from '../../../public/twitter.svg'
 
-function Footer(props:any) {
+function Footer({ about }: any) {
 
-    return (
-    <BodyWrapper>
+  // States
+
+  // Variables
+
+  // Functions
+
+  // Effects
+
+  return (
+
+    <BodyWrapper className="site-footer">
+      {/* {JSON.stringify(about)} */}
       <Grid container spacing={2}>
         <Grid item xs={12} md={4}>
           <Typography
@@ -15,8 +31,7 @@ function Footer(props:any) {
             component="h3"
             color="#535353"
             textAlign="left"
-            sx={{marginBottom:`24px`}}
-
+            sx={{ marginBottom: `24px` }}
           >
             Visit Madh Island
           </Typography>
@@ -25,22 +40,27 @@ function Footer(props:any) {
             component="h3"
             color="#535353"
             textAlign="left"
-            sx={{marginBottom:`12px`}}
+            sx={{ marginBottom: `12px` }}
 
           >
-            @2021 Visit MadhIsland 
+           	&copy; 2021 Visit MadhIsland
           </Typography>
           <Typography
             variant="body1"
             component="h3"
             color="#535353"
             textAlign="left"
-            sx={{marginBottom:`12px`}}
+            sx={{ marginBottom: `12px` }}
 
           >
-            All Rights Reserved 
+            All Rights Reserved
           </Typography>
-      
+          <ul className="social-link">
+            <li><a href={about?.instagramUrl}><img src={instagramIcon.src} alt="instagram" /></a></li>
+            <li><a href={about?.facebookUrl}><img src={facebookIcon.src} alt="facebook" /></a></li>
+            <li><a href={about?.youtubeUrl}><img src={twitterIcon.src} alt="twitter" /></a></li>
+          </ul>
+
         </Grid>
         <Grid item xs={12} md={6}>
           <Typography
@@ -48,20 +68,26 @@ function Footer(props:any) {
             component="h3"
             color="#535353"
             textAlign="left"
-            sx={{marginBottom:`24px`}}
+            sx={{ marginBottom: `24px` }}
 
           >
             Get in Touch
           </Typography>
-          <Typography
-            variant="body1"
-            component="h3"
-            color="#535353"
-            textAlign="left"
-          >
-            103-Sicily, 
-First Floor, Raheja Exotica
-          </Typography>
+          <ul className="footer-links">
+            <li>
+              <a href={`tel: ${about?.phoneNumber}`}><img src={PhoneIcon.src} alt="" />{about?.phoneNumber}</a>
+            </li>
+            <li>
+              <a href="javascript:void(0)"><img src={locationIcon.src} alt="" />
+                {about?.addressLine1} {about?.addressLine2}
+              </a>
+            </li>
+            <li>
+              <a href={`mailto: ${about?.emailId}`}><img src={emailIcon.src} alt="" />
+                {about?.emailId}
+              </a>
+            </li>
+          </ul>
         </Grid>
         <Grid item xs={12} md={2}>
           <Typography
@@ -69,7 +95,7 @@ First Floor, Raheja Exotica
             component="h3"
             color="#535353"
             textAlign="left"
-            sx={{marginBottom:`24px`}}
+            sx={{ marginBottom: `24px` }}
           >
             Site Map
           </Typography>
@@ -78,7 +104,7 @@ First Floor, Raheja Exotica
             component="h3"
             color="#535353"
             textAlign="left"
-            sx={{marginBottom:`12px`}}
+            sx={{ marginBottom: `12px` }}
 
           >
             Talk to us
@@ -97,7 +123,7 @@ First Floor, Raheja Exotica
             variant="body1"
             component="h3"
             color="#535353"
-            sx={{marginBottom:`12px`}}
+            sx={{ marginBottom: `12px` }}
 
             textAlign="left"
           >
@@ -107,7 +133,7 @@ First Floor, Raheja Exotica
             variant="body1"
             component="h3"
             color="#535353"
-            sx={{marginBottom:`12px`}}
+            sx={{ marginBottom: `12px` }}
 
             textAlign="left"
           >
@@ -118,12 +144,12 @@ First Floor, Raheja Exotica
     </BodyWrapper>
   );
 }
- 
+
 
 
 
 export default Footer;
-const BodyWrapper = styled(Box)`
+const BodyWrapper = styled('footer')`
   padding-left: 60px;
   padding-right: 60px;
   background-color: #e6e6e6;
@@ -133,5 +159,5 @@ const BodyWrapper = styled(Box)`
     padding-right: 30px;
   }
 `;
- 
+
 
