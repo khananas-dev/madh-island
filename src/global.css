@@ -25,6 +25,14 @@
 }
 /* SECTION CLIENTS */
 
+/* TALK TO US CONTAINER */
+.talk-to-us-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+/* TALK TO US CONTAINER */
+
 .chip {
   display: inline-flex;
   padding: 6px 12px;
@@ -72,11 +80,11 @@
   margin: 0px;
 }
 
-.footer-links li{
+.footer-links li {
   margin-bottom: 15px;
 }
 .footer-links a {
-  display:flex;
+  display: flex;
   align-items: center;
   font-size: 14px;
   color: #535353;
@@ -90,29 +98,28 @@
   align-self: flex-start;
 }
 
-.social-link{
+.social-link {
   list-style: none;
   padding: 10px 0px 0px 0px;
   margin: 0px;
 }
-.social-link li{
+.social-link li {
   display: inline-block;
-
 }
-.social-link li:not(:last-of-type){
+.social-link li:not(:last-of-type) {
   margin-right: 15px;
 }
-.social-link img{
+.social-link img {
   max-width: 24px;
 }
-.MuiDateRangePickerDay-rangeIntervalDayHighlight{
+.MuiDateRangePickerDay-rangeIntervalDayHighlight {
   background-color: #0c9b7570 !important;
 }
 
-.service-card{
+.service-card {
   cursor: pointer;
 }
-caption{
+caption {
   cursor: pointer;
 }
 @media (max-width: 768px) {
@@ -132,5 +139,11 @@ caption{
   }
   .about-us-img {
     height: 250px;
+  }
+  .site-footer ul {
+    margin-bottom: 15px;
+  }
+  .talk-to-us-wrapper h2 {
+    margin-bottom: 10px;
   }
 }

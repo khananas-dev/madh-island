@@ -15,15 +15,13 @@ function TopLocations({ latestLocation }: any) {
   // Functions
   // console.log(topLocations);
   const handleTopLocations = (ev: any, property: any) => {
-    console.log(property)
+    console.log(property);
     router.push({
       pathname: `/search/${property._id}`,
-
     });
   };
 
   // Effects
-
 
   return (
     <>
@@ -50,24 +48,28 @@ function TopLocations({ latestLocation }: any) {
           Latest Locations
         </Typography>
         <Grid container spacing={4}>
-          {latestLocation && latestLocation.map((property: any) => (
-            <Grid item xs={12} md={4} key={property._id}>
-              <PropertyCard
-                // isPriceDivider
-                id={property?._id}
-                key={property?._id}
-                img={property?.images[0]?.imageUrl || 'http://www.exoticamadhisland.com/img/2.jpg'}
-                area={property?.sizeOfProperty}
-                amminityList={property?.amenities}
-                addressLine1={property?.addressLine1}
-                bedroom={property?.noOfBedrooms}
-                propertyName={property?.title}
-                // buttonsList={property.buttonsList}
-                // price={property.price}
-                action={(ev: any) => handleTopLocations(ev, property)}
-              />
-            </Grid>
-          ))}
+          {latestLocation &&
+            latestLocation.map((property: any) => (
+              <Grid item xs={12} md={4} key={`latest-location-${property._id}`}>
+                <PropertyCard
+                  // isPriceDivider
+                  id={property?._id}
+                  key={property?._id}
+                  img={
+                    property?.images[0]?.imageUrl ||
+                    "http://www.exoticamadhisland.com/img/2.jpg"
+                  }
+                  area={property?.sizeOfProperty}
+                  amminityList={property?.amenities}
+                  addressLine1={property?.addressLine1}
+                  bedroom={property?.noOfBedrooms}
+                  propertyName={property?.title}
+                  // buttonsList={property.buttonsList}
+                  // price={property.price}
+                  action={(ev: any) => handleTopLocations(ev, property)}
+                />
+              </Grid>
+            ))}
         </Grid>
       </Box>
     </>

@@ -1,22 +1,25 @@
 import moment from "moment";
 import { PropertyCardFactory } from "../@types";
-const today = new Date();
-const tomorrow = new Date(today);
-tomorrow.setDate(tomorrow.getDate() + 1);
+// const today = new Date();
+// const tomorrow = new Date(today);
+// tomorrow.setDate(tomorrow.getDate() + 1);
+const today = moment();
+const tomorrow = moment().add(1, "day");
+// tomorrow.setDate(tomorrow.getDate() + 1);
 
 export const DEFAULT_FILTER = {
-    checkInDate: today,
-    checkOutDate: tomorrow,
-    serviceType:`FilmLocation`
-}
+  checkInDate: today,
+  checkOutDate: tomorrow,
+  serviceType: `FilmLocation`,
+};
 
 export const DEFAULT_MAP_PROPS = {
-    center: {
-      lat: 19.148360204126508, 
-      lng: 72.78976224016589,
-    },
-    zoom: 15,
-  };
+  center: {
+    lat: 19.148360204126508,
+    lng: 72.78976224016589,
+  },
+  zoom: 15,
+};
 export const PRODUCTION_HOUSE_TYPES_LIST = [
   "Action Film",
   "Album Song",
@@ -34,7 +37,7 @@ export const PRODUCTION_HOUSE_TYPES_LIST = [
   "TV Serial",
   "Web Series",
   "Youtube",
-]
+];
 export const TOP_PROPERTIES: PropertyCardFactory[] = [
   {
     id: `1`,

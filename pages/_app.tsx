@@ -7,13 +7,38 @@ import theme from "../src/theme";
 import Layout from "../src/components/Layout";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import '../public/css/style.css'
-import '../src/global.css'
- 
- 
+import "../public/css/style.css";
+import "../src/global.css";
+import { useEffect, useState } from "react";
+import { ServiceCategory } from "../src/services/serviceCategory/serviceCategory";
 
 export default function MyApp(props: AppProps) {
+  // States\
+  const [serviceList, setServiceList] = useState<any>();
+
+  // Variables
   const { Component, pageProps } = props;
+  const serviceCategory = new ServiceCategory();
+
+  // Functions
+
+  // Effects
+  const _getAllServiceList = () => {
+    const serviceListData = serviceCategory.getServiceCategoryList();
+    serviceListData.then((res: any) => {
+      if (res.status == 200) {
+        // console.log(res.data.data);
+        // #1. Adding data in state in the for catergoryList
+        setServiceList(res.data.data);
+      }
+    });
+  };
+
+  // Effects
+  useEffect(() => {
+    _getAllServiceList();
+  }, []);
+
   return (
     <React.Fragment>
       <Head>
@@ -24,12 +49,12 @@ export default function MyApp(props: AppProps) {
           name="viewport"
         />
       </Head>
-         <ThemeProvider theme={theme}>
-          <CssBaseline />
-          <Layout>
-            <Component {...pageProps} />
-          </Layout>
-        </ThemeProvider>
-     </React.Fragment>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <Layout serviceList={serviceList}>
+          <Component {...pageProps} />
+        </Layout>
+      </ThemeProvider>
+    </React.Fragment>
   );
 }

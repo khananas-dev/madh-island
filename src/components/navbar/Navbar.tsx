@@ -1,5 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { Nav, NavMenu, NavBtn, Bars, SearchBoxContainer, StartGrid, CenterGrid, EndGrid, NavbarGridContainer } from "./NavbarElements";
+import {
+  Nav,
+  NavMenu,
+  NavBtn,
+  Bars,
+  SearchBoxContainer,
+  StartGrid,
+  CenterGrid,
+  EndGrid,
+  NavbarGridContainer,
+} from "./NavbarElements";
 import Link from "./Navlink";
 import NavLink from "./Navlink";
 import { SidebarProps } from "../props";
@@ -34,26 +44,24 @@ function Navigation(sideBarProps: SidebarProps) {
     const serviceListData = serviceCategory.getServiceCategoryList();
     serviceListData.then((res: any) => {
       if (res.status == 200) {
-        console.log(res.data.data);
+        // console.log(res.data.data);
         // #1. Adding data in state in the for catergoryList
         setServiceList(res.data.data);
       }
-
-    })
-  }
+    });
+  };
 
   // Effects
   useEffect(() => {
     _getAllServiceList();
   }, []);
 
-
   return (
     <>
       <Nav style={{ height: 80 }}>
         <NavbarGridContainer container spacing={2}>
           <StartGrid item xs={6} md={3}>
-            <NavLink  href="/">
+            <NavLink href="/">
               <Image
                 src={logo}
                 width="175"
@@ -65,8 +73,7 @@ function Navigation(sideBarProps: SidebarProps) {
           <CenterGrid item xs={6} md={6}>
             <Bars onClick={sideBarProps.toggleSidebar} />
             <NavMenu>
-              {
-                serviceList &&
+              {serviceList &&
                 serviceList.map((service: any, index: number) => (
                   <NavLink
                     key={index}
@@ -80,8 +87,7 @@ function Navigation(sideBarProps: SidebarProps) {
                   >
                     {service.title}
                   </NavLink>
-                ))
-              }
+                ))}
             </NavMenu>
           </CenterGrid>
           <EndGrid item xs={12} md={3}>

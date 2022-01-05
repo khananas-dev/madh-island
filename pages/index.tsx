@@ -14,23 +14,21 @@ import OurServiceSection from "../src/components/Sections/OurServiceSection";
 import TopLocations from "../src/components/Sections/TopLocations";
 import { DEFAULT_FILTER } from "../src/constants";
 import { GetServerSideProps } from "next";
-import axios from 'axios';
+import axios from "axios";
 import { PropertyService } from "../src/services/property/propertyService";
 import { ServiceCategory } from "../src/services/serviceCategory/serviceCategory";
 import { OrgInfoService } from "../src/services/orgInfo/orgInfoService";
 import OurClients from "../src/components/Sections/OurClients";
-import Aminites from '../public/json/aminites.json'
+import Aminites from "../public/json/aminites.json";
 import Chips from "../src/components/Chips/Chips";
-
 
 // axios.get('http://3.111.11.219:3000/').then(response => {
 //   console.log(response);
 // });
 
 export default function Index({ props }: any) {
-
   // States
-  console.log(props)
+  // console.log(props);
   const [cached, setCached] = useState(true);
   const [latestLocation, setLatestLocation] = useState<any>();
   const [serviceList, setServiceList] = useState<any>();
@@ -46,38 +44,32 @@ export default function Index({ props }: any) {
     const latestLocationData = _propertyService.getLastestLocation();
     latestLocationData.then((res: any) => {
       if (!res?.data?.error) {
-        console.log(res?.data?.data);
+        // console.log(res?.data?.data);
         setLatestLocation(res?.data?.data);
       }
-    })
-  }
+    });
+  };
 
   const _getAllServiceList = () => {
     const serviceListData = serviceCategory.getServiceCategoryList();
     serviceListData.then((res: any) => {
       if (res.status == 200) {
-        console.log(res.data.data);
+        // console.log(res.data.data);
         // #1. Adding data in state in the for catergoryList
         setServiceList(res.data.data);
-        
       }
+    });
+  };
 
-    })
-  }
-
-  const _getOrgInfo = () =>{
+  const _getOrgInfo = () => {
     const orgInfoData = _orgInfoService.getOrgInfo();
-    orgInfoData.then((res:any) =>{
-      if(!res?.data?.error){
-        console.log(res?.data?.data);
+    orgInfoData.then((res: any) => {
+      if (!res?.data?.error) {
+        // console.log(res?.data?.data);
         setAboutUs(res?.data?.data);
-
       }
-    })
-  }
-
-
-
+    });
+  };
 
   // Effects
 
@@ -124,7 +116,6 @@ export default function Index({ props }: any) {
             <Chips title={item.title} className={item.className}/>
           ))
         } */}
-      
       </BodyWrapper>
       <OurPropertyMap latestLocation={latestLocation} />
       <TalkToUsSection />
@@ -132,8 +123,6 @@ export default function Index({ props }: any) {
     </AppWrapper>
   );
 }
-
-
 
 const AppWrapper = styled(Box)`
   background: radial-gradient(
@@ -144,7 +133,7 @@ const AppWrapper = styled(Box)`
   );
 `;
 const Hero = styled(Box)`
-  background: url(${HeroImage.src})  ;
+  background: url(${HeroImage.src});
 
   height: calc(100vh - 80px);
   background-repeat: no-repeat;
@@ -176,7 +165,7 @@ const WhiteContainer = styled(Box)`
   margin: auto;
   box-shadow: 0px 2px 4px -1px rgb(0 0 0 / 20%),
     0px 4px 5px 0px rgb(0 0 0 / 14%), 0px 1px 10px 0px rgb(0 0 0 / 12%);
-    @media (max-width: 768px) {
-      max-width: calc(100% - 30px)!important;
-    }
+  @media (max-width: 768px) {
+    max-width: calc(100% - 30px) !important;
+  }
 `;

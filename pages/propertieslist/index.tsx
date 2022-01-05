@@ -16,7 +16,7 @@ import { getStoreFilters } from "../../src/utils/localStorage";
 import { PropertyService } from "../../src/services/property/propertyService";
 
 const fetchPropertiesByFilter = (filter: PropertyFilter) => {
-  console.log(filter, "Filters");
+  // console.log(filter, "Filters");
 };
 function index() {
   // States
@@ -32,7 +32,6 @@ function index() {
 
   const _propertyService = new PropertyService();
 
-
   // Functions
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -45,7 +44,7 @@ function index() {
     router.push({
       // pathname: `/property/${propertyid}`,
       pathname: "/property/" + `${propertyid}`,
-      query: { id: `${propertyid}` }
+      query: { id: `${propertyid}` },
     });
   };
   const _getAllPropertyList = () => {
@@ -57,20 +56,18 @@ function index() {
         // #1. Saving data to the state of properList
         setPropertyList(res.data.data);
       }
-    })
-  }
+    });
+  };
 
-  const _getLatestLocation = ()=> {
+  const _getLatestLocation = () => {
     const latestLocationData = _propertyService.getLastestLocation();
-    latestLocationData.then((res:any)=>{
-      if(!res?.data?.error){
-        console.log(res?.data?.data);
+    latestLocationData.then((res: any) => {
+      if (!res?.data?.error) {
+        // console.log(res?.data?.data);
         setLatesLocation(res?.data?.data);
       }
-    })
-  }
-
-
+    });
+  };
 
   // const [searchBarObj, setSearchBarObj] = useState<SearchBarProps>();
 
@@ -78,7 +75,7 @@ function index() {
 
   // Trigger on Route Change
   useEffect(() => {
-    console.log(router.query)
+    // console.log(router.query);
     const searchFilters = getStoreFilters();
     const service = searchFilters.serviceType;
     const checkInDate = moment(searchFilters.checkInDate).toDate();
@@ -97,7 +94,6 @@ function index() {
     _getLatestLocation();
   }, []);
 
-
   return (
     <Box>
       <Grid
@@ -110,7 +106,9 @@ function index() {
         alignItems="center"
       >
         <Grid item xs={12} sm={12} md={12}>
-          <SearchWrapper sx={{ margin: `32px auto`,width:'fit-content !important' }}>
+          <SearchWrapper
+            sx={{ margin: `32px auto`, width: "fit-content !important" }}
+          >
             {propertyFilters && (
               <SearchBar
                 from={propertyFilters.checkInDate}
@@ -131,8 +129,7 @@ function index() {
                 {propertyFilters.serviceType === "EventVenues" && `Event Venue`}
                 {propertyFilters.serviceType === "FilmLocation" &&
                   `Film Location`}
-                {propertyFilters.serviceType === "Reece" &&
-                `Reece`}
+                {propertyFilters.serviceType === "Reece" && `Reece`}
               </Typography>
             )}
           </Grid>
@@ -173,12 +170,15 @@ function index() {
         >
           {propertyList &&
             propertyList.map((property: any) => (
-              <Grid item xs={12} md={4} key={property._id}>
+              <Grid item xs={12} md={4} key={`property-card-${property._id}`}>
                 <PropertyCard
                   isPriceDivider
                   id={property._id}
                   key={property._id}
-                  img={property.images[0]?.imageUrl || "https://images.unsplash.com/photo-1516156008625-3a9d6067fab5?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80"}
+                  img={
+                    property.images[0]?.imageUrl ||
+                    "https://images.unsplash.com/photo-1516156008625-3a9d6067fab5?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80"
+                  }
                   area={property?.sizeOfProperty}
                   amminityList={property?.amenities}
                   addressLine1={property.addressLine1}

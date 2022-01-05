@@ -9,13 +9,12 @@ function Layout({ children }: any) {
     setisOpen(!isOpen);
   };
   return (
-    <Box sx={{height:`100%`}}>
-      <Sidebar isOpen={isOpen} toggleSidebar={()=>(setisOpen(!isOpen))} />
-      <Navigation isOpen={isOpen} toggleSidebar={()=>(setisOpen(!isOpen))} />
-      <Box sx={{height:`calc(100vh - 80px)`, overflowX:`auto`}}>
-      {children}
+    <Box sx={{ height: `100%` }}>
+      <Sidebar isOpen={isOpen} toggleSidebar={() => setisOpen(!isOpen)} />
+      <Navigation isOpen={isOpen} toggleSidebar={() => setisOpen(!isOpen)} />
+      <Box sx={{ height: `calc(100vh - 80px)`, overflowX: `auto` }}>
+        {children}
       </Box>
-    
     </Box>
   );
 }
