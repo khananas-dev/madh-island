@@ -28,10 +28,12 @@ const top100Films = [
 function Navigation(sideBarProps: SidebarProps) {
   // States
   const [showAutocomplete, setShowAutocomplete] = useState(false);
-  const [serviceList, setServiceList] = useState<any>();
+  // const [serviceList, setServiceList] = useState<any>(
+  //   sideBarProps?.serviceCategoryList
+  // );
 
   // Variable
-  const serviceCategory = new ServiceCategory();
+  // const serviceCategory = new ServiceCategory();
 
   // Funciton
   const setFilter = (serviceType: string) => {
@@ -40,21 +42,21 @@ function Navigation(sideBarProps: SidebarProps) {
     setStoreFilters(searchFilters);
   };
 
-  const _getAllServiceList = () => {
-    const serviceListData = serviceCategory.getServiceCategoryList();
-    serviceListData.then((res: any) => {
-      if (res.status == 200) {
-        // console.log(res.data.data);
-        // #1. Adding data in state in the for catergoryList
-        setServiceList(res.data.data);
-      }
-    });
-  };
+  // const _getAllServiceList = () => {
+  //   const serviceListData = serviceCategory.getServiceCategoryList();
+  //   serviceListData.then((res: any) => {
+  //     if (res.status == 200) {
+  //       // console.log(res.data.data);
+  //       // #1. Adding data in state in the for catergoryList
+  //       setServiceList(res.data.data);
+  //     }
+  //   });
+  // };
 
   // Effects
-  useEffect(() => {
-    _getAllServiceList();
-  }, []);
+  // useEffect(() => {
+  //   _getAllServiceList();
+  // }, []);
 
   return (
     <>
@@ -73,21 +75,23 @@ function Navigation(sideBarProps: SidebarProps) {
           <CenterGrid item xs={6} md={6}>
             <Bars onClick={sideBarProps.toggleSidebar} />
             <NavMenu>
-              {serviceList &&
-                serviceList.map((service: any, index: number) => (
-                  <NavLink
-                    key={index}
-                    onClick={() => setFilter(service.route)}
-                    href={{
-                      pathname: "/propertieslist/",
-                      query: {
-                        serviceType: service.route,
-                      },
-                    }}
-                  >
-                    {service.title}
-                  </NavLink>
-                ))}
+              {sideBarProps?.serviceCategoryList &&
+                sideBarProps?.serviceCategoryList.map(
+                  (service: any, index: number) => (
+                    <NavLink
+                      key={index}
+                      onClick={() => setFilter(service.route)}
+                      href={{
+                        pathname: "/propertieslist/",
+                        query: {
+                          serviceType: service.route,
+                        },
+                      }}
+                    >
+                      {service.title}
+                    </NavLink>
+                  )
+                )}
             </NavMenu>
           </CenterGrid>
           <EndGrid item xs={12} md={3}>

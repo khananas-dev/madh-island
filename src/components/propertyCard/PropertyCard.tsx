@@ -50,54 +50,85 @@ const PropertyCard = ({
           </div>
         </CardMedia>
         <CardContent>
+          {propertyName && (
+            <Typography
+              style={{ marginBottom: 5 }}
+              gutterBottom
+              variant="h6"
+              component="h3"
+              className="property-Name"
+            >
+              {propertyName}
+            </Typography>
+          )}
+
+          {addressLine1 && (
+            <Typography
+              style={{ marginBottom: "20px" }}
+              className="property-address"
+              component="p"
+            >
+              {addressLine1 && (
+                <span style={{ color: COLORS.shade2 }}> {addressLine1} </span>
+              )}
+            </Typography>
+          )}
           <Typography
-            style={{ marginBottom: 12 }}
-            gutterBottom
             variant="h6"
-            component="div"
+            component="p"
+            className="property-data"
+            sx={{ marginBottom: "15px" }}
           >
-            {propertyName}
-          </Typography>
-          <Typography variant="h6" component="div">
             {bedroom && <span> {bedroom} Bedrooms </span>}
             <span style={{ color: COLORS.shade2 }}> |</span>
             {area && <span> {area} sq.ft </span>}
           </Typography>
-          <Typography
-            style={{ marginBottom: 12 }}
-            variant="body2"
-            component="div"
-          >
-            {addressLine1 && (
-              <span style={{ color: COLORS.shade2 }}> {addressLine1} </span>
-            )}
-          </Typography>
-          <AmminityContainer>
-            {amminityList?.map((amminity: any) => (
-              <Chips
-                key={`amminity-${amminity?.id}`}
-                title={amminity?.title}
-                className={amminity?.className}
-              />
-            ))}
-          </AmminityContainer>
-          {isPriceDivider && <Divider />}
 
-          <Typography
-            style={{ marginBottom: 6, marginTop: 12 }}
-            variant="h5"
-            component="div"
-          >
-            {price && <span style={{}}> Rs. {price}/per Night </span>}
-          </Typography>
-          <Typography style={{ fontSize: 12 }} component="div">
-            {price && (
-              <span style={{ color: COLORS.shade2 }}>
-                {" "}
-                (excl. Taxes and Charges){" "}
-              </span>
-            )}
-          </Typography>
+          {amminityList && (
+            <AmminityContainer>
+              {amminityList?.map((amminity: any) => (
+                <Chips
+                  key={`amminity-${amminity?.id}`}
+                  title={amminity?.title}
+                  className={amminity?.className}
+                />
+              ))}
+            </AmminityContainer>
+          )}
+          {(serviceType && serviceType == "VillasandBunglow") ||
+          serviceType == "EventVenues" ? (
+            <div>
+              {isPriceDivider && <Divider />}
+              <Typography className="property-price">
+                {/* {JSON.stringify(serviceType)} */}
+                {serviceType && serviceType == "VillasandBunglow"
+                  ? price?.villaBunglowPrice && (
+                      <h5>
+                        Rs. {price?.villaBunglowPrice?.toLocaleString("en-IN")}
+                        <span> / night</span>
+                      </h5>
+                    )
+                  : // price?.villaBunglowPrice
+                  serviceType == "EventVenues"
+                  ? price?.eventVenuePrice && (
+                      <h5>
+                        Rs. {price?.eventVenuePrice?.toLocaleString("en-IN")}
+                        <span> / night</span>
+                      </h5>
+                    )
+                  : null}
+                {/* {price && <span style={{}}> Rs. {price}/per Night </span>} */}
+              </Typography>
+              <Typography style={{ fontSize: 12 }} component="div">
+                {price && (
+                  <span style={{ color: COLORS.shade2 }}>
+                    {" "}
+                    (excl. Taxes and Charges){" "}
+                  </span>
+                )}
+              </Typography>
+            </div>
+          ) : null}
         </CardContent>
         {/* <CardContent>
         <Typography gutterBottom variant="h6" component="div">

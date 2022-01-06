@@ -1,7 +1,6 @@
 import React from "react";
 import { SidebarProps } from "../props";
 import {
-  CloseIcon,
   Icon,
   SidebarContainer,
   SidebarLink,
@@ -9,8 +8,23 @@ import {
   SidebarWrapper,
 } from "./SidebarElements";
 import { FaTimes } from "react-icons/fa";
+import { getStoreFilters, setStoreFilters } from "../../utils/localStorage";
+import Link from "next/link";
+import btnCloseIcon from "../../../public/close.svg";
 
-const Sidebar = (props: SidebarProps, { serviceList }: any): JSX.Element => {
+const Sidebar = (props: SidebarProps): JSX.Element => {
+  // States
+
+  // Variables
+
+  // Funtions
+  const setFilter = (serviceType: string) => {
+    let searchFilters = getStoreFilters();
+    searchFilters.serviceType = serviceType;
+    setStoreFilters(searchFilters);
+  };
+
+  // Effects
   console.log(props.isOpen ? "visible" : "hidden");
   return (
     <aside
@@ -31,10 +45,31 @@ const Sidebar = (props: SidebarProps, { serviceList }: any): JSX.Element => {
       onClick={props.toggleSidebar}
     >
       <Icon onClick={props.toggleSidebar}>
-        <FaTimes />
+        <img height={35} width={35} src={btnCloseIcon.src} alt="close button" />
       </Icon>
       <SidebarWrapper>
-        <SidebarMenu>
+        <ul className="sidebar-link">
+          {props?.serviceCategoryList &&
+            props?.serviceCategoryList.map((service: any, index: number) => (
+              <li>
+                <Link
+                  key={`sidebar-list-${index}`}
+                  href={{
+                    pathname: "/propertieslist/",
+                    query: {
+                      serviceType: service.route,
+                    },
+                  }}
+                >
+                  <a onClick={() => setFilter(service.route)}>
+                    {service?.title}
+                  </a>
+                </Link>
+              </li>
+            ))}
+        </ul>
+
+        {/* <SidebarMenu>
           <SidebarLink href="/about">Raccee</SidebarLink>
         </SidebarMenu>
         <SidebarMenu>
@@ -54,7 +89,7 @@ const Sidebar = (props: SidebarProps, { serviceList }: any): JSX.Element => {
         </SidebarMenu>
         <SidebarMenu>
           <SidebarLink href="/about">Profile Name</SidebarLink>
-        </SidebarMenu>
+        </SidebarMenu> */}
       </SidebarWrapper>
     </aside>
   );

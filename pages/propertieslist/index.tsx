@@ -23,8 +23,10 @@ function index() {
   const [propertyFilters, setPropertyFilters] = useState({} as PropertyFilter);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [topLocations, setTopLocations] = useState(TOP_LOCATIONS);
-  const [propertyList, setPropertyList] = useState<any>();
+  const [propertyList, setPropertyList] = useState<any[]>([]);
   const [latestLocation, setLatesLocation] = useState<any>();
+  const [sortData, setSortData] = useState<any>();
+  const [preSearchFilters, setPreSearchFilters] = useState<any>();
 
   // Variables
   const open = Boolean(anchorEl);
@@ -69,6 +71,28 @@ function index() {
     });
   };
 
+  const handleSort = (isDecending?: boolean) => {
+    // #1. Setting Price Key Based on Service Type
+    let priceKey: string = "";
+    switch (preSearchFilters.serviceType) {
+      case "VillasandBunglow":
+        priceKey = "villaBunglowPrice";
+        break;
+      case "EventVenues":
+        priceKey = "eventVenuePrice";
+        break;
+      default:
+        break;
+    }
+
+    // #2. Sorting using Price Key
+    const sortedProperty: any[] = propertyList.sort((a: any, b: any) =>
+      isDecending ? b[priceKey] - a[priceKey] : a[priceKey] - b[priceKey]
+    );
+    setPropertyList(sortedProperty);
+    setAnchorEl(null);
+  };
+
   // const [searchBarObj, setSearchBarObj] = useState<SearchBarProps>();
 
   // Effects
@@ -77,6 +101,7 @@ function index() {
   useEffect(() => {
     // console.log(router.query);
     const searchFilters = getStoreFilters();
+    setPreSearchFilters(getStoreFilters());
     const service = searchFilters.serviceType;
     const checkInDate = moment(searchFilters.checkInDate).toDate();
     const checkOutDate = moment(searchFilters.checkOutDate).toDate();
@@ -133,34 +158,40 @@ function index() {
               </Typography>
             )}
           </Grid>
-          <Grid item xs={2} sm={2} md={2} sx={{ textAlign: `right` }}>
-            <Button
-              id="basic-button"
-              aria-controls="basic-menu"
-              aria-haspopup="true"
-              aria-expanded={open ? "true" : undefined}
-              onClick={handleClick}
-            >
-              <SortIcon />
-              <Typography color="#1f1f1f" component="h2">
-                SORT
-              </Typography>
-            </Button>
-            <Menu
-              id="basic-menu"
-              anchorEl={anchorEl}
-              open={open}
-              onClose={handleClose}
-              MenuListProps={{
-                "aria-labelledby": "basic-button",
-              }}
-            >
-              <MenuItem onClick={handleClose}>Price Low To High</MenuItem>
-              <MenuItem onClick={handleClose}>Price High To Low</MenuItem>
-              <MenuItem onClick={handleClose}>Area Low To High</MenuItem>
-              <MenuItem onClick={handleClose}>Area High To Low</MenuItem>
-            </Menu>
-          </Grid>
+          {(propertyFilters.serviceType &&
+            propertyFilters.serviceType === "EventVenues") ||
+          propertyFilters.serviceType === "VillasandBunglow" ? (
+            <Grid item xs={2} sm={2} md={2} sx={{ textAlign: `right` }}>
+              <Button
+                id="basic-button"
+                aria-controls="basic-menu"
+                aria-haspopup="true"
+                aria-expanded={open ? "true" : undefined}
+                onClick={handleClick}
+              >
+                <SortIcon />
+                <Typography color="#1f1f1f" component="h2">
+                  SORT
+                </Typography>
+              </Button>
+              <Menu
+                id="basic-menu"
+                anchorEl={anchorEl}
+                open={open}
+                onClose={handleClose}
+                MenuListProps={{
+                  "aria-labelledby": "basic-button",
+                }}
+              >
+                <MenuItem onClick={() => handleSort()}>
+                  Price Low To High
+                </MenuItem>
+                <MenuItem onClick={() => handleSort(true)}>
+                  Price High To Low
+                </MenuItem>
+              </Menu>
+            </Grid>
+          ) : null}
         </Grid>
         <Grid
           container
@@ -185,7 +216,8 @@ function index() {
                   bedroom={property?.noOfBedrooms}
                   propertyName={property.title}
                   buttonsList={property.buttonsList}
-                  price={property.price}
+                  price={property}
+                  serviceType={propertyFilters?.serviceType}
                   action={handlePropertyDetails}
                 />
               </Grid>

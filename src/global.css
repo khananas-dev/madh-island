@@ -57,10 +57,41 @@
 .property-card {
   cursor: pointer;
   height: 100%;
+  border-radius: 8px;
+  box-shadow: 0 0 0 1px #e0e0e0;
+  transition: 0.3s ease;
+  overflow: hidden;
+}
+
+.property-card:hover {
+  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
 }
 
 .property-card .MuiPaper-root {
   height: 100%;
+  box-shadow: none;
+  border-radius: none;
+}
+.property-Name {
+  font-size: 18px !important;
+}
+
+.property-address {
+  font-size: 14px;
+  color: #717171;
+}
+.property-data span {
+  font-weight: 400;
+}
+.property-price h5 {
+  font-size: 20px;
+  color: #191919;
+  margin: 15px 0px;
+}
+.property-price span {
+  font-size: 16px;
+  font-weight: normal;
+  color: rgb(83, 83, 83);
 }
 
 .about-us-img {
@@ -122,6 +153,25 @@
 caption {
   cursor: pointer;
 }
+
+.sidebar-link {
+  list-style: none;
+  padding: 0px;
+  margin: 0px;
+  text-align: center;
+}
+
+.sidebar-link li:not(:last-of-type) {
+  margin-bottom: 20px;
+}
+
+.sidebar-link a {
+  display: inline-block;
+  text-decoration: none;
+  font-size: 28px;
+  color: #fff;
+}
+
 @media (max-width: 768px) {
   .about-col-2 {
     order: 1;

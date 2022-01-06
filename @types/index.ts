@@ -10,7 +10,7 @@ export interface PropertyCardFactory {
   area?: string;
   amminityList?: Aminity[];
   buttonsList?: ButtonConfig[];
-  price?: string;
+  price?: any;
   action?: any;
 }
 export interface ChipFactory {

@@ -8,19 +8,17 @@ export const SidebarContainer = styled.aside`
   z-index: 999;
   width: 100%;
   height: 100%;
-  background-color: #0C9B75;
+  background-color: #0c9b75;
   display: grid;
   align-items: center;
   top: 0;
   left: 0;
   transition: 0.3 ease-in-out;
- 
 `;
 export const Icon = styled.div`
-
   position: absolute;
-  top: 30px;
-  right: 45px;
+  top: 25px;
+  right: 20px;
   background-color: transparent;
   font-size: 30px;
   cursor: pointer;
