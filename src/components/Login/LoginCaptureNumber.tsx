@@ -11,8 +11,15 @@ import {
 import { useState } from "react";
 import { AuthenticationService } from "../../services/authentication/authenticationService";
 
-const LoginNumber = ({ userPhone, setSignUpDetail }: any) => {
-
+const LoginNumber = ({
+  userPhone,
+  setSignUpDetail,
+  showOtpScreen,
+  setErrors,
+  setShowOtpScreen,
+  error,
+  apiGenerateOtp,
+}: any) => {
   // States
   const [loginView, setLoginView] = useState(true);
 
@@ -24,7 +31,7 @@ const LoginNumber = ({ userPhone, setSignUpDetail }: any) => {
     firstName: "",
     lastName: "",
     phoneNumber: "",
-    emailId: ""
+    emailId: "",
   };
   const loginFormValidationSchema = LoginFormValidationSchema;
   const signupFormValidationSchema = SignupFormValidationSchema;
@@ -32,15 +39,25 @@ const LoginNumber = ({ userPhone, setSignUpDetail }: any) => {
   // Functions
 
   const handleSignUpSubmit = (values: any, onSubmitProps: any) => {
+    if (error) {
+      setShowOtpScreen(true);
+    } else {
+      setShowOtpScreen(false);
+    }
     userPhone(values.phoneNumber);
     onSubmitProps.resetForm();
     console.log(values);
-    setSignUpDetail(values);
-  }
+    const singUpdata = {
+      firstName: values?.firstName,
+      lastName: values?.lastName,
+      phoneNumber: Number(values?.phoneNumber),
+      emailId: values?.emailId,
+    };
+    setSignUpDetail(singUpdata);
+    setErrors("");
+  };
 
   // Effects
-
-
 
   return (
     <LoginCard>
@@ -89,7 +106,20 @@ const LoginNumber = ({ userPhone, setSignUpDetail }: any) => {
             initialValues={loginFormInitialValues}
             validationSchema={loginFormValidationSchema}
             onSubmit={(values, onSubmitProps) => {
+              // if (!error) {
+              //   console.log("working");
+              //   console.log(error);
+
+              //   console.log("working");
+              // } else {
+              //   setShowOtpScreen(false);
+              // }
               userPhone(values.phoneNumber);
+              const otpPhoneNumber = {
+                phoneNumber: values?.phoneNumber,
+              };
+              apiGenerateOtp(otpPhoneNumber);
+              setShowOtpScreen(!error);
               onSubmitProps.resetForm();
             }}
           >
@@ -117,6 +147,7 @@ const LoginNumber = ({ userPhone, setSignUpDetail }: any) => {
                 >
                   Send OTP
                 </Button>
+                <span className="error">{error}</span>
               </Form>
             )}
           </Formik>
@@ -219,6 +250,7 @@ const LoginNumber = ({ userPhone, setSignUpDetail }: any) => {
                 >
                   Send OTP
                 </Button>
+                <span className="error">{error}</span>
               </Form>
             )}
           </Formik>

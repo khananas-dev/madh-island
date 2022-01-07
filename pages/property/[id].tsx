@@ -35,13 +35,11 @@ const propertyDetailsById = {
   aminities: [],
 };
 function PropertyDetails() {
-
   // States
   const [propertyFilter, setPropertyFilter] = useState({} as PropertyFilter);
   const [loginModel, setLoginModel] = React.useState(false);
   const [signupModel, setSignupModel] = React.useState(false);
   const [propertyDetail, setPropertyDetail] = React.useState<any>();
-
 
   // Variable
   const router = useRouter();
@@ -72,9 +70,7 @@ function PropertyDetails() {
   };
 
   const propertyService = new PropertyService();
-  const { id } = router?.query
-
-
+  const { id } = router?.query;
 
   // Functions
 
@@ -96,7 +92,7 @@ function PropertyDetails() {
   };
   const handleCheckoutCard = (value: any) => {
     console.log(value);
-    
+
     // Check if user is already logged in
     // if logged in than resever api hit;
     // if not loged in show login model
@@ -105,24 +101,22 @@ function PropertyDetails() {
       return OpenLoginForm();
     }
     if (propertyFilter.serviceType === "VillasandBunglow") {
-      console.log('value');
-
-
+      console.log("value");
     }
   };
   const handleClose = () => setLoginModel(false);
 
   const _getPropertyDetailById = (payload: any) => {
-    const singlePropertyDetailData = propertyService.getPropertyDetailById(payload);
+    const singlePropertyDetailData =
+      propertyService.getPropertyDetailById(payload);
     singlePropertyDetailData.then((res: any) => {
       if (!res?.data?.error) {
         console.log(res?.data?.data);
         // Assigning response the data in the state
         setPropertyDetail(res?.data?.data);
       }
-    })
+    });
   };
-
 
   // Effects
   useEffect(() => {
@@ -142,11 +136,10 @@ function PropertyDetails() {
   }, []);
 
   useEffect(() => {
-    if(id){
+    if (id) {
       _getPropertyDetailById(id);
     }
   }, [id]);
-
 
   return (
     <Box sx={{ height: `inherit` }}>
@@ -164,10 +157,11 @@ function PropertyDetails() {
                 `Villas & Bungalows`}
               {propertyFilter.serviceType === "EventVenues" && `Event Venue`}
               {propertyFilter.serviceType === "FilmLocation" && `Film Location`}
-              {propertyFilter.serviceType === "Reece" &&
-                `Reece`}
+              {propertyFilter.serviceType === "Reece" && `Reece`}
             </Link>
-            <Typography color="text.primary">{propertyDetail?.title}</Typography>
+            <Typography color="text.primary">
+              {propertyDetail?.title}
+            </Typography>
           </Breadcrumbs>
 
           <Typography
@@ -180,37 +174,37 @@ function PropertyDetails() {
             {/* {selectedProperty.propertyName} */}
             {propertyDetail?.title}
           </Typography>
-          <Grid container sx={{ flexDirection: { xs: `column-reverse`, md: 'row' } }} spacing={2}>
+          <Grid
+            container
+            sx={{ flexDirection: { xs: `column-reverse`, md: "row" } }}
+            spacing={2}
+          >
             {/* /Left */}
             <Grid item xs={12} md={8}>
-              {propertyDetail?.addressLine1 &&
-                (
-                  <Typography
-                    variant="body1"
-                    component="p"
-                    color="#1F1F1F"
-                    textAlign="left"
-                    sx={{ marginTop: `8px` }}
-                  >
-                    {/* {selectedProperty.address} */}
-                    {propertyDetail?.addressLine1}
-                  </Typography>
-                )
-              }
-              {propertyDetail?.addressLine2 &&
-                (
-                  <Typography
-                    variant="body1"
-                    component="p"
-                    color="#1F1F1F"
-                    textAlign="left"
-                    sx={{ marginTop: `8px` }}
-                  >
-                    {/* {selectedProperty.address} */}
-                    {propertyDetail?.addressLine2}
-                  </Typography>
-                )
-              }
+              {propertyDetail?.addressLine1 && (
+                <Typography
+                  variant="body1"
+                  component="p"
+                  color="#1F1F1F"
+                  textAlign="left"
+                  sx={{ marginTop: `8px` }}
+                >
+                  {/* {selectedProperty.address} */}
+                  {propertyDetail?.addressLine1}
+                </Typography>
+              )}
+              {propertyDetail?.addressLine2 && (
+                <Typography
+                  variant="body1"
+                  component="p"
+                  color="#1F1F1F"
+                  textAlign="left"
+                  sx={{ marginTop: `8px` }}
+                >
+                  {/* {selectedProperty.address} */}
+                  {propertyDetail?.addressLine2}
+                </Typography>
+              )}
 
               <Typography
                 variant="body2"
@@ -219,24 +213,19 @@ function PropertyDetails() {
                 textAlign="left"
                 sx={{ marginTop: `16px` }}
               >
-                {
-                  propertyDetail?.noOfBedrooms &&
-                  `${propertyDetail?.noOfBedrooms} Bedrooms `
-                }
+                {propertyDetail?.noOfBedrooms &&
+                  `${propertyDetail?.noOfBedrooms} Bedrooms `}
 
-                {propertyDetail?.sizeOfProperty && (` | ${propertyDetail?.sizeOfProperty} Sq ft.`)}
-                {
-                  propertyFilter &&
-                    propertyFilter.serviceType == 'VillasandBunglow'
-                    ?
-                    propertyDetail?.additionalChargeMax && (` | Max Guests ${propertyDetail?.additionalChargeMax}`)
-                    :
-                    propertyFilter.serviceType == 'EventVenues'
-                      ?
-                      propertyDetail?.eventVenueMaxCapacity && (` | Max Guests ${propertyDetail?.eventVenueMaxCapacity}`)
-                      :
-                      null
-                }
+                {propertyDetail?.sizeOfProperty &&
+                  ` | ${propertyDetail?.sizeOfProperty} Sq ft.`}
+                {propertyFilter &&
+                propertyFilter.serviceType == "VillasandBunglow"
+                  ? propertyDetail?.additionalChargeMax &&
+                    ` | Max Guests ${propertyDetail?.additionalChargeMax}`
+                  : propertyFilter.serviceType == "EventVenues"
+                  ? propertyDetail?.eventVenueMaxCapacity &&
+                    ` | Max Guests ${propertyDetail?.eventVenueMaxCapacity}`
+                  : null}
               </Typography>
 
               <Typography
@@ -258,100 +247,91 @@ function PropertyDetails() {
                   <Chips key={amminity.id} name={amminity.name} />
                 ))}
               </Stack>
-              {propertyDetail?.description &&
-                (
-                  <Box>
-                    <Typography
-                      variant="h5"
-                      component="p"
-                      color="#1F1F1F"
-                      textAlign="left"
-                      sx={{ marginTop: `16px` }}
-                    >
-                      Details
-                    </Typography>
-                    <Typography
-                      variant="body1"
-                      component="p"
-                      color="#1F1F1F"
-                      textAlign="left"
-                      sx={{ marginTop: `8px` }}
-                    >
-                      {/* {selectedProperty.details} */}
-                      {propertyDetail?.description}
-                    </Typography>
-                  </Box>
-                )
-              }
+              {propertyDetail?.description && (
+                <Box>
+                  <Typography
+                    variant="h5"
+                    component="p"
+                    color="#1F1F1F"
+                    textAlign="left"
+                    sx={{ marginTop: `16px` }}
+                  >
+                    Details
+                  </Typography>
+                  <Typography
+                    variant="body1"
+                    component="p"
+                    color="#1F1F1F"
+                    textAlign="left"
+                    sx={{ marginTop: `8px` }}
+                  >
+                    {/* {selectedProperty.details} */}
+                    {propertyDetail?.description}
+                  </Typography>
+                </Box>
+              )}
 
-              {propertyDetail?.homeRuleTruths &&
-                (
-                  <Box>
-                    <Typography
-                      variant="h5"
-                      component="p"
-                      color="#1F1F1F"
-                      textAlign="left"
-                      sx={{ marginTop: `16px` }}
-                    >
-                      House Rules
-                    </Typography>
-                    <Typography
-                      variant="body1"
-                      component="p"
-                      color="#1F1F1F"
-                      textAlign="left"
-                      sx={{ marginTop: `8px` }}
-                    >
-                      {propertyDetail?.homeRuleTruths}
-                    </Typography>
-                  </Box>
-                )
-              }
+              {propertyDetail?.homeRuleTruths && (
+                <Box>
+                  <Typography
+                    variant="h5"
+                    component="p"
+                    color="#1F1F1F"
+                    textAlign="left"
+                    sx={{ marginTop: `16px` }}
+                  >
+                    House Rules
+                  </Typography>
+                  <Typography
+                    variant="body1"
+                    component="p"
+                    color="#1F1F1F"
+                    textAlign="left"
+                    sx={{ marginTop: `8px` }}
+                  >
+                    {propertyDetail?.homeRuleTruths}
+                  </Typography>
+                </Box>
+              )}
 
-              {propertyDetail?.policies &&
-                (
-                  <Box>
-                    <Typography
-                      variant="h5"
-                      component="p"
-                      color="#1F1F1F"
-                      textAlign="left"
-                      sx={{ marginTop: `16px` }}
-                    >
-                      Policies
-                    </Typography>
-                    <Typography
-                      variant="body1"
-                      component="p"
-                      color="#1F1F1F"
-                      textAlign="left"
-                      sx={{ marginTop: `8px` }}
-                    >
-                      {/* {selectedProperty.details} */}
-                      {propertyDetail?.policies}
-                    </Typography>
-                  </Box>
-                )
-              }
-
+              {propertyDetail?.policies && (
+                <Box>
+                  <Typography
+                    variant="h5"
+                    component="p"
+                    color="#1F1F1F"
+                    textAlign="left"
+                    sx={{ marginTop: `16px` }}
+                  >
+                    Policies
+                  </Typography>
+                  <Typography
+                    variant="body1"
+                    component="p"
+                    color="#1F1F1F"
+                    textAlign="left"
+                    sx={{ marginTop: `8px` }}
+                  >
+                    {/* {selectedProperty.details} */}
+                    {propertyDetail?.policies}
+                  </Typography>
+                </Box>
+              )}
             </Grid>
             {/* Right */}
             <Grid item xs={12} md={4}>
               <CheckoutCard
-                handleClick={(handleClick: any) => handleCheckoutCard(handleClick)}
+                handleClick={(handleClick: any) =>
+                  handleCheckoutCard(handleClick)
+                }
                 detail={propertyDetail}
                 price={
                   propertyFilter?.serviceType &&
-                    propertyFilter?.serviceType == 'VillasandBunglow'
-                    ?
-                    propertyDetail?.villaBunglowPrice
-                    :
-                    propertyFilter?.serviceType == 'EventVenues'
-                      ?
-                      propertyDetail?.eventVenuePrice
-                      : null
-
+                  propertyFilter?.serviceType == "VillasandBunglow"
+                    ? propertyDetail?.villaBunglowPrice
+                    : propertyFilter?.serviceType == "EventVenues"
+                    ? propertyDetail?.eventVenuePrice
+                    : null
                 }
                 serviceType={propertyFilter}
               />
@@ -365,26 +345,25 @@ function PropertyDetails() {
       <FooterWrapper>
         <Grid container spacing={2}>
           <Grid item xs={6}>
-            {
-              propertyFilter.serviceType &&
-                propertyFilter.serviceType != 'Reece'
-                ?
-                <Typography
-                  variant="h3"
-                  component="h3"
-                  color="#1F1F1F"
-                  textAlign="left"
-                  sx={{}}
-                >
-                  {
-                    `
-                ${moment(propertyFilter?.checkInDate).format('DD MMM YYYY')} - ${moment(propertyFilter?.checkOutDate).format('DD MMM YYYY')}
-                `
-                  }
-                  {/* 21-Oct-2021 - 30-Oct-2021 */}
-                </Typography>
-                : null
-            }
+            {propertyFilter.serviceType &&
+            propertyFilter.serviceType != "Reece" ? (
+              <Typography
+                variant="h3"
+                component="h3"
+                color="#1F1F1F"
+                textAlign="left"
+                sx={{}}
+              >
+                {`
+                ${moment(propertyFilter?.checkInDate).format(
+                  "DD MMM YYYY"
+                )} - ${moment(propertyFilter?.checkOutDate).format(
+                  "DD MMM YYYY"
+                )}
+                `}
+                {/* 21-Oct-2021 - 30-Oct-2021 */}
+              </Typography>
+            ) : null}
 
             <Typography
               variant="h4"
@@ -406,26 +385,20 @@ function PropertyDetails() {
               alignItems: "center",
             }}
           >
-            {
-              propertyFilter.serviceType &&
-                propertyFilter.serviceType == 'FilmLocation'
-                ?
-                <Button>Download PDF</Button>
-                : null
-            }
+            {propertyFilter.serviceType &&
+            propertyFilter.serviceType == "FilmLocation" ? (
+              <Button>Download PDF</Button>
+            ) : null}
 
             <Button onClick={BookProperty}>
-              {
-                propertyFilter?.serviceType &&
-                  propertyFilter?.serviceType == 'VillasandBunglow' || propertyFilter?.serviceType == 'EventVenues'
-                  ?
-                  'Book Now'
-                  :
-                  propertyFilter?.serviceType == 'FilmLocation' || propertyFilter?.serviceType == 'Reece'
-                    ?
-                    'Reserve'
-                    : null
-              }
+              {(propertyFilter?.serviceType &&
+                propertyFilter?.serviceType == "VillasandBunglow") ||
+              propertyFilter?.serviceType == "EventVenues"
+                ? "Book Now"
+                : propertyFilter?.serviceType == "FilmLocation" ||
+                  propertyFilter?.serviceType == "Reece"
+                ? "Reserve"
+                : null}
             </Button>
           </Grid>
         </Grid>
@@ -438,7 +411,7 @@ function PropertyDetails() {
         aria-describedby="modal-modal-description"
       >
         <LoginWrapper>
-          <Login />
+          <Login handleClose={handleClose} />
         </LoginWrapper>
       </Modal>
     </Box>

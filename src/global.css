@@ -171,7 +171,27 @@ caption {
   font-size: 28px;
   color: #fff;
 }
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
 
+/* Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+.error {
+  display: block;
+  text-align: center;
+  color: red;
+  font-size: 12px;
+  padding: 10px;
+}
+.otp-input {
+  text-align: center;
+}
 @media (max-width: 768px) {
   .about-col-2 {
     order: 1;
