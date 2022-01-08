@@ -242,7 +242,7 @@ const LoginOtp = ({
               />
             </Box>
 
-            <Link
+            {/* <Link
               component="button"
               variant="body2"
               color="inherit"
@@ -251,7 +251,7 @@ const LoginOtp = ({
               }}
             >
               Resend OTP
-            </Link>
+            </Link> */}
             <Button
               variant="contained"
               type="submit"

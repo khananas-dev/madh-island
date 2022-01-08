@@ -192,6 +192,52 @@ input[type="number"] {
 .otp-input {
   text-align: center;
 }
+
+.default-page {
+  padding: 50px 0px;
+}
+.custom-container {
+  margin-left: 60px;
+  margin-right: 60px;
+}
+.default-page h1 {
+  margin: 0;
+  font-size: 32px;
+  font-family: Roboto;
+  font-weight: normal;
+  color: #0c9b75;
+  margin-bottom: 20px;
+}
+.default-page .about-description {
+  font-size: 16px !important;
+}
+.default-page h3 {
+  margin: 0px 0px 15px 0px;
+}
+
+.default-page ol li::marker,
+.default-page h3 {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.default-page ol ul {
+  counter-reset: alphabeticList;
+}
+.default-page ol ul {
+  list-style: none;
+}
+.default-page ol ul li {
+  text-align: justify;
+  font-weight: 300 !important;
+  font-size: 14px !important;
+  line-height: 25px;
+}
+.default-page ol ul li:before {
+  content: "(" counter(alphabeticList, lower-alpha) ") ";
+  counter-increment: alphabeticList;
+  font-weight: bold;
+}
 @media (max-width: 768px) {
   .about-col-2 {
     order: 1;
@@ -215,5 +261,15 @@ input[type="number"] {
   }
   .talk-to-us-wrapper h2 {
     margin-bottom: 10px;
+  }
+  .custom-container {
+    margin-left: 20px;
+    margin-right: 20px;
+  }
+  .default-page h3 {
+    font-size: 18px;
+  }
+  .default-page p {
+    font-size: 14px !important;
   }
 }

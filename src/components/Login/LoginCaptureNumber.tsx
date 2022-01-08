@@ -57,6 +57,23 @@ const LoginNumber = ({
     setErrors("");
   };
 
+  const handelSingIn = (values: any, onSubmitProps: any) => {
+    if (error) {
+      setShowOtpScreen(true);
+    } else {
+      setShowOtpScreen(false);
+    }
+    userPhone(values.phoneNumber);
+    const otpPhoneNumber = {
+      phoneNumber: values?.phoneNumber,
+    };
+    // apiGenerateOtp(otpPhoneNumber);
+
+    // setShowOtpScreen(!error);
+    onSubmitProps.resetForm();
+    setErrors("");
+  };
+
   // Effects
 
   return (
@@ -81,7 +98,10 @@ const LoginNumber = ({
               Log In
             </Typography>
             <Typography
-              onClick={() => setLoginView(!loginView)}
+              onClick={() => {
+                setLoginView(!loginView);
+                setErrors("");
+              }}
               variant="caption"
               component="caption"
               textAlign="right"
@@ -105,23 +125,17 @@ const LoginNumber = ({
           <Formik
             initialValues={loginFormInitialValues}
             validationSchema={loginFormValidationSchema}
-            onSubmit={(values, onSubmitProps) => {
-              // if (!error) {
-              //   console.log("working");
-              //   console.log(error);
-
-              //   console.log("working");
-              // } else {
-              //   setShowOtpScreen(false);
-              // }
-              userPhone(values.phoneNumber);
-              const otpPhoneNumber = {
-                phoneNumber: values?.phoneNumber,
-              };
-              apiGenerateOtp(otpPhoneNumber);
-              setShowOtpScreen(!error);
-              onSubmitProps.resetForm();
-            }}
+            // onSubmit={(values, onSubmitProps) => {
+            //   userPhone(values.phoneNumber);
+            //   const otpPhoneNumber = {
+            //     phoneNumber: values?.phoneNumber,
+            //   };
+            //   apiGenerateOtp(otpPhoneNumber);
+            //   // setShowOtpScreen(!error);
+            //   setErrors("");
+            //   onSubmitProps.resetForm();
+            // }}
+            onSubmit={handelSingIn}
           >
             {(props) => (
               <Form>
@@ -173,7 +187,10 @@ const LoginNumber = ({
               Create New User
             </Typography>
             <Typography
-              onClick={() => setLoginView(!loginView)}
+              onClick={() => {
+                setLoginView(!loginView);
+                setErrors("");
+              }}
               variant="caption"
               component="caption"
               textAlign="right"

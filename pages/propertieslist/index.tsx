@@ -103,8 +103,8 @@ function index() {
     const searchFilters = getStoreFilters();
     setPreSearchFilters(getStoreFilters());
     const service = searchFilters.serviceType;
-    const checkInDate = moment(searchFilters.checkInDate).toDate();
-    const checkOutDate = moment(searchFilters.checkOutDate).toDate();
+    const checkInDate = searchFilters.checkInDate || moment();
+    const checkOutDate = searchFilters.checkOutDate || moment().add(1, "day");
     const filters: PropertyFilter = {
       serviceType: service as string,
       checkInDate: checkInDate,
@@ -136,8 +136,8 @@ function index() {
           >
             {propertyFilters && (
               <SearchBar
-                from={propertyFilters.checkInDate}
-                to={propertyFilters?.checkOutDate}
+                from={propertyFilters.checkInDate || moment()}
+                to={propertyFilters?.checkOutDate || moment().add(1, "day")}
                 serviceType={propertyFilters?.serviceType}
               />
             )}

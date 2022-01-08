@@ -15,6 +15,7 @@ function Login({ handleClose }: any) {
   const [loginScreen, setLoginScreen] = useState<boolean>(true);
   const [errors, setErrors] = useState<any>("");
   const [showOtpScreen, setShowOtpScreen] = useState<boolean>(false);
+  const [jwt, setJwt] = useState<any>();
 
   // variables
 
@@ -53,8 +54,10 @@ function Login({ handleClose }: any) {
     generateOtpData.then((res: any) => {
       if (!res?.data?.error) {
         console.log(res?.data?.message);
+        setShowOtpScreen(true);
       } else {
         setErrors(res?.data?.error);
+        setShowOtpScreen(false);
       }
     });
   };
@@ -64,9 +67,12 @@ function Login({ handleClose }: any) {
     setLoading(true);
     verifyOtpData.then((res: any) => {
       if (!res?.data?.error) {
-        console.log(res?.data?.data);
+        console.log(res?.data);
         setLoading(false);
         // setLoginScreen(false);
+        console.log();
+
+        setJwt(JSON.stringify(res?.data));
         handleClose();
       } else {
         setLoading(false);
@@ -88,14 +94,14 @@ function Login({ handleClose }: any) {
     }
   }, [signUpDetail]);
 
-  // useEffect(() => {
-  //   if (registeredMobile) {
-  //     const phoneNumberData = {
-  //       phoneNumber: Number(registeredMobile),
-  //     };
-  //     _generateOtp(phoneNumberData);
-  //   }
-  // }, [registeredMobile]);
+  useEffect(() => {
+    if (registeredMobile) {
+      const phoneNumberData = {
+        phoneNumber: Number(registeredMobile),
+      };
+      _generateOtp(phoneNumberData);
+    }
+  }, [registeredMobile]);
 
   // Verifying otp on the set of otp
   useEffect(() => {
@@ -108,8 +114,17 @@ function Login({ handleClose }: any) {
     }
   }, [otp]);
 
+  useEffect(() => {
+    if (jwt) {
+      console.log(jwt);
+      localStorage.setItem("jwt", jwt);
+    }
+  }, [jwt]);
   return (
     <>
+      {/* {JSON.stringify(
+        `error: ${errors} and show otp screen : ${showOtpScreen}`
+      )} */}
       {!showOtpScreen && (
         <LoginNumber
           userPhone={userPhone}
