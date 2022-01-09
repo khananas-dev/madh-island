@@ -28,7 +28,7 @@ import COLORS from "../../constants/color";
 import MobileTimePicker from "@mui/lab/MobileTimePicker";
 import { numberOfNights } from "../../utils/utils";
 import moment from "moment";
-import { getStoreFilters } from "../../utils/localStorage";
+import { getStoreFilters, setStoreFilters } from "../../utils/localStorage";
 
 interface SummaryCard {
   // price?: number | string;
@@ -78,10 +78,14 @@ function index(cardProps: SummaryCard) {
   */
   const noOfNight = () => {
     // return numberOfNights(
-    //   cardProps?.serviceType?.checkInDate,
-    //   cardProps?.serviceType?.checkOutDate
+    //   moment(cardProps?.serviceType?.checkInDate).toDate,
+    //   moment(cardProps?.serviceType?.checkOutDate).toDate
     // );
-    return 1;
+    const checkInDate = moment();
+    const checkOutDate = moment().add(1, "day");
+    // return numberOfNights();
+    // return 1;
+    return Math.floor(moment.duration(checkOutDate.diff(checkInDate)).asDays());
   };
   const subTotalNight = () => {
     return cardProps?.price * noOfNight();
@@ -104,14 +108,18 @@ function index(cardProps: SummaryCard) {
 
   // creating json for the post request
   // useEffect(() => {
-  //   const searchFilters = getStoreFilters();
-  //   setValue([moment(searchFilters.checkInDate).toDate(), moment(searchFilters.checkOutDate).toDate()])
-  // }, [value])
+  //   // const searchFilters = getStoreFilters();
+  //   setValue([
+  //     cardProps?.serviceType?.checkInDate || moment(),
+  //     cardProps?.serviceType?.checkOutDate || moment().add(1, "day"),
+  //   ]);
+  // }, [value]);
 
   const handleClick = () => {
     const payload = {
-      checkInDate: cardProps?.serviceType?.checkInDate,
-      checkOutDate: cardProps?.serviceType?.checkOutDate,
+      checkInDate: cardProps?.serviceType?.checkInDate || moment(),
+      checkOutDate:
+        cardProps?.serviceType?.checkOutDate || moment().add(1, "day"),
       totalAmount: grandTotal(),
       noOfGuest,
       productionName,
@@ -138,9 +146,35 @@ function index(cardProps: SummaryCard) {
     return d;
   };
 
+  const handleChange = () => {
+    const filter = {
+      // serviceType: serviceType,
+      checkInDate: value[0],
+      checkOutDate: value[1],
+    };
+    // setFilterToLocalStorage(filter);
+    setStoreFilters(filter);
+  };
+
+  //  Effects
+
+  useEffect(() => {
+    const searchFilters = getStoreFilters();
+    setValue([
+      searchFilters.checkInDate || value[0],
+      searchFilters.checkOutDate || value[1],
+    ]);
+  }, []);
+
+  useEffect(() => {
+    if (value) {
+      handleChange();
+    }
+  }, [value]);
+
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
-      {JSON.stringify(moment())}
+      {JSON.stringify(`checkIn: ${value[0]}, checkOut ${value[1]}`)}
       <Card
         style={{
           padding: 16,
@@ -181,7 +215,6 @@ function index(cardProps: SummaryCard) {
               startText="Check-in"
               endText="Check-out"
               disablePast
-              minDate={todayDate}
               value={value}
               onChange={(newValue: any) => {
                 setValue(newValue);
