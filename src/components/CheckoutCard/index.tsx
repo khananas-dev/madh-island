@@ -38,6 +38,10 @@ interface SummaryCard {
   detail?: any;
 }
 function index(cardProps: SummaryCard) {
+  // const [value, setValue] = React.useState<DateRange<Date>>([
+  //   cardProps?.serviceType?.checkInDate,
+  //   cardProps?.serviceType?.checkOutDate,
+  // ]);
   const [value, setValue] = React.useState<DateRange<Date>>([
     cardProps?.serviceType?.checkInDate,
     cardProps?.serviceType?.checkOutDate,
@@ -77,15 +81,12 @@ function index(cardProps: SummaryCard) {
   Calc Logic here
   */
   const noOfNight = () => {
-    // return numberOfNights(
-    //   moment(cardProps?.serviceType?.checkInDate).toDate,
-    //   moment(cardProps?.serviceType?.checkOutDate).toDate
-    // );
-    const checkInDate = moment();
-    const checkOutDate = moment().add(1, "day");
+    return numberOfNights(value[0], value[1]);
+    // const checkInDate = moment();
+    // const checkOutDate = moment().add(1, "day");
     // return numberOfNights();
     // return 1;
-    return Math.floor(moment.duration(checkOutDate.diff(checkInDate)).asDays());
+    // return Math.floor(moment.duration(checkOutDate.diff(checkInDate)).asDays());
   };
   const subTotalNight = () => {
     return cardProps?.price * noOfNight();
@@ -146,35 +147,49 @@ function index(cardProps: SummaryCard) {
     return d;
   };
 
-  const handleChange = () => {
-    const filter = {
-      // serviceType: serviceType,
-      checkInDate: value[0],
-      checkOutDate: value[1],
-    };
-    // setFilterToLocalStorage(filter);
-    setStoreFilters(filter);
-  };
+  // const handleChange = () => {
+  //   const filter = {
+  //     serviceType: cardProps?.serviceType,
+  //     checkInDate: value[0],
+  //     checkOutDate: value[1],
+  //   };
+  //   // setFilterToLocalStorage(filter);
+  //   setStoreFilters(filter);
+  // };
 
   //  Effects
 
+  // useEffect(() => {
+  //   const searchFilters = getStoreFilters();
+  //   setValue([
+  //     searchFilters.checkInDate || value[0],
+  //     searchFilters.checkOutDate || value[1],
+  //   ]);
+  // }, []);
   useEffect(() => {
-    const searchFilters = getStoreFilters();
-    setValue([
-      searchFilters.checkInDate || value[0],
-      searchFilters.checkOutDate || value[1],
-    ]);
-  }, []);
-
-  useEffect(() => {
-    if (value) {
-      handleChange();
+    if (cardProps) {
+      setValue([
+        cardProps?.serviceType?.checkInDate || value[0],
+        cardProps?.serviceType?.checkOutDate || value[1],
+      ]);
     }
-  }, [value]);
+  }, [cardProps]);
+
+  // useEffect(() => {
+  //   if (value) {
+  //     handleChange();
+  //   }
+  // }, [value]);
 
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
-      {JSON.stringify(`checkIn: ${value[0]}, checkOut ${value[1]}`)}
+      {/* {JSON.stringify(
+        `checkIN : ${
+          cardProps?.serviceType?.checkInDate
+        } || ${new Date()} || checkOut : ${
+          cardProps?.serviceType?.checkOutDate
+        }`
+      )} */}
       <Card
         style={{
           padding: 16,
@@ -399,7 +414,7 @@ function index(cardProps: SummaryCard) {
                     >
                       {` Extra Guests ${
                         detail?.additionalChargeMin - noOfGuest
-                      } - ${(
+                      }  ${(
                         detail?.additionalChargePerPerson || 0
                       ).toLocaleString("en-IN")}/person`}
                     </Typography>
