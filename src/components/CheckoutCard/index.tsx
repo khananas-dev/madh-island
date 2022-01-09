@@ -157,6 +157,16 @@ function index(cardProps: SummaryCard) {
   //   setStoreFilters(filter);
   // };
 
+  const handleOnChange = (newValue: any) => {
+    setValue(newValue);
+    const filter = {
+      serviceType: cardProps?.serviceType?.serviceType,
+      checkInDate: value[0],
+      checkOutDate: value[1],
+    };
+    // setFilterToLocalStorage(filter);
+    setStoreFilters(filter);
+  };
   //  Effects
 
   // useEffect(() => {
@@ -231,8 +241,11 @@ function index(cardProps: SummaryCard) {
               endText="Check-out"
               disablePast
               value={value}
+              // onChange={(newValue: any) => {
+              //   setValue(newValue);
+              // }}
               onChange={(newValue: any) => {
-                setValue(newValue);
+                handleOnChange(newValue);
               }}
               renderInput={(startProps, endProps) => (
                 <React.Fragment>
@@ -274,6 +287,7 @@ function index(cardProps: SummaryCard) {
                   onChange={(newValue: any) => {
                     setReeceBooking(newValue);
                   }}
+                  // onChange={handleOnChange(newValue)}
                   PopperProps={{
                     placement: "top",
                   }}
@@ -413,8 +427,8 @@ function index(cardProps: SummaryCard) {
                       sx={{ marginTop: `16px` }}
                     >
                       {` Extra Guests ${
-                        detail?.additionalChargeMin - noOfGuest
-                      }  ${(
+                        noOfGuest - detail?.additionalChargeMin
+                      } - ${(
                         detail?.additionalChargePerPerson || 0
                       ).toLocaleString("en-IN")}/person`}
                     </Typography>
