@@ -1,5 +1,5 @@
 import { Box } from "@mui/system";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import ImageGallery from "../../src/components/imageGallery/ImageGallery";
 import styled from "styled-components";
 import {
@@ -22,6 +22,7 @@ import moment from "moment";
 import { PropertyFilter } from "../../@types";
 import CheckoutCard from "../../src/components/CheckoutCard";
 import { PropertyService } from "../../src/services/property/propertyService";
+import AuthContext from "../../src/context/AuthContext";
 
 const propertyDetailsById = {
   id: `1`,
@@ -37,9 +38,10 @@ const propertyDetailsById = {
 function PropertyDetails() {
   // States
   const [propertyFilter, setPropertyFilter] = useState({} as PropertyFilter);
-  const [loginModel, setLoginModel] = React.useState(false);
-  const [signupModel, setSignupModel] = React.useState(false);
+  // const [loginModel, setLoginModel] = React.useState(false);
+  // const [signupModel, setSignupModel] = React.useState(false);
   const [propertyDetail, setPropertyDetail] = React.useState<any>();
+  const [bookingData, setBookingData] = useState<any>();
 
   // Variable
   const router = useRouter();
@@ -72,39 +74,100 @@ function PropertyDetails() {
   const propertyService = new PropertyService();
   const { id } = router?.query;
 
+  // Context
+  const { authenticated, setAuthenticated } = useContext(AuthContext);
+
   // Functions
 
-  const BookProperty = () => {
-    // check if user is already logged in
-    const userAuthenticationStatus = isUserLoggedIn();
-    if (!userAuthenticationStatus) {
-      OpenLoginForm();
-    }
-    // if Yes, than open Dialog
-    // Else Show toasty
-  };
-  const OpenLoginForm = () => {
-    setLoginModel(true);
-  };
-  const OpenSignupForm = () => {
-    setLoginModel(false);
-    setSignupModel(true);
-  };
+  // const BookProperty = () => {
+  //   // check if user is already logged in
+  //   const userAuthenticationStatus = isUserLoggedIn();
+  //   if (!userAuthenticationStatus) {
+  //     OpenLoginForm();
+  //   }
+  //   // if Yes, than open Dialog
+  //   // Else Show toasty
+  // };
+  // const OpenLoginForm = () => {
+  //   setLoginModel(true);
+  // };
+  // const OpenSignupForm = () => {
+  //   setLoginModel(false);
+  //   setSignupModel(true);
+  // };
   const handleCheckoutCard = (value: any) => {
-    console.log(value);
-
     // Check if user is already logged in
     // if logged in than resever api hit;
     // if not loged in show login model
-    const userAuthenticationStatus = isUserLoggedIn();
-    if (!userAuthenticationStatus) {
-      return OpenLoginForm();
-    }
-    if (propertyFilter.serviceType === "VillasandBunglow") {
-      console.log("value");
+    // const userAuthenticationStatus = isUserLoggedIn();
+    // if (!userAuthenticationStatus) {
+    //   return OpenLoginForm();
+    // }
+
+    if (localStorage.getItem("jwt")) {
+      const {
+        checkInDate,
+        checkOutDate,
+        totalAmount,
+        noOfGuest,
+        productionName,
+        productionHouseType,
+        bookingTime,
+        reeceBooking,
+      } = value;
+      setAuthenticated(false);
+      let bookingData: any;
+
+      switch (propertyFilter.serviceType) {
+        case "VillasandBunglow":
+          bookingData = {
+            checkInDate,
+            checkOutDate,
+            noOfGuest,
+            totalAmount,
+          };
+          break;
+
+        case "EventVenues":
+          bookingData = {
+            checkInDate,
+            checkOutDate,
+            totalAmount,
+          };
+          break;
+
+        case "FilmLocation":
+          bookingData = {
+            checkInDate,
+            checkOutDate,
+            productionName,
+            productionHouseType,
+            bookingTime,
+          };
+          break;
+        case "Reece":
+          bookingData = {
+            reeceBooking,
+            productionName,
+            productionHouseType,
+          };
+          break;
+
+        default:
+          break;
+      }
+      // if  === "VillasandBunglow") {
+      //   // let BookingData = value;
+      //   console.log(checkInDate);
+
+      //   // console.log("value");
+      // }
+      console.log(bookingData);
+    } else {
+      setAuthenticated(true);
     }
   };
-  const handleClose = () => setLoginModel(false);
+  // const handleClose = () => setLoginModel(false);
 
   const _getPropertyDetailById = (payload: any) => {
     const singlePropertyDetailData =
@@ -227,26 +290,34 @@ function PropertyDetails() {
                     ` | Max Guests ${propertyDetail?.eventVenueMaxCapacity}`
                   : null}
               </Typography>
+              {propertyDetail?.amenities && (
+                <>
+                  <Typography
+                    variant="h5"
+                    component="p"
+                    color="#1F1F1F"
+                    textAlign="left"
+                    sx={{ marginTop: `8px` }}
+                  >
+                    Amenities
+                  </Typography>
+                  <Stack
+                    sx={{ marginTop: `8px` }}
+                    direction="row"
+                    spacing={1}
+                    justifyContent="flex-start"
+                  >
+                    {propertyDetail?.amenities.map((amminity: any) => (
+                      <Chips
+                        key={`amminity-${amminity?.id}`}
+                        title={amminity?.title}
+                        className={amminity?.className}
+                      />
+                    ))}
+                  </Stack>
+                </>
+              )}
 
-              <Typography
-                variant="h5"
-                component="p"
-                color="#1F1F1F"
-                textAlign="left"
-                sx={{ marginTop: `8px` }}
-              >
-                Amenities
-              </Typography>
-              <Stack
-                sx={{ marginTop: `8px` }}
-                direction="row"
-                spacing={1}
-                justifyContent="flex-start"
-              >
-                {selectedProperty.amminityList.map((amminity: any) => (
-                  <Chips key={amminity.id} name={amminity.name} />
-                ))}
-              </Stack>
               {propertyDetail?.description && (
                 <Box>
                   <Typography
@@ -390,7 +461,7 @@ function PropertyDetails() {
               <Button>Download PDF</Button>
             ) : null}
 
-            <Button onClick={BookProperty}>
+            <Button>
               {(propertyFilter?.serviceType &&
                 propertyFilter?.serviceType == "VillasandBunglow") ||
               propertyFilter?.serviceType == "EventVenues"
@@ -403,7 +474,7 @@ function PropertyDetails() {
           </Grid>
         </Grid>
       </FooterWrapper>
-
+      {/* 
       <Modal
         open={loginModel}
         onClose={handleClose}
@@ -413,7 +484,7 @@ function PropertyDetails() {
         <LoginWrapper>
           <Login handleClose={handleClose} />
         </LoginWrapper>
-      </Modal>
+      </Modal> */}
     </Box>
   );
 }

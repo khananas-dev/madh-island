@@ -1,11 +1,12 @@
 import { Modal, Typography } from "@mui/material";
 import { Box, style } from "@mui/system";
 import React, { useEffect, useState } from "react";
+import { useLocalStorage } from "../../hooks/useLocalStorage";
 import { AuthenticationService } from "../../services/authentication/authenticationService";
 import LoginNumber from "./LoginCaptureNumber";
 import LoginOtp from "./LoginCaptureOTP";
 
-function Login({ handleClose }: any) {
+function Login({ handleClose, setJwt, jwt }: any) {
   // States
   const [registeredMobile, setRegisteredMobile] = React.useState("");
   const [signUpDetail, setSignUpDetail] = useState<any>();
@@ -15,7 +16,8 @@ function Login({ handleClose }: any) {
   const [loginScreen, setLoginScreen] = useState<boolean>(true);
   const [errors, setErrors] = useState<any>("");
   const [showOtpScreen, setShowOtpScreen] = useState<boolean>(false);
-  const [jwt, setJwt] = useState<any>();
+  // const [jwt, setJwt] = useState<any>();
+  // const [jwt, setJwt] = useLocalStorage("jwt", null);
 
   // variables
 

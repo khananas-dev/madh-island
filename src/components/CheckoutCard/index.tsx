@@ -29,6 +29,7 @@ import MobileTimePicker from "@mui/lab/MobileTimePicker";
 import { numberOfNights } from "../../utils/utils";
 import moment from "moment";
 import { getStoreFilters, setStoreFilters } from "../../utils/localStorage";
+import { ProductionService } from "../../services/production/productionService";
 
 interface SummaryCard {
   // price?: number | string;
@@ -55,9 +56,12 @@ function index(cardProps: SummaryCard) {
   const [bookingDetail, setBookingDetail] = useState<any>();
   const [productionName, setProductionName] = useState<any>("");
   const [productionHouseType, setProductionHouseType] = useState<any>("");
+  const [productionHouseTypeList, setProductionHouseTypeList] =
+    useState<any>("");
 
   // Variable
   const { detail } = cardProps;
+  const productinService = new ProductionService();
 
   // Functions
   const handleInputChange = (e: any) => {
@@ -82,11 +86,6 @@ function index(cardProps: SummaryCard) {
   */
   const noOfNight = () => {
     return numberOfNights(value[0], value[1]);
-    // const checkInDate = moment();
-    // const checkOutDate = moment().add(1, "day");
-    // return numberOfNights();
-    // return 1;
-    // return Math.floor(moment.duration(checkOutDate.diff(checkInDate)).asDays());
   };
   const subTotalNight = () => {
     return cardProps?.price * noOfNight();
@@ -107,15 +106,6 @@ function index(cardProps: SummaryCard) {
     return subTotal() + gstCalculatedPrice();
   };
 
-  // creating json for the post request
-  // useEffect(() => {
-  //   // const searchFilters = getStoreFilters();
-  //   setValue([
-  //     cardProps?.serviceType?.checkInDate || moment(),
-  //     cardProps?.serviceType?.checkOutDate || moment().add(1, "day"),
-  //   ]);
-  // }, [value]);
-
   const handleClick = () => {
     const payload = {
       checkInDate: cardProps?.serviceType?.checkInDate || moment(),
@@ -127,12 +117,7 @@ function index(cardProps: SummaryCard) {
       productionHouseType,
       bookingTime,
       reeceBooking,
-      // noOfGuest: noOfGuest,
-      // productionName: productionName,
-      // productionHouseType: productionHouseType
     };
-    console.log(payload);
-
     cardProps.handleClick(payload);
   };
 
@@ -147,16 +132,6 @@ function index(cardProps: SummaryCard) {
     return d;
   };
 
-  // const handleChange = () => {
-  //   const filter = {
-  //     serviceType: cardProps?.serviceType,
-  //     checkInDate: value[0],
-  //     checkOutDate: value[1],
-  //   };
-  //   // setFilterToLocalStorage(filter);
-  //   setStoreFilters(filter);
-  // };
-
   const handleOnChange = (newValue: any) => {
     setValue(newValue);
     const filter = {
@@ -164,18 +139,21 @@ function index(cardProps: SummaryCard) {
       checkInDate: value[0],
       checkOutDate: value[1],
     };
-    // setFilterToLocalStorage(filter);
     setStoreFilters(filter);
+  };
+
+  const _getAllProductionService = () => {
+    const productionList = productinService.getProductionType();
+    productionList.then((res: any) => {
+      if (!res?.data?.error) {
+        console.log(res?.data?.data);
+        // #1. Assing the response in the state for use
+        setProductionHouseTypeList(res?.data?.data);
+      }
+    });
   };
   //  Effects
 
-  // useEffect(() => {
-  //   const searchFilters = getStoreFilters();
-  //   setValue([
-  //     searchFilters.checkInDate || value[0],
-  //     searchFilters.checkOutDate || value[1],
-  //   ]);
-  // }, []);
   useEffect(() => {
     if (cardProps) {
       setValue([
@@ -185,21 +163,12 @@ function index(cardProps: SummaryCard) {
     }
   }, [cardProps]);
 
-  // useEffect(() => {
-  //   if (value) {
-  //     handleChange();
-  //   }
-  // }, [value]);
+  useEffect(() => {
+    _getAllProductionService();
+  }, []);
 
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
-      {/* {JSON.stringify(
-        `checkIN : ${
-          cardProps?.serviceType?.checkInDate
-        } || ${new Date()} || checkOut : ${
-          cardProps?.serviceType?.checkOutDate
-        }`
-      )} */}
       <Card
         style={{
           padding: 16,
@@ -327,9 +296,18 @@ function index(cardProps: SummaryCard) {
                 // onChange={handleChange}
                 onChange={handleProdcutionHouseType}
               >
-                <MenuItem value={10}>Ten</MenuItem>
+                {productionHouseTypeList &&
+                  productionHouseTypeList.map((item: any, index: number) => (
+                    <MenuItem
+                      key={`productionTypeKey-${index}`}
+                      value={item?.id}
+                    >
+                      {item?.title}
+                    </MenuItem>
+                  ))}
+                {/* <MenuItem value={10}>Ten</MenuItem>
                 <MenuItem value={20}>Twenty</MenuItem>
-                <MenuItem value={30}>Thirty</MenuItem>
+                <MenuItem value={30}>Thirty</MenuItem> */}
               </Select>
             </FormControl>
             {cardProps?.serviceType &&

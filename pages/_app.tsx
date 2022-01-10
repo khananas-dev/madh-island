@@ -11,10 +11,12 @@ import "../public/css/style.css";
 import "../src/global.css";
 import { useEffect, useState } from "react";
 import { ServiceCategory } from "../src/services/serviceCategory/serviceCategory";
+import AuthContext from "../src/context/AuthContext";
 
 export default function MyApp(props: AppProps) {
   // States\
   const [serviceList, setServiceList] = useState<any>();
+  const [authenticated, setAuthenticated] = useState(false);
 
   // Variables
   const { Component, pageProps } = props;
@@ -51,9 +53,11 @@ export default function MyApp(props: AppProps) {
       </Head>
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <Layout serviceList={serviceList}>
-          <Component {...pageProps} />
-        </Layout>
+        <AuthContext.Provider value={{ authenticated, setAuthenticated }}>
+          <Layout serviceList={serviceList}>
+            <Component {...pageProps} />
+          </Layout>
+        </AuthContext.Provider>
       </ThemeProvider>
     </React.Fragment>
   );
