@@ -21,6 +21,7 @@ function Layout({ serviceList, children }: any) {
         serviceCategoryList={serviceList}
         toggleSidebar={() => setisOpen(!isOpen)}
       />
+      {/* <Component {...pageProps} /> */}
       <Box sx={{ height: `calc(100vh - 80px)`, overflowX: `auto` }}>
         {children}
       </Box>

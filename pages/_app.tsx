@@ -55,7 +55,7 @@ export default function MyApp(props: AppProps) {
         <CssBaseline />
         <AuthContext.Provider value={{ authenticated, setAuthenticated }}>
           <Layout serviceList={serviceList}>
-            <Component {...pageProps} />
+            <Component serviceList={serviceList} {...pageProps} />
           </Layout>
         </AuthContext.Provider>
       </ThemeProvider>

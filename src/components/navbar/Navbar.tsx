@@ -49,10 +49,6 @@ function Navigation(sideBarProps: SidebarProps) {
   const [loginModel, setLoginModel] = React.useState(false);
   const [signupModel, setSignupModel] = React.useState(false);
 
-  // const [serviceList, setServiceList] = useState<any>(
-  //   sideBarProps?.serviceCategoryList
-  // );
-
   // Context
   const { authenticated, setAuthenticated } = useContext(AuthContext);
 
@@ -74,17 +70,6 @@ function Navigation(sideBarProps: SidebarProps) {
     searchFilters.serviceType = serviceType;
     setStoreFilters(searchFilters);
   };
-
-  // const _getAllServiceList = () => {
-  //   const serviceListData = serviceCategory.getServiceCategoryList();
-  //   serviceListData.then((res: any) => {
-  //     if (res.status == 200) {
-  //       // console.log(res.data.data);
-  //       // #1. Adding data in state in the for catergoryList
-  //       setServiceList(res.data.data);
-  //     }
-  //   });
-  // };
 
   const verifyAuth = () => {
     if (localStorage.getItem("jwt")) {
