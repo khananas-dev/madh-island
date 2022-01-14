@@ -377,6 +377,7 @@ function searchResult({ serviceList }: any) {
   // Variable
   const open = Boolean(anchorEl);
   const router = useRouter();
+  const { search } = router.query;
 
   // Functions
 
@@ -430,7 +431,7 @@ function searchResult({ serviceList }: any) {
       //     item[objectKey].toString().toLowerCase().includes("tes")
       //   )
       // );
-      return item.title.toLowerCase().includes("test");
+      return item.title.toLowerCase().includes("te");
     });
 
     setPropertyList(sortedData);
@@ -447,16 +448,18 @@ function searchResult({ serviceList }: any) {
       <div className="header">
         <Breadcrumbs aria-label="breadcrumb">
           <Link underline="hover" color="inherit" href="/">
-            Search Result for ItemfromUrl
+            Search Result for {search}
           </Link>
         </Breadcrumbs>
       </div>
       <Box sx={{ width: "100%" }}>
         <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
           <Tabs
+            variant="scrollable"
             value={value}
             onChange={handleChange}
-            aria-label="basic tabs example"
+            allowScrollButtonsMobile
+            aria-label="Search Tabs"
           >
             {serviceList &&
               serviceList.map((item: any, index: number) => (
@@ -471,7 +474,7 @@ function searchResult({ serviceList }: any) {
               value={value}
               index={index}
             >
-              <Grid container spacing={2} justifyContent="space-between">
+              <Grid container spacing={2}>
                 {propertyList &&
                   propertyList.map((property: any) => (
                     <Grid

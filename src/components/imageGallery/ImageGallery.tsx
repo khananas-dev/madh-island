@@ -9,7 +9,7 @@ import "react-bnb-gallery/dist/style.css";
 import ReactBnbGallery from "react-bnb-gallery";
 import VMICarousel from "../carousel/carousel";
 
-function ImageGallery({imageList}:any) {
+function ImageGallery({ imageList }: any) {
   const [isOpen, setIsOpen] = useState(false);
   const [activePhoto, setActivePhoto] = useState(0);
   const openLightbox = (index: number) => {
@@ -17,90 +17,112 @@ function ImageGallery({imageList}:any) {
     setIsOpen(true);
   };
   return (
-    <Box sx={{ margin: `0px 64px`, height: `auto`, position: `relative` }}>
-      <Box
-        sx={{
-          height: "250px",
-          display: {
-            md: "none",
+    // <Box sx={{ margin: `0px 64px`, height: `auto`, position: `relative` }}>
+    //   <Box
+    //     sx={{
+    //       height: "250px",
+    //       display: {
+    //         md: "none",
 
-            xs: "block",
-          },
-        }}
-      >
-        <VMICarousel />
-      </Box>
-      <Box
-        sx={{
-          display: {
-            xs: "none",
-            md: "block",
-          },
-        }}
-      >
-        <ImageList
-          variant="masonry"
-          cols={6}
-          gap={10}
-          sx={{
-            minHeight: `fit-content`,
-            maxHeight: `400px`,
-            overflow: `hidden`,
-          }}
-        >
-         
-          {
-            imageList &&
-          imageList?.map((item:any, index:any) => (
-            <ImageListItem key={item.img}>
-              <img
-                onClick={() => {
-                  openLightbox(index);
-                }}
-                src={`${item.imageUrl}`}
-                //   srcSet={`${item.img}?w=348&fit=crop&auto=format&dpr=2 2x`}
-                alt={item.title}
-                loading="lazy"
-              />
-            </ImageListItem>
+    //         xs: "block",
+    //       },
+    //     }}
+    //   >
+    //     <VMICarousel />
+    //   </Box>
+    //   <Box
+    //     sx={{
+    //       display: {
+    //         xs: "none",
+    //         md: "block",
+    //       },
+    //     }}
+    //   >
+    //     <ImageList
+    //       variant="masonry"
+    //       cols={6}
+    //       gap={10}
+    //       sx={{
+    //         minHeight: `fit-content`,
+    //         maxHeight: `400px`,
+    //         overflow: `hidden`,
+    //       }}
+    //     >
+
+    //       {
+    //         imageList &&
+    //       imageList?.map((item:any, index:any) => (
+    //         <ImageListItem key={item.img}>
+    //           <img
+    //             onClick={() => {
+    //               openLightbox(index);
+    //             }}
+    //             src={`${item.imageUrl}`}
+    //             //   srcSet={`${item.img}?w=348&fit=crop&auto=format&dpr=2 2x`}
+    //             alt={item.title}
+    //             loading="lazy"
+    //           />
+    //         </ImageListItem>
+    //       ))}
+    //       <Button
+    //         variant="contained"
+    //         color="info"
+    //         sx={{
+    //           position: `absolute`,
+    //           background: "#EAFCF7",
+    //           bottom: 0,
+    //           color: "#191919",
+    //           ":hover": {
+    //             background: "#b9e2d6",
+    //           },
+    //           width: `150px`,
+    //           right: `0px`,
+    //         }}
+    //         onClick={() => setIsOpen(true)}
+    //       >
+    //         View More
+    //       </Button>
+    //     </ImageList>
+    //   </Box>
+    //   {/* <pre>
+    //       {JSON.stringify(imageList)}
+    //       </pre> */}
+
+    //   <ReactBnbGallery
+    //     activePhotoIndex={activePhoto}
+    //     show={isOpen}
+    //     photos={
+    //       imageList &&
+    //       imageList?.map((item:any,index:any)=>(
+    //         item?.imageUrl
+    //       )
+    //       )
+    //     }
+    //     onClose={() => setIsOpen(false)}
+    //   />
+    // </Box>
+    <>
+      <div className="img-gallery">
+        <div className="grid-container">
+          {itemData?.slice(0, 3)?.map((item: any, index: number) => (
+            <div className={`item${index + 1}`}>
+              <img src={item?.img} alt="" />
+            </div>
           ))}
-          <Button
-            variant="contained"
-            color="info"
-            sx={{
-              position: `absolute`,
-              background: "#EAFCF7",
-              bottom: 0,
-              color: "#191919",
-              ":hover": {
-                background: "#b9e2d6",
-              },
-              width: `150px`,
-              right: `0px`,
-            }}
-            onClick={() => setIsOpen(true)}
-          >
-            View More
-          </Button>
-        </ImageList>
-      </Box>
-      {/* <pre>
-          {JSON.stringify(imageList)}
-          </pre> */}
-
+        </div>
+        <a className="viewAll">
+          + <span>{itemData.length} photos</span>
+        </a>
+      </div>
       <ReactBnbGallery
         activePhotoIndex={activePhoto}
         show={isOpen}
         photos={
-          imageList &&
-          imageList?.map((item:any,index:any)=>(
-            item?.imageUrl
-          )
-          )
+          imageList && imageList?.map((item: any, index: any) => item?.imageUrl)
         }
         onClose={() => setIsOpen(false)}
       />
-    </Box>
+    </>
   );
 }
 

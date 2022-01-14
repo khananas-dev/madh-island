@@ -35,6 +35,7 @@ import { getStoreFilters, setStoreFilters } from "../../utils/localStorage";
 import { ServiceCategory } from "../../services/serviceCategory/serviceCategory";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
 import AuthContext from "../../context/AuthContext";
+import { useRouter } from "next/router";
 const top100Films = [
   { label: "The Shawshank Redemption", year: 1994 },
   { label: "The Godfather", year: 1972 },
@@ -48,12 +49,14 @@ function Navigation(sideBarProps: SidebarProps) {
   const [open, setOpen] = useState(false);
   const [loginModel, setLoginModel] = React.useState(false);
   const [signupModel, setSignupModel] = React.useState(false);
+  const [searchValue, setSearchValue] = useState<any>();
 
   // Context
   const { authenticated, setAuthenticated } = useContext(AuthContext);
 
   // Variable
   const accountMenu = Boolean(anchorEl);
+  const router = useRouter();
 
   // Funciton
 
@@ -105,6 +108,24 @@ function Navigation(sideBarProps: SidebarProps) {
     setAnchorEl(null);
   };
 
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchValue(event.target.value);
+  };
+
+  const handleSearch = () => {
+    if (showAutocomplete) {
+      router.push({
+        pathname: `/search`,
+        query: {
+          search: searchValue,
+        },
+      });
+      setShowAutocomplete(false);
+      setSearchValue("");
+    } else {
+      setShowAutocomplete(true);
+    }
+  };
   const displayUserName = () => {
     let userName = localStorage.getItem("jwt");
     if (userName) {
@@ -162,20 +183,31 @@ function Navigation(sideBarProps: SidebarProps) {
           <EndGrid item xs={12} md={3}>
             <SearchBoxContainer>
               {showAutocomplete && (
-                <Autocomplete
-                  style={{}}
-                  id="combo-box-demo"
-                  options={top100Films}
-                  sx={{ width: 300 }}
-                  renderInput={(params) => (
-                    <TextField {...params} label="Search Property" />
-                  )}
+                // <Autocomplete
+                //   style={{}}
+                //   id="combo-box-demo"
+                //   options={top100Films}
+                //   sx={{ width: 300 }}
+                //   renderInput={(params) => (
+                //     <TextField {...params} label="Search Property" />
+                //   )}
+                // />
+                <TextField
+                  id="search"
+                  label="Search"
+                  value={searchValue}
+                  onChange={handleChange}
                 />
+                // <TextField
+                //   value={searchValue}
+                //   onChange={(newValue: any) => setSearchValue(newValue)}
+                //   label="Search Property"
+                // />
               )}
               <IconButton
                 color="primary"
                 aria-label="Search Property"
-                onClick={() => setShowAutocomplete(!showAutocomplete)}
+                onClick={handleSearch}
               >
                 <Search style={{ width: 24 }} />
               </IconButton>
