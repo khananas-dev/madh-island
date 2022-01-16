@@ -232,7 +232,7 @@ function PropertyDetails() {
             component="p"
             color="#1F1F1F"
             textAlign="left"
-            sx={{ marginTop: `16px` }}
+            sx={{ marginTop: `10px`, marginBottom: "10px" }}
           >
             {/* {selectedProperty.propertyName} */}
             {propertyDetail?.title}
@@ -284,7 +284,7 @@ function PropertyDetails() {
                 {propertyFilter &&
                 propertyFilter.serviceType == "VillasandBunglow"
                   ? propertyDetail?.additionalChargeMax &&
-                    ` | Max Guests ${propertyDetail?.additionalChargeMax}`
+                    ` | Max Guests ${propertyDetail?.additionalChargeMin}`
                   : propertyFilter.serviceType == "EventVenues"
                   ? propertyDetail?.eventVenueMaxCapacity &&
                     ` | Max Guests ${propertyDetail?.eventVenueMaxCapacity}`
@@ -423,7 +423,7 @@ function PropertyDetails() {
                 component="h3"
                 color="#1F1F1F"
                 textAlign="left"
-                sx={{}}
+                className="bottom-footer-date"
               >
                 {`
                 ${moment(propertyFilter?.checkInDate).format(
@@ -511,6 +511,7 @@ const LayoutWrapper = styled(Box)`
     height: calc(100% - 100px);
     padding-bottom: 40px;
     overflow-y: auto;
+    overflow-x: hidden;
   }
 `;
 

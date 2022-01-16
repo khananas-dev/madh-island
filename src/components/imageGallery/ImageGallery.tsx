@@ -7,6 +7,7 @@ import { Button, ImageList } from "@mui/material";
 import ImageListItem from "@mui/material/ImageListItem";
 import "react-bnb-gallery/dist/style.css";
 import ReactBnbGallery from "react-bnb-gallery";
+import useMediaQuery from "@mui/material/useMediaQuery";
 import VMICarousel from "../carousel/carousel";
 
 function ImageGallery({ imageList }: any) {
@@ -102,18 +103,48 @@ function ImageGallery({ imageList }: any) {
     //   />
     // </Box>
     <>
-      <div className="img-gallery">
-        <div className="grid-container">
-          {itemData?.slice(0, 3)?.map((item: any, index: number) => (
-            <div className={`item${index + 1}`}>
-              <img src={item?.img} alt="" />
-            </div>
-          ))}
+      <Box
+        sx={{
+          display: {
+            xs: "none",
+            sm: "block",
+          },
+        }}
+      >
+        <div className="img-gallery">
+          <div className="grid-container">
+            {itemData?.slice(0, 3)?.map((item: any, index: number) => (
+              <div className={`item${index + 1}`}>
+                <img
+                  onClick={() => {
+                    openLightbox(index);
+                  }}
+                  src={item?.img}
+                  alt=""
+                />
+              </div>
+            ))}
+          </div>
+          {imageList?.length > 3 ? (
+            <a className="viewAll" onClick={() => setIsOpen(true)}>
+              + <span>{itemData?.length} photos</span>
+            </a>
+          ) : null}
         </div>
-        <a className="viewAll">
-          + <span>{itemData.length} photos</span>
-        </a>
-      </div>
+      </Box>
+      <Box
+        sx={{
+          height: "250px",
+          display: {
+            md: "none",
+
+            xs: "block",
+          },
+        }}
+      >
+        <VMICarousel imgList={itemData} />
+      </Box>
+
       <ReactBnbGallery
         activePhotoIndex={activePhoto}
         show={isOpen}
@@ -137,11 +168,11 @@ const photosArray = [
 ];
 const itemData = [
   {
-    img: "https://images.unsplash.com/photo-1549388604-817d15aa0110",
+    img: "https://vmi-assets.s3.us-east-2.amazonaws.com/property/61bfce8ff9552e100d65d7fb--5bf5fbbe-ab49-42db-bf43-6634315c3167.webp",
     title: "Bed",
   },
   {
-    img: "https://images.unsplash.com/photo-1525097487452-6278ff080c31",
+    img: "https://vmi-assets.s3.us-east-2.amazonaws.com/property/61bfce8ff9552e100d65d7fb--5bf5fbbe-ab49-42db-bf43-6634315c3167.webp",
     title: "Books",
   },
   {

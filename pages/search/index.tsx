@@ -15,6 +15,8 @@ import Tab from "@mui/material/Tab";
 import { CgSortAz } from "react-icons/cg";
 import PropertyCard from "../../src/components/PropertyCard/PropertyCard";
 import { useRouter } from "next/router";
+import { PropertyService } from "../../src/services/property/propertyService";
+import { getStoreFilters, setStoreFilters } from "../../src/utils/localStorage";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -42,342 +44,13 @@ function searchResult({ serviceList }: any) {
   // States
   const [value, setValue] = React.useState(0);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const [propertyList, setPropertyList] = useState<any[]>([
-    {
-      _id: "61bfce8ff9552e100d65d7fb",
-      title: "Test Mansion",
-      ownerId: "61bfba54340d747975c21a82",
-      addressLine1: "Test 1",
-      addressLine2: "Test 2",
-      longitude: 91.123,
-      latitude: -123.123,
-      sizeOfProperty: 1350,
-      description: "Test description",
-      homeRuleTruths: "some text",
-      policies: "some policies",
-      villaBunglowPrice: 20000,
-      additionalChargePerPerson: 500,
-      additionalChargeMin: 10,
-      additionalChargeMax: 15,
-      eventVenuePrice: 35000,
-      eventVenueMaxCapacity: 500,
-      managerName: "Cadbury",
-      managerPhoneNumber: "1231231321",
-      managerEmail: "manager@testmansion.com",
-      staffName: "Butler",
-      staffPhoneNumber: "987654321",
-      noOfBedrooms: 4,
-      images: [
-        {
-          _id: "61c2317bb9ec27217e70c228",
-          propertyId: "61bfce8ff9552e100d65d7fb",
-          title: "Test Title",
-          imageUrl:
-            "https://vmi-assets.s3.us-east-2.amazonaws.com/property/61bfce8ff9552e100d65d7fb--5bf5fbbe-ab49-42db-bf43-6634315c3167.webp",
-        },
-      ],
-    },
-    {
-      _id: "61bfd4fc2ad8a17649970f08",
-      title: "New Mansion Dummy",
-      ownerId: "61bfba54340d747975c21a82",
-      addressLine1: "Test 1",
-      addressLine2: "Test 2",
-      longitude: 91.123,
-      latitude: -123.123,
-      sizeOfProperty: 1350,
-      description: "Test description",
-      homeRuleTruths: "some text",
-      policies: "some policies",
-      villaBunglowPrice: 30000,
-      additionalChargePerPerson: 500,
-      additionalChargeMin: 10,
-      additionalChargeMax: 15,
-      eventVenuePrice: 45000,
-      eventVenueMaxCapacity: 500,
-      managerName: "Cadbury",
-      managerPhoneNumber: "1231231321",
-      managerEmail: "manager@testmansion.com",
-      staffName: "Butler",
-      staffPhoneNumber: "987654321",
-      noOfBedrooms: 3,
-      images: [
-        {
-          _id: "61c2314db9ec27217e70c226",
-          propertyId: "61bfd4fc2ad8a17649970f08",
-          title: "Some new image",
-          imageUrl:
-            "https://vmi-assets.s3.amazonaws.com/property/61bfd4fc2ad8a17649970f08--0ae4173c-d1c6-4dfa-b262-ec72c76e8e45.webp",
-        },
-      ],
-    },
-    {
-      _id: "61bfd53ca11408d6b3af1fd2",
-      title: "Test Return ID Property",
-      ownerId: "61bfba54340d747975c21a82",
-      addressLine1: "Test 1",
-      addressLine2: "Test 2",
-      longitude: 91.123,
-      latitude: -123.123,
-      sizeOfProperty: 1350,
-      description: "Test description",
-      homeRuleTruths: "some text",
-      policies: "some policies",
-      villaBunglowPrice: 30000,
-      additionalChargePerPerson: 500,
-      additionalChargeMin: 10,
-      additionalChargeMax: 15,
-      eventVenuePrice: 45000,
-      eventVenueMaxCapacity: 500,
-      managerName: "Cadbury",
-      managerPhoneNumber: "1231231321",
-      managerEmail: "manager@testmansion.com",
-      staffName: "Butler",
-      staffPhoneNumber: "987654321",
-      noOfBedrooms: 3,
-      images: [
-        {
-          _id: "61c2318bb9ec27217e70c22a",
-          propertyId: "61bfd53ca11408d6b3af1fd2",
-          title: "Test Title",
-          imageUrl:
-            "https://vmi-assets.s3.us-east-2.amazonaws.com/property/61bfd53ca11408d6b3af1fd2--5bf5fbbe-ab49-42db-bf43-6634315c3167.webp",
-        },
-      ],
-    },
-    {
-      _id: "61c0b3f77eace1a815f3b97a",
-      title: "My Mansion 1",
-      ownerId: "61bfba54340d747975c21a82",
-      addressLine1: "Test 1",
-      addressLine2: "Test 2",
-      longitude: 91.123,
-      latitude: -123.123,
-      sizeOfProperty: 1350,
-      description: "Test description",
-      homeRuleTruths: "some text",
-      policies: "some policies",
-      villaBunglowPrice: 30000,
-      additionalChargePerPerson: 500,
-      additionalChargeMin: 10,
-      additionalChargeMax: 15,
-      eventVenuePrice: 45000,
-      eventVenueMaxCapacity: 500,
-      managerName: "Cadbury",
-      managerPhoneNumber: "1231231321",
-      managerEmail: "manager@testmansion.com",
-      staffName: "Butler",
-      staffPhoneNumber: "987654321",
-      noOfBedrooms: 5,
-      images: [
-        {
-          _id: "61c2319db9ec27217e70c22c",
-          propertyId: "61c0b3f77eace1a815f3b97a",
-          title: "Test Title",
-          imageUrl:
-            "https://vmi-assets.s3.us-east-2.amazonaws.com/property/61c0b3f77eace1a815f3b97a--5bf5fbbe-ab49-42db-bf43-6634315c3167.webp",
-        },
-      ],
-    },
-    {
-      _id: "61c0b4047eace1a815f3b97c",
-      title: "Nirlon Bunglow",
-      ownerId: "61bfba54340d747975c21a82",
-      addressLine1: "Test 1",
-      addressLine2: "Test 2",
-      longitude: 19.146638077647513,
-      latitude: 72.78988749609002,
-      sizeOfProperty: 1350,
-      description: "Test description",
-      homeRuleTruths: "some text",
-      policies: "some policies",
-      villaBunglowPrice: 30000,
-      additionalChargePerPerson: 500,
-      additionalChargeMin: 10,
-      additionalChargeMax: 15,
-      eventVenuePrice: 45000,
-      eventVenueMaxCapacity: 500,
-      managerName: "Cadbury",
-      managerPhoneNumber: "1231231321",
-      managerEmail: "manager@testmansion.com",
-      staffName: "Butler",
-      staffPhoneNumber: "987654321",
-      noOfBedrooms: 3,
-      images: [
-        {
-          _id: "61c231aab9ec27217e70c22e",
-          propertyId: "61c0b4047eace1a815f3b97c",
-          title: "Test Title",
-          imageUrl:
-            "https://vmi-assets.s3.us-east-2.amazonaws.com/property/61c0b4047eace1a815f3b97c--5bf5fbbe-ab49-42db-bf43-6634315c3167.webp",
-        },
-      ],
-    },
-    {
-      _id: "61c0b40b7eace1a815f3b97e",
-      title: "Sukoon Bungalow",
-      ownerId: "61bfba54340d747975c21a82",
-      addressLine1: "Test 1",
-      addressLine2: "Test 2",
-      longitude: 19.148360204126508,
-      latitude: 72.78976224016589,
-      sizeOfProperty: 1350,
-      description: "Test description",
-      homeRuleTruths: "some text",
-      policies: "some policies",
-      villaBunglowPrice: 30000,
-      additionalChargePerPerson: 500,
-      additionalChargeMin: 10,
-      additionalChargeMax: 15,
-      eventVenuePrice: 45000,
-      eventVenueMaxCapacity: 500,
-      managerName: "Cadbury",
-      managerPhoneNumber: "1231231321",
-      managerEmail: "manager@testmansion.com",
-      staffName: "Butler",
-      staffPhoneNumber: "987654321",
-      noOfBedrooms: 3,
-      images: [
-        {
-          _id: "61c231b9b9ec27217e70c230",
-          propertyId: "61c0b40b7eace1a815f3b97e",
-          title: "Test Title",
-          imageUrl:
-            "https://vmi-assets.s3.us-east-2.amazonaws.com/property/61c0b40b7eace1a815f3b97e--5bf5fbbe-ab49-42db-bf43-6634315c3167.webp",
-        },
-      ],
-    },
-    {
-      _id: "61d1a347c31c61bdfdbc688d",
-      title: "Vailainkani Villa",
-      ownerId: "61c880c59e20686bb14df61a",
-      amenities: [
-        {
-          title: "Electricity kW",
-          className: "electricity",
-          isActive: true,
-          createdAt: "2022-01-02T12:53:56.232Z",
-          updatedAt: "2022-01-02T12:53:56.232Z",
-          id: "61d1a0646626b03dcb3213d4",
-        },
-      ],
-      addressLine1: "Test 1",
-      addressLine2: "Test 2",
-      longitude: 19.146322965945338,
-      latitude: 72.79081165233225,
-      sizeOfProperty: 1350,
-      noOfBedrooms: 4,
-      description: "Test description",
-      homeRuleTruths: "some text",
-      policies: "some policies",
-      villaBunglowPrice: 30000,
-      additionalChargePerPerson: 500,
-      additionalChargeMin: 10,
-      additionalChargeMax: 15,
-      eventVenuePrice: 45000,
-      eventVenueMaxCapacity: 500,
-      managerName: "Cadbury",
-      managerPhoneNumber: "1231231321",
-      managerEmail: "manager@testmansion.com",
-      staffName: "Butler",
-      staffPhoneNumber: "987654321",
-      images: [
-        {
-          _id: "61d1a42b36b1dc809f857bd6",
-          propertyId: "61d1a347c31c61bdfdbc688d",
-          title: "Test Title",
-          imageUrl:
-            "https://vmi-assets.s3.amazonaws.com/property/61d1a347c31c61bdfdbc688d--5bf5fbbe-ab49-42db-bf43-6634315c3167.webp",
-        },
-      ],
-    },
-    {
-      _id: "61d2f90ea279107bb5781e64",
-      title: "Mount Mansion",
-      ownerId: "61c880c59e20686bb14df61a",
-      amenities: ["61d1a0646626b03dcb3213d4"],
-      addressLine1: "Test 1",
-      addressLine2: "Test 2",
-      longitude: 91.123,
-      latitude: -123.123,
-      sizeOfProperty: 1350,
-      noOfBedrooms: 4,
-      description: "Test description",
-      homeRuleTruths: "some text",
-      policies: "some policies",
-      villaBunglowPrice: 30000,
-      additionalChargePerPerson: 500,
-      additionalChargeMin: 10,
-      additionalChargeMax: 15,
-      eventVenuePrice: 45000,
-      eventVenueMaxCapacity: 500,
-      managerName: "Cadbury",
-      managerPhoneNumber: "1231231321",
-      managerEmail: "manager@testmansion.com",
-      staffName: "Butler",
-      staffPhoneNumber: "987654321",
-      images: [],
-    },
-    {
-      _id: "61d322ce8c0e4942d5c06964",
-      title: "Dummy1",
-      ownerId: "61c87983c4b9554011d88151",
-      amenities: [],
-      addressLine1: "Address line 1",
-      addressLine2: "Mumbai",
-      longitude: 72.79081165233225,
-      latitude: 19.146322965945338,
-      sizeOfProperty: 500,
-      noOfBedrooms: 5,
-      description: "Some description",
-      homeRuleTruths: "Some hourse rules",
-      policies: "Policies",
-      villaBunglowPrice: 5000,
-      additionalChargePerPerson: 2000,
-      additionalChargeMin: 8,
-      additionalChargeMax: 28,
-      eventVenuePrice: 60000,
-      eventVenueMaxCapacity: 100,
-      managerName: "Mahesh",
-      managerPhoneNumber: "9988669988",
-      managerEmail: "Hitesh@gmail.com",
-      staffName: "Hitesh",
-      staffPhoneNumber: "6699885566",
-      images: [],
-    },
-    {
-      _id: "61d5e82a8c0e4942d5c06c80",
-      title: "Property name111",
-      ownerId: "61c87983c4b9554011d88151",
-      amenities: [],
-      addressLine1: "Addressline1 1",
-      addressLine2: "",
-      longitude: null,
-      latitude: null,
-      sizeOfProperty: 600,
-      noOfBedrooms: 8,
-      description: "Description",
-      homeRuleTruths: "Omerule",
-      policies: "Policies",
-      villaBunglowPrice: 500,
-      additionalChargePerPerson: 600,
-      additionalChargeMin: 10,
-      additionalChargeMax: 26,
-      eventVenuePrice: 800,
-      eventVenueMaxCapacity: 600,
-      managerName: "Mname",
-      managerPhoneNumber: "9988669988",
-      managerEmail: "",
-      staffName: "Snamw",
-      staffPhoneNumber: "8899669988",
-      images: [],
-    },
-  ]);
+  const [propertyList, setPropertyList] = useState<any>(null);
 
   // Variable
   const open = Boolean(anchorEl);
   const router = useRouter();
   const { search } = router.query;
+  const propertyService = new PropertyService();
 
   // Functions
 
@@ -393,27 +66,27 @@ function searchResult({ serviceList }: any) {
     setAnchorEl(null);
   };
 
-  const handleSort = (isDecending?: boolean, service?: string) => {
-    // #1. Setting Price Key Based on Service Type
-    let priceKey: string = "";
-    switch (service) {
-      case "VillasandBunglow":
-        priceKey = "villaBunglowPrice";
-        break;
-      case "EventVenues":
-        priceKey = "eventVenuePrice";
-        break;
-      default:
-        break;
-    }
+  // const handleSort = (isDecending?: boolean, service?: string) => {
+  //   // #1. Setting Price Key Based on Service Type
+  //   let priceKey: string = "";
+  //   switch (service) {
+  //     case "VillasandBunglow":
+  //       priceKey = "villaBunglowPrice";
+  //       break;
+  //     case "EventVenues":
+  //       priceKey = "eventVenuePrice";
+  //       break;
+  //     default:
+  //       break;
+  //   }
 
-    // #2. Sorting using Price Key
-    const sortedProperty: any[] = propertyList.sort((a: any, b: any) =>
-      isDecending ? b[priceKey] - a[priceKey] : a[priceKey] - b[priceKey]
-    );
-    setPropertyList(sortedProperty);
-    setAnchorEl(null);
-  };
+  //   // #2. Sorting using Price Key
+  //   const sortedProperty: any[] = propertyList?.sort((a: any, b: any) =>
+  //     isDecending ? b[priceKey] - a[priceKey] : a[priceKey] - b[priceKey]
+  //   );
+  //   setPropertyList(sortedProperty);
+  //   setAnchorEl(null);
+  // };
 
   const handlePropertyDetails = (propertyid: any) => {
     router.push({
@@ -423,24 +96,34 @@ function searchResult({ serviceList }: any) {
     });
   };
 
-  const searchFilteredData = () => {
-    const sortedData = propertyList.filter((item: any) => {
-      // const objectKeys = items[0] && Object.keys(items[0]);
-      // return items.filter((item: any) =>
-      //   objectKeys.some((objectKey: any) =>
-      //     item[objectKey].toString().toLowerCase().includes("tes")
-      //   )
-      // );
-      return item.title.toLowerCase().includes("te");
+  const _getPropertyByKeyword = (payload: any) => {
+    const filteredData = propertyService?.getPropertyByKeyword(payload);
+    filteredData.then((res: any) => {
+      if (!res?.data?.error) {
+        console.log(res?.data?.data);
+        setPropertyList(res?.data?.data);
+      } else {
+        setPropertyList(null);
+      }
     });
+  };
 
-    setPropertyList(sortedData);
+  const setFilter = (serviceType: string) => {
+    let searchFilters = getStoreFilters();
+    searchFilters.serviceType = serviceType;
+    setStoreFilters(searchFilters);
   };
 
   // Effects
 
   useEffect(() => {
-    searchFilteredData();
+    // searchFilteredData();
+    if (search) {
+      _getPropertyByKeyword(search);
+    }
+  }, [search]);
+  useEffect(() => {
+    setFilter("VillasandBunglow");
   }, []);
 
   return (
@@ -463,7 +146,11 @@ function searchResult({ serviceList }: any) {
           >
             {serviceList &&
               serviceList.map((item: any, index: number) => (
-                <Tab key={`search-tab-${index}`} label={item?.title} />
+                <Tab
+                  onClick={() => setFilter(item?.route)}
+                  key={`search-tab-${index}`}
+                  label={item?.title}
+                />
               ))}
           </Tabs>
         </Box>
@@ -475,7 +162,7 @@ function searchResult({ serviceList }: any) {
               index={index}
             >
               <Grid container spacing={2}>
-                {propertyList &&
+                {propertyList && propertyList ? (
                   propertyList.map((property: any) => (
                     <Grid
                       item
@@ -502,7 +189,12 @@ function searchResult({ serviceList }: any) {
                         action={handlePropertyDetails}
                       />
                     </Grid>
-                  ))}
+                  ))
+                ) : (
+                  <div className="property-not-found">
+                    <h5>Nothing Found</h5>
+                  </div>
+                )}
               </Grid>
             </TabPanel>
           ))}
