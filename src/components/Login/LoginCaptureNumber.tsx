@@ -18,6 +18,7 @@ const LoginNumber = ({
   setErrors,
   setShowOtpScreen,
   error,
+  setSignUpApi,
   apiGenerateOtp,
 }: any) => {
   // States
@@ -67,6 +68,7 @@ const LoginNumber = ({
     const otpPhoneNumber = {
       phoneNumber: values?.phoneNumber,
     };
+    setSignUpApi(values);
     // apiGenerateOtp(otpPhoneNumber);
 
     // setShowOtpScreen(!error);

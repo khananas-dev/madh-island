@@ -30,6 +30,7 @@ import { numberOfNights } from "../../utils/utils";
 import moment from "moment";
 import { getStoreFilters, setStoreFilters } from "../../utils/localStorage";
 import { ProductionService } from "../../services/production/productionService";
+import { Booking } from "../../services/booking";
 
 interface SummaryCard {
   // price?: number | string;
@@ -37,6 +38,7 @@ interface SummaryCard {
   handleClick: Function;
   serviceType: any;
   detail?: any;
+  setUpdateFilter?: any;
 }
 function index(cardProps: SummaryCard) {
   // const [value, setValue] = React.useState<DateRange<Date>>([
@@ -59,9 +61,12 @@ function index(cardProps: SummaryCard) {
   const [productionHouseTypeList, setProductionHouseTypeList] =
     useState<any>("");
 
+  const [reservedDate, setReservedDate] = useState<any[]>();
   // Variable
   const { detail } = cardProps;
   const productinService = new ProductionService();
+  const booking = new Booking();
+  const { setUpdateFilter } = cardProps;
 
   // Functions
   const handleInputChange = (e: any) => {
@@ -81,8 +86,17 @@ function index(cardProps: SummaryCard) {
     }
   };
 
+  const _reservedDate = (payload: any) => {
+    const reservedData = booking.reservedDate(payload);
+    reservedData.then((res: any) => {
+      if (!res?.data?.error) {
+        setReservedDate(res?.data?.data);
+      }
+    });
+  };
+
   /* 
-  Calc Logic here
+  Calc Logic start
   */
   const noOfNight = () => {
     return numberOfNights(value[0], value[1]);
@@ -105,6 +119,9 @@ function index(cardProps: SummaryCard) {
   const grandTotal = () => {
     return subTotal() + gstCalculatedPrice();
   };
+  /* 
+  Calc Logic end
+  */
 
   const handleClick = () => {
     const payload = {
@@ -127,19 +144,16 @@ function index(cardProps: SummaryCard) {
   const handleProdcutionHouseType = (ev: any) => {
     setProductionHouseType(ev.target.value);
   };
-  const todayDate = () => {
-    const d = new Date();
-    return d;
-  };
 
   const handleOnChange = (newValue: any) => {
     setValue(newValue);
     const filter = {
       serviceType: cardProps?.serviceType?.serviceType,
-      checkInDate: value[0],
-      checkOutDate: value[1],
+      checkInDate: newValue[0],
+      checkOutDate: newValue[1],
     };
     setStoreFilters(filter);
+    console.log("working");
   };
 
   const _getAllProductionService = () => {
@@ -151,6 +165,15 @@ function index(cardProps: SummaryCard) {
         setProductionHouseTypeList(res?.data?.data);
       }
     });
+  };
+
+  const reservedDates = (event: any) => {
+    // let date = ["2022-01-30", "2022-01-31"];
+    const dateInt: any[] = [];
+    reservedDate?.map((item: any) => {
+      dateInt.push(moment(item).format());
+    });
+    return dateInt.includes(moment(event).format());
   };
   //  Effects
 
@@ -166,6 +189,12 @@ function index(cardProps: SummaryCard) {
   useEffect(() => {
     _getAllProductionService();
   }, []);
+
+  useEffect(() => {
+    if (detail) {
+      _reservedDate(detail?._id);
+    }
+  }, [detail]);
 
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -204,23 +233,25 @@ function index(cardProps: SummaryCard) {
           : null}
         {cardProps?.serviceType &&
         cardProps?.serviceType?.serviceType != "Reece" ? (
-          <Box sx={{ marginTop: 2 }}>
+          <Box className="check-in-and-out-date-picker" sx={{ marginTop: 2 }}>
             <DateRangePicker
               startText="Check-in"
               endText="Check-out"
               disablePast
+              shouldDisableDate={reservedDates}
               value={value}
               // onChange={(newValue: any) => {
               //   setValue(newValue);
               // }}
               onChange={(newValue: any) => {
                 handleOnChange(newValue);
+                setUpdateFilter(newValue);
               }}
               renderInput={(startProps, endProps) => (
                 <React.Fragment>
-                  <TextField {...startProps} />
+                  <TextField className="date-input" {...startProps} />
                   <Box sx={{ mx: 2 }}> to </Box>
-                  <TextField {...endProps} />
+                  <TextField className="date-input" {...endProps} />
                 </React.Fragment>
               )}
             />

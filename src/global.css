@@ -443,6 +443,35 @@ input[type="number"] {
   font-size: 20px;
   margin: 0;
 }
+.user-avatar {
+  background: #e6e6e6;
+  border: 2px solid #25c69b;
+}
+.single-property-footer-bottom {
+  background: #ffffff;
+  box-shadow: 0px -4px 12px rgba(110, 110, 110, 0.16);
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1;
+}
+.footer-bottom-container {
+  padding: 15px 0px;
+  max-width: calc(100% - 120px);
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.single-property-footer-bottom h5 {
+  font-size: 18px;
+  margin: 0px 0px 10px 0px;
+}
+.single-property-footer-bottom h4 {
+  font-size: 24px;
+  margin: 0px;
+}
 @media (max-width: 992px) {
   .img-gallery {
     max-width: calc(100% - 60px);
@@ -453,5 +482,27 @@ input[type="number"] {
 @media (max-width: 576px) {
   .bottom-footer-date {
     font-size: 14px !important;
+  }
+  .check-in-and-out-date-picker > div {
+    display: block;
+  }
+  .check-in-and-out-date-picker .date-input {
+    display: block;
+    width: 100%;
+    margin-bottom: 10px;
+  }
+  .check-in-and-out-date-picker .date-input .MuiInputBase-root {
+    width: 100%;
+  }
+  .check-in-and-out-date-picker .MuiBox-root {
+    margin-bottom: 15px;
+  }
+  .property-title {
+    font-size: 32px !important;
+    margin-bottom: 25px !important;
+  }
+  .footer-bottom-container {
+    max-width: calc(100% - 60px);
+    display: block;
   }
 }

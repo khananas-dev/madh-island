@@ -42,7 +42,9 @@ function PropertyDetails() {
   // const [signupModel, setSignupModel] = React.useState(false);
   const [propertyDetail, setPropertyDetail] = React.useState<any>();
   const [bookingData, setBookingData] = useState<any>();
-
+  const [checkInDateFooter, setCheckInDateFooter] = useState<any>();
+  const [checkOutDateFooter, setCheckOutDateFooter] = useState<any>();
+  const [updateFilter, setUpdateFilter] = useState<any>();
   // Variable
   const router = useRouter();
   const selectedProperty = {
@@ -199,10 +201,33 @@ function PropertyDetails() {
   }, []);
 
   useEffect(() => {
+    const searchFilters = getStoreFilters();
+
+    const service = searchFilters.serviceType;
+    const checkInDate = searchFilters.checkInDate || moment();
+    const checkOutDate = searchFilters.checkOutDate || moment().add(1, "day");
+
+    const filters: PropertyFilter = {
+      serviceType: service as string,
+      checkInDate: checkInDate,
+      checkOutDate: checkOutDate,
+    };
+    console.log(filters);
+    setPropertyFilter(filters);
+  }, [updateFilter]);
+
+  useEffect(() => {
     if (id) {
       _getPropertyDetailById(id);
     }
   }, [id]);
+
+  useEffect(() => {
+    if (propertyFilter) {
+      setCheckInDateFooter(propertyFilter?.checkInDate);
+      setCheckOutDateFooter(propertyFilter?.checkOutDate);
+    }
+  }, [propertyFilter]);
 
   return (
     <Box sx={{ height: `inherit` }}>
@@ -230,6 +255,7 @@ function PropertyDetails() {
           <Typography
             variant="h1"
             component="p"
+            className="property-title"
             color="#1F1F1F"
             textAlign="left"
             sx={{ marginTop: `10px`, marginBottom: "10px" }}
@@ -395,6 +421,7 @@ function PropertyDetails() {
                 handleClick={(handleClick: any) =>
                   handleCheckoutCard(handleClick)
                 }
+                setUpdateFilter={setUpdateFilter}
                 detail={propertyDetail}
                 price={
                   propertyFilter?.serviceType &&
@@ -413,7 +440,7 @@ function PropertyDetails() {
         </BodyWrapper>
       </LayoutWrapper>
 
-      <FooterWrapper>
+      {/* <FooterWrapper>
         <Grid container spacing={2}>
           <Grid item xs={6}>
             {propertyFilter.serviceType &&
@@ -432,7 +459,6 @@ function PropertyDetails() {
                   "DD MMM YYYY"
                 )}
                 `}
-                {/* 21-Oct-2021 - 30-Oct-2021 */}
               </Typography>
             ) : null}
 
@@ -443,7 +469,6 @@ function PropertyDetails() {
               textAlign="left"
               sx={{}}
             >
-              {/* Property Name */}
               {propertyDetail?.title}
             </Typography>
           </Grid>
@@ -473,18 +498,42 @@ function PropertyDetails() {
             </Button>
           </Grid>
         </Grid>
-      </FooterWrapper>
-      {/* 
-      <Modal
-        open={loginModel}
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <LoginWrapper>
-          <Login handleClose={handleClose} />
-        </LoginWrapper>
-      </Modal> */}
+      </FooterWrapper> */}
+
+      <div className="single-property-footer-bottom">
+        <div className="footer-bottom-container">
+          <div className="date-and-title">
+            {propertyFilter.serviceType &&
+            propertyFilter.serviceType != "Reece" ? (
+              <h5>
+                {`
+                ${moment(checkInDateFooter).format("DD MMM YYYY")} - ${moment(
+                  checkOutDateFooter
+                ).format("DD MMM YYYY")}
+                `}
+              </h5>
+            ) : null}
+            {propertyDetail?.title && <h4>{propertyDetail?.title}</h4>}
+          </div>
+          <div className="cta-btn">
+            {propertyFilter.serviceType &&
+            propertyFilter.serviceType == "FilmLocation" ? (
+              <Button>Download PDF</Button>
+            ) : null}
+
+            <Button>
+              {(propertyFilter?.serviceType &&
+                propertyFilter?.serviceType == "VillasandBunglow") ||
+              propertyFilter?.serviceType == "EventVenues"
+                ? "Book Now"
+                : propertyFilter?.serviceType == "FilmLocation" ||
+                  propertyFilter?.serviceType == "Reece"
+                ? "Reserve"
+                : null}
+            </Button>
+          </div>
+        </div>
+      </div>
     </Box>
   );
 }
@@ -501,15 +550,15 @@ const BodyWrapper = styled(Box)`
   }
 `;
 const LayoutWrapper = styled(Box)`
-  height: calc(100% - 80px);
-  padding-bottom: 40px;
+  // height: calc(100% - 80px);
+  padding-bottom: 150px;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
   overflow-y: auto;
   @media screen and (max-width: 768px) {
-    height: calc(100% - 100px);
-    padding-bottom: 40px;
+    // height: calc(100% - 100px);
+    padding-bottom: 170px;
     overflow-y: auto;
     overflow-x: hidden;
   }

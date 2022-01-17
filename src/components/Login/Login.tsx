@@ -16,6 +16,7 @@ function Login({ handleClose, setJwt, jwt }: any) {
   const [loginScreen, setLoginScreen] = useState<boolean>(true);
   const [errors, setErrors] = useState<any>("");
   const [showOtpScreen, setShowOtpScreen] = useState<boolean>(false);
+  const [signUpApi, setSignUpApi] = useState<any>();
   // const [jwt, setJwt] = useState<any>();
   // const [jwt, setJwt] = useLocalStorage("jwt", null);
 
@@ -40,7 +41,7 @@ function Login({ handleClose, setJwt, jwt }: any) {
           phoneNumber: Number(payLoad?.phoneNumber),
         };
         setShowOtpScreen(true);
-        _generateOtp(otpData);
+        _generateOtpForSingUp(otpData);
       } else {
         setShowOtpScreen(false);
         setErrors(res?.data?.error);
@@ -51,6 +52,18 @@ function Login({ handleClose, setJwt, jwt }: any) {
   // const _singIn = (payLoad: any) => {
   //   _generateOtp(payLoad);
   // };
+  const _generateOtpForSingUp = (payLoad: any) => {
+    const generateOtpData = authenticationService.generateOtp(payLoad);
+    generateOtpData.then((res: any) => {
+      if (!res?.data?.error) {
+        console.log(res?.data?.message);
+        // setShowOtpScreen(true);
+      } else {
+        setErrors(res?.data?.error);
+        // setShowOtpScreen(false);
+      }
+    });
+  };
   const _generateOtp = (payLoad: any) => {
     const generateOtpData = authenticationService.generateOtp(payLoad);
     generateOtpData.then((res: any) => {
@@ -83,12 +96,12 @@ function Login({ handleClose, setJwt, jwt }: any) {
       }
     });
   };
-  // Effects
 
   // calling generate otp on the click of the login
   const singInApi = (payload: any) => {
     _generateOtp(payload);
   };
+  // Effects
 
   useEffect(() => {
     if (signUpDetail) {
@@ -96,14 +109,24 @@ function Login({ handleClose, setJwt, jwt }: any) {
     }
   }, [signUpDetail]);
 
+  // useEffect(() => {
+  //   if (registeredMobile) {
+  //     const phoneNumberData = {
+  //       phoneNumber: Number(registeredMobile),
+  //     };
+  //     _generateOtp(phoneNumberData);
+  //   }
+  // }, [registeredMobile]);
+
   useEffect(() => {
     if (registeredMobile) {
       const phoneNumberData = {
         phoneNumber: Number(registeredMobile),
       };
-      _generateOtp(phoneNumberData);
+      singInApi(phoneNumberData);
+      // _generateOtp();
     }
-  }, [registeredMobile]);
+  }, [signUpApi]);
 
   // Verifying otp on the set of otp
   useEffect(() => {
@@ -130,6 +153,7 @@ function Login({ handleClose, setJwt, jwt }: any) {
       {!showOtpScreen && (
         <LoginNumber
           userPhone={userPhone}
+          setSignUpApi={setSignUpApi}
           setSignUpDetail={setSignUpDetail}
           setOtpPhoneNumber={setOtpPhoneNumber}
           showOtpScreen={showOtpScreen}

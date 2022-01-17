@@ -218,7 +218,7 @@ function Navigation(sideBarProps: SidebarProps) {
           <Box>
             <IconButton onClick={accountMenuHandleClick}>
               <Avatar
-                sx={{ bgcolor: "orange", textTransform: "uppercase" }}
+                className="user-avatar"
                 alt={displayUserName()}
                 src="/broken-image.jpg"
               />
@@ -237,7 +237,7 @@ function Navigation(sideBarProps: SidebarProps) {
           </Box>
         ) : (
           <IconButton onClick={handleOpen}>
-            <Avatar src="/broken-image.jpg" />
+            <Avatar className="user-avatar" src="/broken-image.jpg" />
           </IconButton>
         )}
       </Nav>

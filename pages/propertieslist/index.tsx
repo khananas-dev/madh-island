@@ -236,6 +236,9 @@ const SearchWrapper = styled(Box)`
   padding: 24px;
   max-width: 1100px;
   width: min-content;
+  @media screen and (max-width: 576px) {
+    max-width: calc(100% - 60px);
+  }
 `;
 
 const BodyWrapper = styled(Box)`
