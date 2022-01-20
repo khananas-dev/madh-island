@@ -1,144 +1,109 @@
-import { Modal, Typography } from "@mui/material";
+import { Button, Modal, TextField, Typography } from "@mui/material";
 import { Box, style } from "@mui/system";
+import { Formik, Form } from "formik";
 import React, { useEffect, useState } from "react";
-import { useLocalStorage } from "../../hooks/useLocalStorage";
 import { AuthenticationService } from "../../services/authentication/authenticationService";
-import LoginNumber from "./LoginCaptureNumber";
-import LoginOtp from "./LoginCaptureOTP";
+import {
+  LoginFormValidationSchema,
+  SignupFormValidationSchema,
+} from "../../utils/Validations";
+import {
+  SignFormInitialValues,
+  signupFormInitialValues,
+} from "./form-initial-values";
+import Otp from "./LoginCaptureOTP";
+import { LoginCard } from "./LoginElements";
 
 function Login({ handleClose, setJwt, jwt }: any) {
   // States
-  const [registeredMobile, setRegisteredMobile] = React.useState("");
-  const [signUpDetail, setSignUpDetail] = useState<any>();
-  const [otpPhoneNumber, setOtpPhoneNumber] = useState<any>();
-  const [otp, setOtp] = useState<any>();
+  const [otpScreen, setOtpScreen] = useState<boolean>(false);
+  const [Error, setError] = useState<any>();
+  const [phoneNumber, setPhoneNumber] = useState<any>();
   const [loading, setLoading] = useState<boolean>(false);
-  const [loginScreen, setLoginScreen] = useState<boolean>(true);
-  const [errors, setErrors] = useState<any>("");
-  const [showOtpScreen, setShowOtpScreen] = useState<boolean>(false);
-  const [signUpApi, setSignUpApi] = useState<any>();
-  // const [jwt, setJwt] = useState<any>();
-  // const [jwt, setJwt] = useLocalStorage("jwt", null);
+  const [signUp, setSignUp] = useState<any>(false);
 
-  // variables
-
+  // Variables
   const authenticationService = new AuthenticationService();
 
   // Functions
-  const userPhone = (value: any) => {
-    setRegisteredMobile(value);
+  const handelSignIn = (values: any, onSubmitProps: any) => {
+    onSubmitProps.resetForm();
+    setError(null);
+    console.log(values);
+    _signIn(values);
+    setPhoneNumber(values);
+  };
+
+  const handleSignUpSubmit = (values: any, onSubmitProps: any) => {
+    onSubmitProps.resetForm();
+    // _signUp();
+    setError(null);
+    console.log(values);
+    _signUp(values);
+  };
+
+  const handelDisabled = (props: any) => {
+    if (loading) {
+      return true;
+    } else {
+      return !(props.isValid && props.dirty);
+    }
+  };
+
+  const _signIn = (payLoad: any) => {
+    _generateOtp(payLoad);
   };
 
   const _signUp = (payLoad: any) => {
-    const signUpData = authenticationService.signUp(payLoad);
-    signUpData.then((res: any) => {
+    const signUpApiCall = authenticationService.signUp(payLoad);
+    setLoading(true);
+    signUpApiCall.then((res: any) => {
       if (!res?.data?.error) {
         console.log(res?.data?.data);
-        setOtpPhoneNumber({
-          phoneNumber: Number(payLoad?.phoneNumber),
-        });
-        const otpData = {
-          phoneNumber: Number(payLoad?.phoneNumber),
-        };
-        setShowOtpScreen(true);
-        _generateOtpForSingUp(otpData);
+        setError(null);
+        setOtpScreen(true);
+        setLoading(false);
       } else {
-        setShowOtpScreen(false);
-        setErrors(res?.data?.error);
+        setError(res?.data?.error);
+        setLoading(false);
       }
     });
   };
 
-  // const _singIn = (payLoad: any) => {
-  //   _generateOtp(payLoad);
-  // };
-  const _generateOtpForSingUp = (payLoad: any) => {
-    const generateOtpData = authenticationService.generateOtp(payLoad);
-    generateOtpData.then((res: any) => {
-      if (!res?.data?.error) {
-        console.log(res?.data?.message);
-        // setShowOtpScreen(true);
-      } else {
-        setErrors(res?.data?.error);
-        // setShowOtpScreen(false);
-      }
-    });
-  };
   const _generateOtp = (payLoad: any) => {
-    const generateOtpData = authenticationService.generateOtp(payLoad);
-    generateOtpData.then((res: any) => {
+    let generateOtpApiCall = authenticationService.generateOtp(payLoad);
+    setLoading(true);
+    generateOtpApiCall.then((res: any) => {
       if (!res?.data?.error) {
-        console.log(res?.data?.message);
-        setShowOtpScreen(true);
+        console.log(res?.data?.data);
+        setOtpScreen(true);
+        setError(null);
+        setLoading(false);
       } else {
-        setErrors(res?.data?.error);
-        setShowOtpScreen(false);
+        setError(res?.data?.error);
+        setLoading(false);
       }
     });
   };
 
   const _verifyOtp = (payLoad: any) => {
-    const verifyOtpData = authenticationService.verifyOtp(payLoad);
+    let verifyOtpApiCall = authenticationService.verifyOtp(payLoad);
     setLoading(true);
-    verifyOtpData.then((res: any) => {
+    verifyOtpApiCall.then((res: any) => {
       if (!res?.data?.error) {
-        console.log(res?.data);
-        setLoading(false);
-        // setLoginScreen(false);
-        console.log();
-
+        console.log(res?.data?.data);
+        setError(null);
         setJwt(JSON.stringify(res?.data));
-        handleClose();
-      } else {
+        handleClose(true);
         setLoading(false);
-        console.log(res?.data?.error);
-        setErrors(res?.data?.error);
+      } else {
+        setError(res?.data?.error);
+        setLoading(false);
       }
     });
   };
 
-  // calling generate otp on the click of the login
-  const singInApi = (payload: any) => {
-    _generateOtp(payload);
-  };
   // Effects
-
-  useEffect(() => {
-    if (signUpDetail) {
-      _signUp(signUpDetail);
-    }
-  }, [signUpDetail]);
-
-  // useEffect(() => {
-  //   if (registeredMobile) {
-  //     const phoneNumberData = {
-  //       phoneNumber: Number(registeredMobile),
-  //     };
-  //     _generateOtp(phoneNumberData);
-  //   }
-  // }, [registeredMobile]);
-
-  useEffect(() => {
-    if (registeredMobile) {
-      const phoneNumberData = {
-        phoneNumber: Number(registeredMobile),
-      };
-      singInApi(phoneNumberData);
-      // _generateOtp();
-    }
-  }, [signUpApi]);
-
-  // Verifying otp on the set of otp
-  useEffect(() => {
-    if (otp) {
-      const payLoad = {
-        phoneNumber: Number(registeredMobile),
-        otp: Number(otp),
-      };
-      _verifyOtp(payLoad);
-    }
-  }, [otp]);
-
   useEffect(() => {
     if (jwt) {
       console.log(jwt);
@@ -147,34 +112,211 @@ function Login({ handleClose, setJwt, jwt }: any) {
   }, [jwt]);
   return (
     <>
-      {/* {JSON.stringify(
-        `error: ${errors} and show otp screen : ${showOtpScreen}`
-      )} */}
-      {!showOtpScreen && (
-        <LoginNumber
-          userPhone={userPhone}
-          setSignUpApi={setSignUpApi}
-          setSignUpDetail={setSignUpDetail}
-          setOtpPhoneNumber={setOtpPhoneNumber}
-          showOtpScreen={showOtpScreen}
-          setShowOtpScreen={setShowOtpScreen}
-          error={errors}
-          setErrors={setErrors}
-          apiGenerateOtp={singInApi}
-        />
-      )}
-      {showOtpScreen && (
-        <LoginOtp
-          userData={registeredMobile}
-          userPhone={userPhone}
-          setOtp={setOtp}
-          setShowOtpScreen={setShowOtpScreen}
-          loading={loading}
-          apiVerify={_verifyOtp}
-          error={errors}
-          setErrors={setErrors}
-        />
-      )}
+      <LoginCard>
+        {!otpScreen && (
+          <>
+            {!signUp && (
+              <div>
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "baseline",
+                  }}
+                >
+                  <Typography
+                    variant="h2"
+                    component="h2"
+                    textAlign="left"
+                    sx={{
+                      margin: "0px 0px 24px 0px",
+                    }}
+                  >
+                    Log In
+                  </Typography>
+                  <Typography
+                    onClick={() => {
+                      // setLoginView(!loginView);
+                      setSignUp(true);
+                      setError(null);
+                    }}
+                    variant="caption"
+                    component="caption"
+                    textAlign="right"
+                    sx={{
+                      margin: "0px 0px 24px 0px",
+                    }}
+                  >
+                    New User ?
+                  </Typography>
+                </Box>
+
+                <Typography
+                  variant="h4"
+                  component="h4"
+                  sx={{
+                    margin: "0px 0px 24px 0px",
+                  }}
+                >
+                  Enter Mobile Number to receive OTP
+                </Typography>
+                <Formik
+                  initialValues={SignFormInitialValues}
+                  validationSchema={LoginFormValidationSchema}
+                  onSubmit={handelSignIn}
+                >
+                  {(props) => (
+                    <Form>
+                      <TextField
+                        type="tel"
+                        fullWidth
+                        label="Mobile Number"
+                        name="phoneNumber"
+                        value={props.values.phoneNumber}
+                        onChange={props.handleChange}
+                        variant="outlined"
+                        sx={{
+                          margin: "0px 0px 24px 0px",
+                        }}
+                      />
+
+                      <Button
+                        variant="contained"
+                        type="submit"
+                        // disabled={!(props.isValid && props.dirty)}
+                        disabled={handelDisabled(props)}
+                        sx={{ display: "table", margin: "0 auto" }}
+                      >
+                        {/* Send OTP */}
+                        {loading ? "Sending.." : "Send OTP "}
+                      </Button>
+                      <span className="error">{Error}</span>
+                    </Form>
+                  )}
+                </Formik>
+              </div>
+            )}
+            {signUp && (
+              <div>
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "baseline",
+                  }}
+                >
+                  <Typography
+                    variant="h2"
+                    component="h2"
+                    textAlign="left"
+                    sx={{
+                      margin: "0px 0px 24px 0px",
+                    }}
+                  >
+                    Create New User
+                  </Typography>
+                  <Typography
+                    onClick={() => {
+                      setSignUp(false);
+                      setError(null);
+                    }}
+                    variant="caption"
+                    component="caption"
+                    textAlign="right"
+                    sx={{
+                      margin: "0px 0px 24px 0px",
+                    }}
+                  >
+                    Already have an account ?
+                  </Typography>
+                </Box>
+
+                <Formik
+                  initialValues={signupFormInitialValues}
+                  validationSchema={SignupFormValidationSchema}
+                  onSubmit={handleSignUpSubmit}
+                >
+                  {(props) => (
+                    <Form>
+                      <TextField
+                        type="text"
+                        fullWidth
+                        label="First Name"
+                        name="firstName"
+                        value={props.values.firstName}
+                        onChange={props.handleChange}
+                        variant="outlined"
+                        sx={{
+                          margin: "0px 0px 24px 0px",
+                        }}
+                      />
+                      <TextField
+                        type="text"
+                        fullWidth
+                        label="Last Name"
+                        name="lastName"
+                        value={props.values.lastName}
+                        onChange={props.handleChange}
+                        variant="outlined"
+                        sx={{
+                          margin: "0px 0px 24px 0px",
+                        }}
+                      />
+                      <TextField
+                        type="tel"
+                        fullWidth
+                        label="Mobile Number"
+                        name="phoneNumber"
+                        value={props.values.phoneNumber}
+                        onChange={props.handleChange}
+                        variant="outlined"
+                        sx={{
+                          margin: "0px 0px 24px 0px",
+                        }}
+                      />
+                      <TextField
+                        type="text"
+                        fullWidth
+                        label="Email"
+                        name="emailId"
+                        value={props.values.emailId}
+                        onChange={props.handleChange}
+                        variant="outlined"
+                        sx={{
+                          margin: "0px 0px 24px 0px",
+                        }}
+                      />
+
+                      <Button
+                        variant="contained"
+                        type="submit"
+                        // disabled={!(props.isValid && props.dirty)}
+                        // disabled={!isValid}
+                        disabled={handelDisabled(props)}
+                        sx={{ display: "table", margin: "0 auto" }}
+                      >
+                        {/* Send OTP */}
+                        {loading ? "Creating..." : "Create"}
+                      </Button>
+                      <span className="error">{Error}</span>
+                    </Form>
+                  )}
+                </Formik>
+              </div>
+            )}
+          </>
+        )}
+        {otpScreen && (
+          <Otp
+            phoneNumber={phoneNumber}
+            setOtpScreen={setOtpScreen}
+            _verifyOtp={_verifyOtp}
+            Error={Error}
+            loading={loading}
+            setError={setError}
+          />
+        )}
+      </LoginCard>
     </>
   );
 }

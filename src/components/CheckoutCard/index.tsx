@@ -20,6 +20,7 @@ import {
   MenuItem,
   Select,
   ClickAwayListener,
+  FormHelperText,
 } from "@mui/material";
 import Card from "@mui/material/Card";
 import { red } from "@mui/material/colors";
@@ -31,6 +32,9 @@ import moment from "moment";
 import { getStoreFilters, setStoreFilters } from "../../utils/localStorage";
 import { ProductionService } from "../../services/production/productionService";
 import { Booking } from "../../services/booking";
+import { Formik } from "formik";
+import { bookingFormInitialValues } from "../Login/form-initial-values";
+import { bookingFormValidation } from "../../utils/Validations";
 
 interface SummaryCard {
   // price?: number | string;
@@ -49,17 +53,23 @@ function index(cardProps: SummaryCard) {
     cardProps?.serviceType?.checkInDate,
     cardProps?.serviceType?.checkOutDate,
   ]);
-  const [bookingTime, setBookingTime] = React.useState<Date | null>(null);
+  const [bookingTime, setBookingTime] = React.useState<Date | null>(
+    new Date("2020-01-01 12:00")
+  );
   const [noOfGuest, setNoOfGuest] = useState<any | number>(1);
   const [additionalCharge, setAdditionalCharge] = useState<boolean>(false);
   const [selectedDate, handleDateChange] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
-  const [reeceBooking, setReeceBooking] = useState<any>(null);
+  const [reeceBooking, setReeceBooking] = useState<Date | null>(new Date());
   const [bookingDetail, setBookingDetail] = useState<any>();
   const [productionName, setProductionName] = useState<any>("");
   const [productionHouseType, setProductionHouseType] = useState<any>("");
   const [productionHouseTypeList, setProductionHouseTypeList] =
     useState<any>("");
+  const [productionNameError, setProductionNameError] = useState<any>();
+  const [productionTypeError, setProductionTypeError] = useState<any>();
+  const [datePickerError, setdatePickerError] = useState<any>();
+  const [formError, setFormError] = useState<boolean>(true);
 
   const [reservedDate, setReservedDate] = useState<any[]>();
   // Variable
@@ -125,6 +135,8 @@ function index(cardProps: SummaryCard) {
 
   const handleClick = () => {
     const payload = {
+      propertyId: detail?._id,
+      serviceCategoryId: "sd",
       checkInDate: cardProps?.serviceType?.checkInDate || moment(),
       checkOutDate:
         cardProps?.serviceType?.checkOutDate || moment().add(1, "day"),
@@ -138,11 +150,57 @@ function index(cardProps: SummaryCard) {
     cardProps.handleClick(payload);
   };
 
+  const initialFormValidation = () => {
+    console.log("outside working..");
+
+    if (
+      cardProps?.serviceType?.serviceType == "VillasandBunglow" ||
+      cardProps?.serviceType?.serviceType == "EventVenues"
+    ) {
+      setFormError(false);
+      console.log("working..");
+    } else {
+      if (productionName.length > 3 && productionHouseType) {
+        setFormError(false);
+      } else {
+        setFormError(true);
+      }
+    }
+  };
+
   const handleProdcutionName = (ev: any) => {
     setProductionName(ev.target.value);
+    console.log(ev?.target?.value?.length);
+
+    if (ev?.target?.value?.length > 3) {
+      setProductionNameError(null);
+    } else {
+      setProductionNameError("To short");
+    }
+  };
+
+  const handleBlurProductionName = (ev: any) => {
+    if (ev?.target?.value?.length > 3) {
+      setProductionNameError(null);
+    } else {
+      setProductionNameError("This field is required");
+    }
   };
   const handleProdcutionHouseType = (ev: any) => {
     setProductionHouseType(ev.target.value);
+    if (ev.target.value) {
+      setProductionTypeError(null);
+    } else {
+      setProductionTypeError("This field is required");
+    }
+  };
+
+  const handleProdcutionHouseTypeBlur = (ev: any) => {
+    if (ev.target.value) {
+      setProductionTypeError(null);
+    } else {
+      setProductionNameError("This field is required");
+    }
   };
 
   const handleOnChange = (newValue: any) => {
@@ -178,6 +236,13 @@ function index(cardProps: SummaryCard) {
   //  Effects
 
   useEffect(() => {
+    initialFormValidation();
+  }, [cardProps]);
+  useEffect(() => {
+    initialFormValidation();
+  }, [productionName, productionHouseType]);
+
+  useEffect(() => {
     if (cardProps) {
       setValue([
         cardProps?.serviceType?.checkInDate || value[0],
@@ -198,6 +263,15 @@ function index(cardProps: SummaryCard) {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
+      {/* <Formik
+        initialValues={bookingFormInitialValues}
+        validationSchema={bookingFormValidation}
+        onSubmit={bookingFormSubmit}
+        >
+           {(props) => (
+             
+           )}
+        </Formik> */}
       <Card
         style={{
           padding: 16,
@@ -282,10 +356,15 @@ function index(cardProps: SummaryCard) {
                 <DateTimePicker
                   label="Date&Time picker"
                   disablePast
-                  inputFormat="do MMMM yyyy hh"
+                  inputFormat="do MMMM yyyy hh:00 a"
                   value={reeceBooking}
                   onChange={(newValue: any) => {
                     setReeceBooking(newValue);
+                    if (newValue) {
+                      setdatePickerError(null);
+                    } else {
+                      setdatePickerError("This field is required");
+                    }
                   }}
                   // onChange={handleOnChange(newValue)}
                   PopperProps={{
@@ -297,6 +376,8 @@ function index(cardProps: SummaryCard) {
                       onClick={(e) => setIsOpen(true)}
                       sx={{ marginTop: 3 }}
                       fullWidth
+                      error={datePickerError}
+                      helperText={datePickerError && datePickerError}
                     />
                   )}
                   open={isOpen}
@@ -311,11 +392,19 @@ function index(cardProps: SummaryCard) {
               id="Production Name"
               value={productionName}
               onInput={handleProdcutionName}
+              onBlur={handleBlurProductionName}
+              error={productionNameError}
               label="Production Name"
               fullWidth
               variant="outlined"
+              helperText={productionNameError && productionNameError}
             />
-            <FormControl fullWidth sx={{ marginTop: 3 }}>
+
+            <FormControl
+              fullWidth
+              sx={{ marginTop: 3 }}
+              error={productionTypeError}
+            >
               <InputLabel id="production-house-type-lable">
                 Production House Type
               </InputLabel>
@@ -324,6 +413,7 @@ function index(cardProps: SummaryCard) {
                 id="production-house-type"
                 value={productionHouseType}
                 label="Production House Type"
+                onBlur={handleProdcutionHouseTypeBlur}
                 // onChange={handleChange}
                 onChange={handleProdcutionHouseType}
               >
@@ -336,10 +426,10 @@ function index(cardProps: SummaryCard) {
                       {item?.title}
                     </MenuItem>
                   ))}
-                {/* <MenuItem value={10}>Ten</MenuItem>
-                <MenuItem value={20}>Twenty</MenuItem>
-                <MenuItem value={30}>Thirty</MenuItem> */}
               </Select>
+              <FormHelperText>
+                {productionTypeError && productionTypeError}
+              </FormHelperText>
             </FormControl>
             {cardProps?.serviceType &&
             cardProps?.serviceType?.serviceType == "FilmLocation" ? (
@@ -373,6 +463,7 @@ function index(cardProps: SummaryCard) {
         <Button
           onClick={handleClick}
           // onClick={(ev: any) => cardProps.handleClick(ev)}
+          disabled={formError}
           sx={{ marginTop: 3 }}
           size="large"
           variant="contained"

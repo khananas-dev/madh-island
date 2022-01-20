@@ -13,3 +13,5 @@ export const SignupFormValidationSchema = Yup.object().shape({
     .required(),
   emailId: Yup.string().email("Email must be valid").required(),
 });
+
+export const bookingFormValidation = Yup.object().shape({});

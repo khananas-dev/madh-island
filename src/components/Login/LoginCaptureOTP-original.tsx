@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Grid, Paper, Box, Typography, Link, Button } from "@mui/material";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
@@ -12,16 +12,18 @@ const otpbox = {
   borderRadius: 7,
   border: "2px solid #535353",
 };
-const Otp = ({
-  phoneNumber,
-  setOtpScreen,
-  _verifyOtp,
-  Error,
+const LoginOtp = ({
+  userData,
+  userPhone,
+  setOtp,
+  setOtpPhoneNumber,
   loading,
-  setError,
+  _verifyOtp,
+  error,
+  setErrors,
+  setShowOtpScreen,
 }: any) => {
   // States
-  const [payLoad, setPayLoad] = useState<any>();
 
   // Variables
   const formSchema = {
@@ -44,6 +46,11 @@ const Otp = ({
   });
 
   // Functions
+  const changNumber = () => {
+    userPhone("");
+    setErrors("");
+    setShowOtpScreen(false);
+  };
 
   const handleMaxLength = (elmnt: any) => {
     if (elmnt.target.value.length > elmnt.target.maxLength)
@@ -64,20 +71,12 @@ const Otp = ({
     }
   };
 
-  const otpHandelSubmit = (values: any, onSubmitProps: any) => {
-    onSubmitProps.resetForm();
+  const otpHandelSubmit = (values: any) => {
     console.log(values);
-    setError(null);
     const otp = `
             ${values.otp1}${values.otp2}${values.otp3}${values.otp4}${values.otp5}${values.otp6}
             `;
-    // setOtp(otp.toString().replaceAll(/\s/g, ""));
-    const payLoadData = {
-      phoneNumber: phoneNumber?.phoneNumber,
-      otp: Number(otp.toString().replaceAll(/\s/g, "")),
-    };
-    setPayLoad(payLoadData);
-    // _verifyOtp(payLoad);
+    setOtp(otp.toString().replaceAll(/\s/g, ""));
   };
 
   const handelDisabled = (props: any) => {
@@ -88,17 +87,7 @@ const Otp = ({
     }
   };
 
-  const changNumber = () => {
-    setOtpScreen(false);
-    setError(null);
-  };
-
   // Effects
-  useEffect(() => {
-    if (payLoad) {
-      _verifyOtp(payLoad);
-    }
-  }, [payLoad]);
 
   return (
     <LoginCard>
@@ -133,7 +122,7 @@ const Otp = ({
           margin: "0px 0px 24px 0px",
         }}
       >
-        Sent to Mobile Number {phoneNumber?.phoneNumber}
+        Sent to Mobile Number {userData}
       </Typography>
       <Formik
         initialValues={formSchema}
@@ -266,7 +255,7 @@ const Otp = ({
             <Button
               variant="contained"
               type="submit"
-              // disabled={!(props.isValid && props.dirty)}
+              //   disabled={!(props.isValid && props.dirty)}
               disabled={handelDisabled(props)}
               sx={{
                 display: "table",
@@ -276,7 +265,7 @@ const Otp = ({
             >
               {loading ? "verifying.." : "Log In "}
             </Button>
-            <span className="error">{Error}</span>
+            <span className="error">{error}</span>
           </Form>
         )}
       </Formik>
@@ -284,4 +273,4 @@ const Otp = ({
   );
 };
 
-export default Otp;
+export default LoginOtp;
