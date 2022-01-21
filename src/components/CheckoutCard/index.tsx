@@ -31,7 +31,7 @@ import { numberOfNights } from "../../utils/utils";
 import moment from "moment";
 import { getStoreFilters, setStoreFilters } from "../../utils/localStorage";
 import { ProductionService } from "../../services/production/productionService";
-import { Booking } from "../../services/booking";
+import { BookingService } from "../../services/booking";
 import { Formik } from "formik";
 import { bookingFormInitialValues } from "../Login/form-initial-values";
 import { bookingFormValidation } from "../../utils/Validations";
@@ -75,7 +75,7 @@ function index(cardProps: SummaryCard) {
   // Variable
   const { detail } = cardProps;
   const productinService = new ProductionService();
-  const booking = new Booking();
+  const bookingService = new BookingService();
   const { setUpdateFilter } = cardProps;
 
   // Functions
@@ -97,7 +97,7 @@ function index(cardProps: SummaryCard) {
   };
 
   const _reservedDate = (payload: any) => {
-    const reservedData = booking.reservedDate(payload);
+    const reservedData = bookingService.reservedDate(payload);
     reservedData.then((res: any) => {
       if (!res?.data?.error) {
         setReservedDate(res?.data?.data);

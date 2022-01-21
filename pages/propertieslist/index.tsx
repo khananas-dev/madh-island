@@ -1,5 +1,5 @@
 import { Button, Grid, Menu, MenuItem, Typography } from "@mui/material";
-import { useRouter } from "next/router";
+import { Router, useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { SearchBarProps } from "../../src/components/props";
 import SearchBar from "../../src/components/SearchBar/SearchBar";
@@ -33,6 +33,7 @@ function index() {
   const router = useRouter();
 
   const _propertyService = new PropertyService();
+  const { serviceTypeId } = router.query;
 
   // Functions
 
@@ -45,8 +46,9 @@ function index() {
   const handlePropertyDetails = (propertyid: any) => {
     router.push({
       // pathname: `/property/${propertyid}`,
-      pathname: "/property/" + `${propertyid}`,
-      query: { id: `${propertyid}` },
+      // pathname: "/property/" + `${propertyid}`,
+      pathname: "/property/",
+      query: { id: `${propertyid}`, serviceTypeId },
     });
   };
   const _getAllPropertyList = () => {

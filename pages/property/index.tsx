@@ -23,6 +23,7 @@ import { PropertyFilter } from "../../@types";
 import CheckoutCard from "../../src/components/CheckoutCard";
 import { PropertyService } from "../../src/services/property/propertyService";
 import AuthContext from "../../src/context/AuthContext";
+import { BookingService } from "../../src/services/booking";
 
 const propertyDetailsById = {
   id: `1`,
@@ -74,7 +75,8 @@ function PropertyDetails() {
   };
 
   const propertyService = new PropertyService();
-  const { id } = router?.query;
+  const bookingService = new BookingService();
+  const { id, serviceTypeId } = router?.query;
 
   // Context
   const { authenticated, setAuthenticated } = useContext(AuthContext);
@@ -107,6 +109,11 @@ function PropertyDetails() {
     // }
 
     if (localStorage.getItem("jwt")) {
+      let user = localStorage.getItem("jwt");
+      let customerId;
+      if (user) {
+        customerId = JSON.parse(user)?.id;
+      }
       const {
         checkInDate,
         checkOutDate,
@@ -118,11 +125,14 @@ function PropertyDetails() {
         reeceBooking,
       } = value;
       setAuthenticated(false);
-      let bookingData: any;
+      let bookingDataObject: any;
 
       switch (propertyFilter.serviceType) {
         case "VillasandBunglow":
-          bookingData = {
+          bookingDataObject = {
+            propertyId: id,
+            serviceCategoryId: serviceTypeId,
+            customerId,
             checkInDate,
             checkOutDate,
             noOfGuest,
@@ -131,7 +141,10 @@ function PropertyDetails() {
           break;
 
         case "EventVenues":
-          bookingData = {
+          bookingDataObject = {
+            propertyId: id,
+            serviceCategoryId: serviceTypeId,
+            customerId,
             checkInDate,
             checkOutDate,
             totalAmount,
@@ -139,7 +152,10 @@ function PropertyDetails() {
           break;
 
         case "FilmLocation":
-          bookingData = {
+          bookingDataObject = {
+            propertyId: id,
+            serviceCategoryId: serviceTypeId,
+            customerId,
             checkInDate,
             checkOutDate,
             productionName,
@@ -148,7 +164,10 @@ function PropertyDetails() {
           };
           break;
         case "Reece":
-          bookingData = {
+          bookingDataObject = {
+            propertyId: id,
+            serviceCategoryId: serviceTypeId,
+            customerId,
             reeceBooking,
             productionName,
             productionHouseType,
@@ -164,7 +183,8 @@ function PropertyDetails() {
 
       //   // console.log("value");
       // }
-      console.log(bookingData);
+      console.log(bookingDataObject);
+      setBookingData(bookingDataObject);
     } else {
       setAuthenticated(true);
     }
@@ -179,6 +199,15 @@ function PropertyDetails() {
         console.log(res?.data?.data);
         // Assigning response the data in the state
         setPropertyDetail(res?.data?.data);
+      }
+    });
+  };
+
+  const _booking = (payload: any) => {
+    const bookingApiCall = bookingService.booking(payload);
+    bookingApiCall.then((res: any) => {
+      if (!res?.data?.error) {
+        console.log(res?.data?.message);
       }
     });
   };
@@ -228,6 +257,12 @@ function PropertyDetails() {
       setCheckOutDateFooter(propertyFilter?.checkOutDate);
     }
   }, [propertyFilter]);
+
+  useEffect(() => {
+    if (bookingData) {
+      _booking(bookingData);
+    }
+  }, [bookingData]);
 
   return (
     <Box sx={{ height: `inherit` }}>
@@ -521,7 +556,7 @@ function PropertyDetails() {
               <Button>Download PDF</Button>
             ) : null}
 
-            <Button>
+            <Button disabled>
               {(propertyFilter?.serviceType &&
                 propertyFilter?.serviceType == "VillasandBunglow") ||
               propertyFilter?.serviceType == "EventVenues"

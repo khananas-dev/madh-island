@@ -45,6 +45,9 @@ function searchResult({ serviceList }: any) {
   const [value, setValue] = React.useState(0);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [propertyList, setPropertyList] = useState<any>(null);
+  const [serviceTypeId, setServiceTypeId] = useState<any>(
+    "61bfb4cc69554cea7ba278c4"
+  );
 
   // Variable
   const open = Boolean(anchorEl);
@@ -91,8 +94,8 @@ function searchResult({ serviceList }: any) {
   const handlePropertyDetails = (propertyid: any) => {
     router.push({
       // pathname: `/property/${propertyid}`,
-      pathname: "/property/" + `${propertyid}`,
-      query: { id: `${propertyid}` },
+      pathname: "/property/",
+      query: { id: `${propertyid}`, serviceTypeId },
     });
   };
 
@@ -147,7 +150,10 @@ function searchResult({ serviceList }: any) {
             {serviceList &&
               serviceList.map((item: any, index: number) => (
                 <Tab
-                  onClick={() => setFilter(item?.route)}
+                  onClick={() => {
+                    setFilter(item?.route);
+                    setServiceTypeId(item?.id);
+                  }}
                   key={`search-tab-${index}`}
                   label={item?.title}
                 />

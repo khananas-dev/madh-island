@@ -171,6 +171,7 @@ function Navigation(sideBarProps: SidebarProps) {
                         pathname: "/propertieslist/",
                         query: {
                           serviceType: service.route,
+                          serviceTypeId: service?.id,
                         },
                       }}
                     >

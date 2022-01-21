@@ -17,7 +17,8 @@ function TopLocations({ latestLocation }: any) {
   const handleTopLocations = (ev: any, property: any) => {
     console.log(property);
     router.push({
-      pathname: `/search/${property._id}`,
+      pathname: `/search`,
+      query: { search: property },
     });
   };
 
@@ -66,7 +67,7 @@ function TopLocations({ latestLocation }: any) {
                   propertyName={property?.title}
                   // buttonsList={property.buttonsList}
                   // price={property.price}
-                  action={(ev: any) => handleTopLocations(ev, property)}
+                  action={(ev: any) => handleTopLocations(ev, property?.title)}
                 />
               </Grid>
             ))}
