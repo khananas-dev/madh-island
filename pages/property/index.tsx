@@ -24,6 +24,7 @@ import CheckoutCard from "../../src/components/CheckoutCard";
 import { PropertyService } from "../../src/services/property/propertyService";
 import AuthContext from "../../src/context/AuthContext";
 import { BookingService } from "../../src/services/booking";
+import BookingSuccessIcon from "../../public/success-booking.png";
 
 const propertyDetailsById = {
   id: `1`,
@@ -46,6 +47,8 @@ function PropertyDetails() {
   const [checkInDateFooter, setCheckInDateFooter] = useState<any>();
   const [checkOutDateFooter, setCheckOutDateFooter] = useState<any>();
   const [updateFilter, setUpdateFilter] = useState<any>();
+  const [successBookingPopup, setSuccessBookingPopup] =
+    useState<boolean>(false);
   // Variable
   const router = useRouter();
   const selectedProperty = {
@@ -208,6 +211,9 @@ function PropertyDetails() {
     bookingApiCall.then((res: any) => {
       if (!res?.data?.error) {
         console.log(res?.data?.message);
+        setSuccessBookingPopup(true);
+      } else {
+        setSuccessBookingPopup(false);
       }
     });
   };
@@ -567,6 +573,29 @@ function PropertyDetails() {
                 : null}
             </Button>
           </div>
+        </div>
+      </div>
+      <div
+        className={`success-booking-modal ${
+          successBookingPopup ? "active" : ""
+        } `}
+      >
+        <div className="success-booking-card">
+          <img src={BookingSuccessIcon.src} alt="" />
+          <h3>You’ve sucessfully booked!</h3>
+          <p>
+            You will be receiving a confirmation on your registered mobile
+            number & email.
+          </p>
+          <a
+            onClick={() =>
+              router.push({
+                pathname: "/",
+              })
+            }
+          >
+            Home
+          </a>
         </div>
       </div>
     </Box>
