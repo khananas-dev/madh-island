@@ -1,18 +1,22 @@
 import { Button, InputAdornment, TextField } from "@mui/material";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import PhoneIcon from "../public/phone.svg";
 import EmailIcon from "../public/email.svg";
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
+import { ContactService } from "../src/services/contact";
+import BookingSuccessIcon from "../public/success-booking.png";
+import { useRouter } from "next/router";
 
 export default function ContactUs() {
   // States
-  const [fullName, setFullName] = useState<any>();
-  const [email, setEmail] = useState<any>();
-  const [phone, setPhone] = useState<any>();
-  const [message, setMessage] = useState<any>();
+  const [contactData, setContactData] = useState<any>();
+  const [successBookingPopup, setSuccessBookingPopup] =
+    useState<boolean>(false);
 
   // Variables
+  const router = useRouter();
+  const contactService = new ContactService();
 
   const phoneRegExp =
     /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
@@ -44,19 +48,30 @@ export default function ContactUs() {
 
   const handleSubmit = (value: any, { resetForm }: any) => {
     console.log(value);
+    setContactData(value);
     resetForm();
   };
 
-  const handleClick = () => {
-    console.log({
-      fullName,
-      email,
-      phone,
-      message,
+  const _contactUs = (payload: any) => {
+    const contactUsApiCall = contactService.contactUs(payload);
+    contactUsApiCall.then((res: any) => {
+      if (!res?.data?.error) {
+        console.log(res?.data?.message);
+        setSuccessBookingPopup(true);
+      } else {
+        setSuccessBookingPopup(false);
+      }
     });
   };
 
   // Effects
+
+  useEffect(() => {
+    if (contactData) {
+      _contactUs(contactData);
+    }
+  }, [contactData]);
+
   return (
     <section className="contact-us-section">
       <div className="contact-us-wrapper">
@@ -170,6 +185,29 @@ export default function ContactUs() {
             </Form>
           )}
         </Formik>
+      </div>
+      <div
+        className={`success-booking-modal ${
+          successBookingPopup ? "active" : ""
+        } `}
+      >
+        <div className="success-booking-card">
+          <img src={BookingSuccessIcon.src} alt="" />
+          <h3>You’ve sucessfully booked!</h3>
+          <p>
+            You will be receiving a confirmation on your registered mobile
+            number & email.
+          </p>
+          <a
+            onClick={() =>
+              router.push({
+                pathname: "/",
+              })
+            }
+          >
+            Home
+          </a>
+        </div>
       </div>
     </section>
   );
