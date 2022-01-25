@@ -58,6 +58,9 @@ export default function ContactUs() {
       if (!res?.data?.error) {
         console.log(res?.data?.message);
         setSuccessBookingPopup(true);
+        setTimeout(function () {
+          setSuccessBookingPopup(false);
+        }, 3000);
       } else {
         setSuccessBookingPopup(false);
       }

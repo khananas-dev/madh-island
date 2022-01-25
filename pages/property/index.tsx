@@ -49,6 +49,8 @@ function PropertyDetails() {
   const [updateFilter, setUpdateFilter] = useState<any>();
   const [successBookingPopup, setSuccessBookingPopup] =
     useState<boolean>(false);
+  const [loading, setLoading] = useState<any>();
+  const [formDisableControl, setFormDisableControl] = useState<any>();
   // Variable
   const router = useRouter();
   const selectedProperty = {
@@ -180,12 +182,7 @@ function PropertyDetails() {
         default:
           break;
       }
-      // if  === "VillasandBunglow") {
-      //   // let BookingData = value;
-      //   console.log(checkInDate);
 
-      //   // console.log("value");
-      // }
       console.log(bookingDataObject);
       setBookingData(bookingDataObject);
     } else {
@@ -193,6 +190,75 @@ function PropertyDetails() {
     }
   };
   // const handleClose = () => setLoginModel(false);
+
+  // Razorpay
+  const loadScript = (src: any) => {
+    return new Promise((resolve: any) => {
+      const script = document.createElement("script");
+      script.src = src;
+      script.onload = () => {
+        resolve(true);
+      };
+      script.onerror = () => {
+        resolve(false);
+      };
+      document.body.appendChild(script);
+    });
+  };
+
+  // ConfirmBooking
+  const confirmBooking = (payment?: any, payload?: any) => {
+    const booking = {
+      ...payload,
+      payment: payment,
+      // Booking Status
+      bookingStatusId: "61d2d1685c41f20143cca451", // Confirmed
+      paymentStatusId: "61d2b4a248459ec16ee535a7", // Paid
+    };
+
+    console.log(booking);
+    _bookingAuthorize(booking);
+  };
+
+  const showRazorpay = async (payload: any) => {
+    setLoading(true);
+    const res = await loadScript(
+      "https://checkout.razorpay.com/v1/checkout.js"
+    );
+
+    if (!res) {
+      alert("Razorpay SDK failed to load. Are you online?");
+      return;
+    }
+
+    const RAZORPAY_KEY = "rzp_test_h2on3gnKuJgpt1";
+    // const apiResponse = _booking(payload);
+    const apiResponse = await fetch("http://3.111.11.219:3000/api/booking", {
+      method: "POST",
+      body: JSON.stringify(payload),
+      headers: {
+        "Content-Type": "application/json",
+        "x-access-token":
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxYjUwNDZkODVjYWMyMjY5OGI1MGMxOSIsImlhdCI6MTY0MjYyMTk2NSwiZXhwIjoxNjQ1MjEzOTY1fQ.cz4e92ipsk1ruz0zG2_rO_nxfxVflLCMGX0aN13Nub8",
+      },
+    }).then((t) => t.json());
+
+    console.log(apiResponse);
+
+    const { data }: any = apiResponse;
+    const options = {
+      key: RAZORPAY_KEY,
+      currency: data?.currency,
+      order_id: data?.id,
+      name: "Visit Madh Island - Booking",
+      description: "Thank you for booking with us",
+      handler: (response: any) => {
+        confirmBooking(response, payload);
+      },
+    };
+    const paymentObject = new (window as any).Razorpay(options);
+    paymentObject.open();
+  };
 
   const _getPropertyDetailById = (payload: any) => {
     const singlePropertyDetailData =
@@ -206,12 +272,28 @@ function PropertyDetails() {
     });
   };
 
+  // Booking api call function
   const _booking = (payload: any) => {
     const bookingApiCall = bookingService.booking(payload);
     bookingApiCall.then((res: any) => {
       if (!res?.data?.error) {
-        console.log(res?.data?.message);
+        // console.log(res?.data?.message);
         setSuccessBookingPopup(true);
+        console.log(res?.data?.data);
+      } else {
+        setSuccessBookingPopup(false);
+      }
+    });
+  };
+
+  // Authorize Booking api call function
+  const _bookingAuthorize = (payload: any) => {
+    const bookingAuthorizeApiCall = bookingService.bookingAuthorize(payload);
+    bookingAuthorizeApiCall.then((res: any) => {
+      if (!res?.data?.error) {
+        console.log(res?.data);
+        setSuccessBookingPopup(true);
+        setLoading(false);
       } else {
         setSuccessBookingPopup(false);
       }
@@ -231,7 +313,7 @@ function PropertyDetails() {
       checkInDate: checkInDate,
       checkOutDate: checkOutDate,
     };
-    console.log(filters);
+    // console.log(filters);
     setPropertyFilter(filters);
   }, []);
 
@@ -247,7 +329,7 @@ function PropertyDetails() {
       checkInDate: checkInDate,
       checkOutDate: checkOutDate,
     };
-    console.log(filters);
+    // console.log(filters);
     setPropertyFilter(filters);
   }, [updateFilter]);
 
@@ -266,7 +348,14 @@ function PropertyDetails() {
 
   useEffect(() => {
     if (bookingData) {
-      _booking(bookingData);
+      if (
+        propertyFilter?.serviceType == "VillasandBunglow" ||
+        propertyFilter?.serviceType == "EventVenues"
+      ) {
+        showRazorpay(bookingData);
+      } else {
+        _booking(bookingData);
+      }
     }
   }, [bookingData]);
 
@@ -473,6 +562,8 @@ function PropertyDetails() {
                     : null
                 }
                 serviceType={propertyFilter}
+                loading={loading}
+                setFormDisableControl={setFormDisableControl}
               />
             </Grid>
           </Grid>
@@ -561,8 +652,7 @@ function PropertyDetails() {
             propertyFilter.serviceType == "FilmLocation" ? (
               <Button>Download PDF</Button>
             ) : null}
-
-            <Button disabled>
+            <Button disabled={formDisableControl}>
               {(propertyFilter?.serviceType &&
                 propertyFilter?.serviceType == "VillasandBunglow") ||
               propertyFilter?.serviceType == "EventVenues"

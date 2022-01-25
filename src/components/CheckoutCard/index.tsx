@@ -43,6 +43,8 @@ interface SummaryCard {
   serviceType: any;
   detail?: any;
   setUpdateFilter?: any;
+  loading?: any;
+  setFormDisableControl?: any;
 }
 function index(cardProps: SummaryCard) {
   // const [value, setValue] = React.useState<DateRange<Date>>([
@@ -69,14 +71,15 @@ function index(cardProps: SummaryCard) {
   const [productionNameError, setProductionNameError] = useState<any>();
   const [productionTypeError, setProductionTypeError] = useState<any>();
   const [datePickerError, setdatePickerError] = useState<any>();
-  const [formError, setFormError] = useState<boolean>(true);
+  const [formError, setFormError] = useState<any>(null);
+  // const [formErrorDection, setF]
 
   const [reservedDate, setReservedDate] = useState<any[]>();
   // Variable
   const { detail } = cardProps;
   const productinService = new ProductionService();
   const bookingService = new BookingService();
-  const { setUpdateFilter } = cardProps;
+  const { setUpdateFilter, loading, setFormDisableControl } = cardProps;
 
   // Functions
   const handleInputChange = (e: any) => {
@@ -151,26 +154,26 @@ function index(cardProps: SummaryCard) {
   };
 
   const initialFormValidation = () => {
-    console.log("outside working..");
+    // console.log("outside working..");
 
     if (
       cardProps?.serviceType?.serviceType == "VillasandBunglow" ||
       cardProps?.serviceType?.serviceType == "EventVenues"
     ) {
-      setFormError(false);
-      console.log("working..");
+      setFormError(null);
+      // console.log("working..");
     } else {
       if (productionName.length > 3 && productionHouseType) {
-        setFormError(false);
+        setFormError(null);
       } else {
-        setFormError(true);
+        setFormError("Error");
       }
     }
   };
 
   const handleProdcutionName = (ev: any) => {
     setProductionName(ev.target.value);
-    console.log(ev?.target?.value?.length);
+    // console.log(ev?.target?.value?.length);
 
     if (ev?.target?.value?.length > 3) {
       setProductionNameError(null);
@@ -211,14 +214,14 @@ function index(cardProps: SummaryCard) {
       checkOutDate: newValue[1],
     };
     setStoreFilters(filter);
-    console.log("working");
+    // console.log("working");
   };
 
   const _getAllProductionService = () => {
     const productionList = productinService.getProductionType();
     productionList.then((res: any) => {
       if (!res?.data?.error) {
-        console.log(res?.data?.data);
+        // console.log(res?.data?.data);
         // #1. Assing the response in the state for use
         setProductionHouseTypeList(res?.data?.data);
       }
@@ -232,6 +235,17 @@ function index(cardProps: SummaryCard) {
       dateInt.push(moment(item).format());
     });
     return dateInt.includes(moment(event).format());
+  };
+
+  const handleDisableButton = () => {
+    if (
+      cardProps?.serviceType?.serviceType == "VillasandBunglow" ||
+      cardProps?.serviceType?.serviceType == "EventVenues"
+    ) {
+      return loading;
+    } else {
+      return formError;
+    }
   };
   //  Effects
 
@@ -260,6 +274,15 @@ function index(cardProps: SummaryCard) {
       _reservedDate(detail?._id);
     }
   }, [detail]);
+
+  useEffect(() => {
+    setFormDisableControl(formError);
+  }, []);
+
+  useEffect(() => {
+    setFormDisableControl(formError);
+    // console.log("working...");
+  }, [formError]);
 
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -350,6 +373,7 @@ function index(cardProps: SummaryCard) {
           cardProps?.serviceType?.serviceType == "FilmLocation") ||
         cardProps?.serviceType?.serviceType == "Reece" ? (
           <Box>
+            {/* {JSON.stringify(formError)} */}
             {cardProps?.serviceType &&
             cardProps?.serviceType?.serviceType == "Reece" ? (
               <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -463,7 +487,8 @@ function index(cardProps: SummaryCard) {
         <Button
           onClick={handleClick}
           // onClick={(ev: any) => cardProps.handleClick(ev)}
-          disabled={formError}
+          // disabled={formError}
+          disabled={handleDisableButton()}
           sx={{ marginTop: 3 }}
           size="large"
           variant="contained"
@@ -471,7 +496,9 @@ function index(cardProps: SummaryCard) {
           {(cardProps?.serviceType &&
             cardProps?.serviceType?.serviceType == "VillasandBunglow") ||
           cardProps?.serviceType?.serviceType == "EventVenues"
-            ? "Book"
+            ? loading
+              ? "Booking"
+              : "Book"
             : cardProps?.serviceType?.serviceType == "FilmLocation" ||
               cardProps?.serviceType?.serviceType == "Reece"
             ? "Reserve"
