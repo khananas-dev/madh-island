@@ -25,6 +25,7 @@ import { PropertyService } from "../../src/services/property/propertyService";
 import AuthContext from "../../src/context/AuthContext";
 import { BookingService } from "../../src/services/booking";
 import BookingSuccessIcon from "../../public/success-booking.png";
+import { userData } from "../../src/utils/getAccessToken";
 
 const propertyDetailsById = {
   id: `1`,
@@ -38,6 +39,13 @@ const propertyDetailsById = {
   aminities: [],
 };
 function PropertyDetails() {
+  // interface
+  interface customerType {
+    firstName: string;
+    lastName: string;
+    emailId: string;
+  }
+
   // States
   const [propertyFilter, setPropertyFilter] = useState({} as PropertyFilter);
   // const [loginModel, setLoginModel] = React.useState(false);
@@ -51,34 +59,12 @@ function PropertyDetails() {
     useState<boolean>(false);
   const [loading, setLoading] = useState<any>();
   const [formDisableControl, setFormDisableControl] = useState<any>();
+  const [bookingError, setBookingError] = useState<any>();
+
   // Variable
   const router = useRouter();
-  const selectedProperty = {
-    id: `1`,
-    images: [],
-    propertyName: "BunglowName",
-    address: "Address",
-    area: "150",
-    serviceType: "Film Location",
-    details:
-      "The apartment is a contemporary collection of cobblestones, rich wooden effect decks, and carefully detailed windows composed to capture light and afford dramatic views. Each flat features full-height windows, doors, some with terraces for poo  ",
-    amminityList: [
-      { id: `1`, name: `Gym` },
-      { id: `2`, name: `Fire` },
-      { id: `3`, name: `Pool` },
-    ],
-    buttonsList: [
-      {
-        name: `Download PDF`,
-        variant: `outlined`,
-      },
-      {
-        name: `Book Now`,
-        variant: `outlined`,
-      },
-    ],
-  };
-
+  const customerData = userData();
+  // const customerData = JSON.parse(customerDataJson);
   const propertyService = new PropertyService();
   const bookingService = new BookingService();
   const { id, serviceTypeId } = router?.query;
@@ -232,16 +218,23 @@ function PropertyDetails() {
     }
 
     const RAZORPAY_KEY = "rzp_test_h2on3gnKuJgpt1";
-    // const apiResponse = _booking(payload);
-    const apiResponse = await fetch("http://3.111.11.219:3000/api/booking", {
-      method: "POST",
-      body: JSON.stringify(payload),
-      headers: {
-        "Content-Type": "application/json",
-        "x-access-token":
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxYjUwNDZkODVjYWMyMjY5OGI1MGMxOSIsImlhdCI6MTY0MjYyMTk2NSwiZXhwIjoxNjQ1MjEzOTY1fQ.cz4e92ipsk1ruz0zG2_rO_nxfxVflLCMGX0aN13Nub8",
-      },
-    }).then((t) => t.json());
+    const customer: customerType = {
+      firstName: customerData?.firstName,
+      lastName: customerData?.lastName,
+      emailId: customerData?.emailId,
+      // phoneNumber: customerData?.phoneNumber,
+    };
+    const apiResponse = await _bookingPayMode(payload);
+    setLoading(false);
+    // const apiResponse = await fetch("http://3.111.11.219:3000/api/booking", {
+    //   method: "POST",
+    //   body: JSON.stringify(payload),
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //     "x-access-token":
+    //       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxYjUwNDZkODVjYWMyMjY5OGI1MGMxOSIsImlhdCI6MTY0MjYyMTk2NSwiZXhwIjoxNjQ1MjEzOTY1fQ.cz4e92ipsk1ruz0zG2_rO_nxfxVflLCMGX0aN13Nub8",
+    //   },
+    // }).then((t) => t.json());
 
     console.log(apiResponse);
 
@@ -254,6 +247,13 @@ function PropertyDetails() {
       description: "Thank you for booking with us",
       handler: (response: any) => {
         confirmBooking(response, payload);
+      },
+      prefill: {
+        name: `${customer.firstName} ${customer.lastName}`,
+        email: customer.emailId,
+        // phone_number: customer.phoneNumber.includes("+")
+        //   ? `${customer.phoneNumber}`
+        //   : `+91${customer.phoneNumber}`,
       },
     };
     const paymentObject = new (window as any).Razorpay(options);
@@ -273,17 +273,55 @@ function PropertyDetails() {
   };
 
   // Booking api call function
-  const _booking = (payload: any) => {
-    const bookingApiCall = bookingService.booking(payload);
-    bookingApiCall.then((res: any) => {
-      if (!res?.data?.error) {
-        // console.log(res?.data?.message);
-        setSuccessBookingPopup(true);
-        console.log(res?.data?.data);
-      } else {
-        setSuccessBookingPopup(false);
-      }
-    });
+
+  const _bookingPayMode = async (payload: any) => {
+    setBookingError(null);
+    const { data } = await bookingService.booking(payload);
+    if (!data?.error) {
+      // console.log(res?.data?.message);
+      // setSuccessBookingPopup(true);
+      console.log(data);
+      setBookingError(null);
+    } else {
+      // setSuccessBookingPopup(false);
+      setBookingError(data?.error);
+    }
+    return data;
+
+    // bookingApiCall.then((res: any) => {
+    //   if (!res?.data?.error) {
+    //     // console.log(res?.data?.message);
+    //     setSuccessBookingPopup(true);
+    //     console.log(res?.data?.data);
+    //   } else {
+    //     setSuccessBookingPopup(false);
+    //   }
+    // });
+  };
+
+  const _booking = async (payload: any) => {
+    setBookingError(null);
+    const { data } = await bookingService.booking(payload);
+    if (!data?.error) {
+      // console.log(res?.data?.message);
+      setSuccessBookingPopup(true);
+      console.log(data);
+      setBookingError(null);
+    } else {
+      setSuccessBookingPopup(false);
+      setBookingError(data?.error);
+    }
+    return data;
+
+    // bookingApiCall.then((res: any) => {
+    //   if (!res?.data?.error) {
+    //     // console.log(res?.data?.message);
+    //     setSuccessBookingPopup(true);
+    //     console.log(res?.data?.data);
+    //   } else {
+    //     setSuccessBookingPopup(false);
+    //   }
+    // });
   };
 
   // Authorize Booking api call function
@@ -358,6 +396,9 @@ function PropertyDetails() {
       }
     }
   }, [bookingData]);
+  useEffect(() => {
+    console.log(customerData);
+  }, []);
 
   return (
     <Box sx={{ height: `inherit` }}>
@@ -548,6 +589,7 @@ function PropertyDetails() {
             {/* Right */}
             <Grid item xs={12} md={4}>
               <CheckoutCard
+                bookingError={bookingError}
                 handleClick={(handleClick: any) =>
                   handleCheckoutCard(handleClick)
                 }
@@ -649,10 +691,14 @@ function PropertyDetails() {
           </div>
           <div className="cta-btn">
             {propertyFilter.serviceType &&
-            propertyFilter.serviceType == "FilmLocation" ? (
-              <Button>Download PDF</Button>
-            ) : null}
-            <Button disabled={formDisableControl}>
+            propertyFilter.serviceType == "FilmLocation"
+              ? propertyDetail?.catalog && (
+                  <a href={propertyDetail?.catalog} download>
+                    Download PDF
+                  </a>
+                )
+              : null}
+            <Button disabled={formDisableControl || loading}>
               {(propertyFilter?.serviceType &&
                 propertyFilter?.serviceType == "VillasandBunglow") ||
               propertyFilter?.serviceType == "EventVenues"

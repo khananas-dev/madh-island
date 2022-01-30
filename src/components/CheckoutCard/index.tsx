@@ -45,6 +45,7 @@ interface SummaryCard {
   setUpdateFilter?: any;
   loading?: any;
   setFormDisableControl?: any;
+  bookingError?: any;
 }
 function index(cardProps: SummaryCard) {
   // const [value, setValue] = React.useState<DateRange<Date>>([
@@ -72,6 +73,7 @@ function index(cardProps: SummaryCard) {
   const [productionTypeError, setProductionTypeError] = useState<any>();
   const [datePickerError, setdatePickerError] = useState<any>();
   const [formError, setFormError] = useState<any>(null);
+  const [dataValidateError, setDataValidateError] = useState<boolean>(false);
   // const [formErrorDection, setF]
 
   const [reservedDate, setReservedDate] = useState<any[]>();
@@ -79,7 +81,8 @@ function index(cardProps: SummaryCard) {
   const { detail } = cardProps;
   const productinService = new ProductionService();
   const bookingService = new BookingService();
-  const { setUpdateFilter, loading, setFormDisableControl } = cardProps;
+  const { setUpdateFilter, loading, setFormDisableControl, bookingError } =
+    cardProps;
 
   // Functions
   const handleInputChange = (e: any) => {
@@ -237,16 +240,29 @@ function index(cardProps: SummaryCard) {
     return dateInt.includes(moment(event).format());
   };
 
+  const handleOnError = (reason: any, value: any) => {
+    if (reason[0] == "shouldDisableDate" || reason[1] == "shouldDisableDate") {
+      setDataValidateError(true);
+      console.log("error");
+    } else {
+      setDataValidateError(false);
+    }
+  };
+
   const handleDisableButton = () => {
+    // if (loading) {
+    //   setDataValidateError(true);
+    // }
     if (
       cardProps?.serviceType?.serviceType == "VillasandBunglow" ||
       cardProps?.serviceType?.serviceType == "EventVenues"
     ) {
-      return loading;
+      return dataValidateError || loading;
     } else {
       return formError;
     }
   };
+
   //  Effects
 
   useEffect(() => {
@@ -284,6 +300,15 @@ function index(cardProps: SummaryCard) {
     // console.log("working...");
   }, [formError]);
 
+  useEffect(() => {
+    setFormDisableControl(dataValidateError);
+  }, []);
+
+  useEffect(() => {
+    setFormDisableControl(dataValidateError);
+    // console.log("working...");
+  }, [dataValidateError]);
+
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
       {/* <Formik
@@ -295,6 +320,7 @@ function index(cardProps: SummaryCard) {
              
            )}
         </Formik> */}
+      {JSON.stringify(dataValidateError)}
       <Card
         style={{
           padding: 16,
@@ -340,6 +366,7 @@ function index(cardProps: SummaryCard) {
               // onChange={(newValue: any) => {
               //   setValue(newValue);
               // }}
+              onError={handleOnError}
               onChange={(newValue: any) => {
                 handleOnChange(newValue);
                 setUpdateFilter(newValue);
@@ -497,7 +524,7 @@ function index(cardProps: SummaryCard) {
             cardProps?.serviceType?.serviceType == "VillasandBunglow") ||
           cardProps?.serviceType?.serviceType == "EventVenues"
             ? loading
-              ? "Booking"
+              ? "Booking..."
               : "Book"
             : cardProps?.serviceType?.serviceType == "FilmLocation" ||
               cardProps?.serviceType?.serviceType == "Reece"
@@ -629,6 +656,7 @@ function index(cardProps: SummaryCard) {
             </Box>
           </Box>
         ) : null}
+        {bookingError && <span className="error">{bookingError}</span>}
       </Card>
     </LocalizationProvider>
   );
