@@ -109,7 +109,7 @@ function PropertyDetails() {
         checkInDate,
         checkOutDate,
         totalAmount,
-        noOfGuest,
+        numberOfGuests,
         productionName,
         productionHouseType,
         bookingTime,
@@ -126,8 +126,7 @@ function PropertyDetails() {
             customerId,
             checkInDate,
             checkOutDate,
-            noOfGuest,
-            totalAmount,
+            numberOfGuests,
           };
           break;
 
@@ -138,7 +137,6 @@ function PropertyDetails() {
             customerId,
             checkInDate,
             checkOutDate,
-            totalAmount,
           };
           break;
 
@@ -224,8 +222,36 @@ function PropertyDetails() {
       emailId: customerData?.emailId,
       // phoneNumber: customerData?.phoneNumber,
     };
-    const apiResponse = await _bookingPayMode(payload);
-    setLoading(false);
+    try {
+      const apiResponse = await _bookingPayMode(payload);
+      console.log(apiResponse);
+      setLoading(false);
+
+      const { data }: any = apiResponse;
+      const options = {
+        key: RAZORPAY_KEY,
+        currency: data?.currency,
+        order_id: data?.id,
+        name: "Visit Madh Island - Booking",
+        description: "Thank you for booking with us",
+        handler: (response: any) => {
+          confirmBooking(response, payload);
+        },
+        prefill: {
+          name: `${customer.firstName} ${customer.lastName}`,
+          email: customer.emailId,
+          // phone_number: customer.phoneNumber.includes("+")
+          //   ? `${customer.phoneNumber}`
+          //   : `+91${customer.phoneNumber}`,
+        },
+      };
+      const paymentObject = new (window as any).Razorpay(options);
+      paymentObject.open();
+    } catch (error) {
+      setBookingError("Amount is greater then maximum. Please low amount");
+      console.log(error);
+      setLoading(false);
+    }
     // const apiResponse = await fetch("http://3.111.11.219:3000/api/booking", {
     //   method: "POST",
     //   body: JSON.stringify(payload),
@@ -235,29 +261,6 @@ function PropertyDetails() {
     //       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxYjUwNDZkODVjYWMyMjY5OGI1MGMxOSIsImlhdCI6MTY0MjYyMTk2NSwiZXhwIjoxNjQ1MjEzOTY1fQ.cz4e92ipsk1ruz0zG2_rO_nxfxVflLCMGX0aN13Nub8",
     //   },
     // }).then((t) => t.json());
-
-    console.log(apiResponse);
-
-    const { data }: any = apiResponse;
-    const options = {
-      key: RAZORPAY_KEY,
-      currency: data?.currency,
-      order_id: data?.id,
-      name: "Visit Madh Island - Booking",
-      description: "Thank you for booking with us",
-      handler: (response: any) => {
-        confirmBooking(response, payload);
-      },
-      prefill: {
-        name: `${customer.firstName} ${customer.lastName}`,
-        email: customer.emailId,
-        // phone_number: customer.phoneNumber.includes("+")
-        //   ? `${customer.phoneNumber}`
-        //   : `+91${customer.phoneNumber}`,
-      },
-    };
-    const paymentObject = new (window as any).Razorpay(options);
-    paymentObject.open();
   };
 
   const _getPropertyDetailById = (payload: any) => {
@@ -276,15 +279,16 @@ function PropertyDetails() {
 
   const _bookingPayMode = async (payload: any) => {
     setBookingError(null);
+    // const { data } = await bookingService.booking(payload);
+
     const { data } = await bookingService.booking(payload);
+
     if (!data?.error) {
-      // console.log(res?.data?.message);
-      // setSuccessBookingPopup(true);
       console.log(data);
       setBookingError(null);
     } else {
-      // setSuccessBookingPopup(false);
       setBookingError(data?.error);
+      console.log(data?.error);
     }
     return data;
 
@@ -297,6 +301,23 @@ function PropertyDetails() {
     //     setSuccessBookingPopup(false);
     //   }
     // });
+    // bookingService
+    //   .booking(payload)
+    //   .then((res: any) => {
+    //     if (!res.data.error) {
+    //       return res.data.data;
+    //     }
+    //   })
+    //   .catch((error) => {
+    //     console.log(error);
+    //   });
+    // try {
+    //   const data = await bookingService.booking(payload);
+    //   console.log(data);
+    //   return [data, null];
+    // } catch (error) {
+    //   console.log(error);
+    // }
   };
 
   const _booking = async (payload: any) => {

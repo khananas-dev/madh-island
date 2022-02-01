@@ -13,6 +13,7 @@ export default function ContactUs() {
   const [contactData, setContactData] = useState<any>();
   const [successBookingPopup, setSuccessBookingPopup] =
     useState<boolean>(false);
+  const [email, setEmail] = useState<any>();
 
   // Variables
   const router = useRouter();
@@ -47,6 +48,7 @@ export default function ContactUs() {
   // Functions
 
   const handleSubmit = (value: any, { resetForm }: any) => {
+    setEmail(value?.email);
     console.log(value);
     setContactData(value);
     resetForm();
@@ -58,9 +60,9 @@ export default function ContactUs() {
       if (!res?.data?.error) {
         console.log(res?.data?.message);
         setSuccessBookingPopup(true);
-        setTimeout(function () {
-          setSuccessBookingPopup(false);
-        }, 3000);
+        // setTimeout(function () {
+        //   setSuccessBookingPopup(false);
+        // }, 3000);
       } else {
         setSuccessBookingPopup(false);
       }
@@ -196,10 +198,10 @@ export default function ContactUs() {
       >
         <div className="success-booking-card">
           <img src={BookingSuccessIcon.src} alt="" />
-          <h3>You’ve sucessfully booked!</h3>
+          <h3>Thanks for connecting!</h3>
           <p>
-            You will be receiving a confirmation on your registered mobile
-            number & email.
+            Our team will contact you shortly, please check your mail on
+            <span>&nbsp; {email && email}</span>
           </p>
           <a
             onClick={() =>

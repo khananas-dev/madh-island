@@ -59,7 +59,7 @@ function index(cardProps: SummaryCard) {
   const [bookingTime, setBookingTime] = React.useState<Date | null>(
     new Date("2020-01-01 12:00")
   );
-  const [noOfGuest, setNoOfGuest] = useState<any | number>(1);
+  const [numberOfGuests, setnumberOfGuests] = useState<any | number>(1);
   const [additionalCharge, setAdditionalCharge] = useState<boolean>(false);
   const [selectedDate, handleDateChange] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
@@ -87,9 +87,9 @@ function index(cardProps: SummaryCard) {
   // Functions
   const handleInputChange = (e: any) => {
     const { value } = e.target;
-    setNoOfGuest(value);
+    setnumberOfGuests(value);
     if (Number(value) < 1) {
-      setNoOfGuest(1);
+      setnumberOfGuests(1);
     } else if (Number(value) <= detail?.additionalChargeMin) {
       setAdditionalCharge(false);
     } else if (
@@ -98,7 +98,7 @@ function index(cardProps: SummaryCard) {
     ) {
       setAdditionalCharge(true);
     } else if (Number(value) > detail?.additionalChargeMax) {
-      setNoOfGuest(detail?.additionalChargeMax);
+      setnumberOfGuests(detail?.additionalChargeMax);
     }
   };
 
@@ -129,7 +129,7 @@ function index(cardProps: SummaryCard) {
   };
 
   const guestTotalPrice = () => {
-    return noOfGuest * detail?.additionalChargePerPerson;
+    return numberOfGuests * detail?.additionalChargePerPerson;
   };
 
   const grandTotal = () => {
@@ -147,7 +147,7 @@ function index(cardProps: SummaryCard) {
       checkOutDate:
         cardProps?.serviceType?.checkOutDate || moment().add(1, "day"),
       totalAmount: grandTotal(),
-      noOfGuest,
+      numberOfGuests,
       productionName,
       productionHouseType,
       bookingTime,
@@ -381,7 +381,7 @@ function index(cardProps: SummaryCard) {
             />
           </Box>
         ) : null}
-        {/* {`No of Guest: ${noOfGuest} ${JSON.stringify(additionalCharge)}`} */}
+        {/* {`No of Guest: ${numberOfGuests} ${JSON.stringify(additionalCharge)}`} */}
         {cardProps?.serviceType &&
         cardProps?.serviceType?.serviceType == "VillasandBunglow" ? (
           <TextField
@@ -391,7 +391,7 @@ function index(cardProps: SummaryCard) {
             variant="filled"
             placeholder="14"
             onInput={handleInputChange}
-            value={noOfGuest}
+            value={numberOfGuests}
             type="number"
           />
         ) : null}
@@ -581,7 +581,7 @@ function index(cardProps: SummaryCard) {
                       sx={{ marginTop: `16px` }}
                     >
                       {` Extra Guests ${
-                        noOfGuest - detail?.additionalChargeMin
+                        numberOfGuests - detail?.additionalChargeMin
                       } - ${(
                         detail?.additionalChargePerPerson || 0
                       ).toLocaleString("en-IN")}/person`}
