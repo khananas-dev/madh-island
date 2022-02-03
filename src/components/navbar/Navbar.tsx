@@ -117,7 +117,7 @@ function Navigation(sideBarProps: SidebarProps) {
       router.push({
         pathname: `/search`,
         query: {
-          search: searchValue,
+          keyword: searchValue,
         },
       });
       setShowAutocomplete(false);

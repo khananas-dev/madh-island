@@ -52,7 +52,7 @@ function searchResult({ serviceList }: any) {
   // Variable
   const open = Boolean(anchorEl);
   const router = useRouter();
-  const { search } = router.query;
+  const { keyword } = router.query;
   const propertyService = new PropertyService();
 
   // Functions
@@ -91,6 +91,15 @@ function searchResult({ serviceList }: any) {
   //   setAnchorEl(null);
   // };
 
+  function capitalize(word: any) {
+    return word
+      ?.split("")
+      ?.map((letter: any, index: number) =>
+        index ? letter?.toLowerCase() : letter?.toUpperCase()
+      )
+      .join("");
+  }
+
   const handlePropertyDetails = (propertyid: any) => {
     router.push({
       // pathname: `/property/${propertyid}`,
@@ -121,10 +130,10 @@ function searchResult({ serviceList }: any) {
 
   useEffect(() => {
     // searchFilteredData();
-    if (search) {
-      _getPropertyByKeyword(search);
+    if (keyword) {
+      _getPropertyByKeyword(keyword);
     }
-  }, [search]);
+  }, [keyword]);
   useEffect(() => {
     setFilter("VillasandBunglow");
   }, []);
@@ -134,7 +143,7 @@ function searchResult({ serviceList }: any) {
       <div className="header">
         <Breadcrumbs aria-label="breadcrumb">
           <Link underline="hover" color="inherit" href="/">
-            Search Result for {search}
+            Search Result for : <b>{capitalize(keyword)}</b>
           </Link>
         </Breadcrumbs>
       </div>

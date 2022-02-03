@@ -534,6 +534,35 @@ input[type="number"] {
   height: 1px;
   background: #0c9b75;
 }
+.cursor-pointer {
+  cursor: pointer;
+}
+.primary-button {
+  cursor: pointer;
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 1.75;
+  -webkit-letter-spacing: 0.02857em;
+  -moz-letter-spacing: 0.02857em;
+  -ms-letter-spacing: 0.02857em;
+  letter-spacing: 0.02857em;
+  text-transform: uppercase;
+  min-width: 64px;
+  padding: 6px 8px;
+  border-radius: 4px;
+  -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
+    box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
+    border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
+    color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
+    box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
+    border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
+    color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  color: #0c9b75;
+  display: inline-block;
+  margin-right: 10px;
+}
 @media (max-width: 992px) {
   .img-gallery {
     max-width: calc(100% - 60px);

@@ -46,6 +46,7 @@ interface SummaryCard {
   loading?: any;
   setFormDisableControl?: any;
   bookingError?: any;
+  forwardedRef?: any;
 }
 function index(cardProps: SummaryCard) {
   // const [value, setValue] = React.useState<DateRange<Date>>([
@@ -81,8 +82,13 @@ function index(cardProps: SummaryCard) {
   const { detail } = cardProps;
   const productinService = new ProductionService();
   const bookingService = new BookingService();
-  const { setUpdateFilter, loading, setFormDisableControl, bookingError } =
-    cardProps;
+  const {
+    setUpdateFilter,
+    forwardedRef,
+    loading,
+    setFormDisableControl,
+    bookingError,
+  } = cardProps;
 
   // Functions
   const handleInputChange = (e: any) => {
@@ -154,6 +160,7 @@ function index(cardProps: SummaryCard) {
       reeceBooking,
     };
     cardProps.handleClick(payload);
+    console.log("nested");
   };
 
   const initialFormValidation = () => {
@@ -512,6 +519,7 @@ function index(cardProps: SummaryCard) {
         ) : null}
 
         <Button
+          ref={forwardedRef}
           onClick={handleClick}
           // onClick={(ev: any) => cardProps.handleClick(ev)}
           // disabled={formError}
@@ -528,7 +536,9 @@ function index(cardProps: SummaryCard) {
               : "Book"
             : cardProps?.serviceType?.serviceType == "FilmLocation" ||
               cardProps?.serviceType?.serviceType == "Reece"
-            ? "Reserve"
+            ? !loading
+              ? "Reserving..."
+              : "Reserve"
             : null}
         </Button>
 

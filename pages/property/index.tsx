@@ -1,5 +1,5 @@
 import { Box } from "@mui/system";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import ImageGallery from "../../src/components/imageGallery/ImageGallery";
 import styled from "styled-components";
 import {
@@ -25,19 +25,10 @@ import { PropertyService } from "../../src/services/property/propertyService";
 import AuthContext from "../../src/context/AuthContext";
 import { BookingService } from "../../src/services/booking";
 import BookingSuccessIcon from "../../public/success-booking.png";
-import { userData } from "../../src/utils/getAccessToken";
+import { userData, xAccessToken } from "../../src/utils/getAccessToken";
+import axios from "axios";
+import { BASE_URL } from "../../src/constants/apiConfig";
 
-const propertyDetailsById = {
-  id: `1`,
-  images: [],
-  propertyName: "BunglowName",
-  address: "BunglowName",
-  area: "150",
-  serviceType: "Film Location",
-  details:
-    "The apartment is a contemporary collection of cobblestones, rich wooden effect decks, and carefully detailed windows composed to capture light and afford dramatic views. Each flat features full-height windows, doors, some with terraces for poo  ",
-  aminities: [],
-};
 function PropertyDetails() {
   // interface
   interface customerType {
@@ -48,8 +39,6 @@ function PropertyDetails() {
 
   // States
   const [propertyFilter, setPropertyFilter] = useState({} as PropertyFilter);
-  // const [loginModel, setLoginModel] = React.useState(false);
-  // const [signupModel, setSignupModel] = React.useState(false);
   const [propertyDetail, setPropertyDetail] = React.useState<any>();
   const [bookingData, setBookingData] = useState<any>();
   const [checkInDateFooter, setCheckInDateFooter] = useState<any>();
@@ -64,6 +53,7 @@ function PropertyDetails() {
   // Variable
   const router = useRouter();
   const customerData = userData();
+  const UserXAccessToken = xAccessToken();
   // const customerData = JSON.parse(customerDataJson);
   const propertyService = new PropertyService();
   const bookingService = new BookingService();
@@ -73,32 +63,7 @@ function PropertyDetails() {
   const { authenticated, setAuthenticated } = useContext(AuthContext);
 
   // Functions
-
-  // const BookProperty = () => {
-  //   // check if user is already logged in
-  //   const userAuthenticationStatus = isUserLoggedIn();
-  //   if (!userAuthenticationStatus) {
-  //     OpenLoginForm();
-  //   }
-  //   // if Yes, than open Dialog
-  //   // Else Show toasty
-  // };
-  // const OpenLoginForm = () => {
-  //   setLoginModel(true);
-  // };
-  // const OpenSignupForm = () => {
-  //   setLoginModel(false);
-  //   setSignupModel(true);
-  // };
   const handleCheckoutCard = (value: any) => {
-    // Check if user is already logged in
-    // if logged in than resever api hit;
-    // if not loged in show login model
-    // const userAuthenticationStatus = isUserLoggedIn();
-    // if (!userAuthenticationStatus) {
-    //   return OpenLoginForm();
-    // }
-
     if (localStorage.getItem("jwt")) {
       let user = localStorage.getItem("jwt");
       let customerId;
@@ -222,8 +187,32 @@ function PropertyDetails() {
       emailId: customerData?.emailId,
       // phoneNumber: customerData?.phoneNumber,
     };
-    try {
-      const apiResponse = await _bookingPayMode(payload);
+    // apiResponse = await _bookingPayMode(payload);
+    setBookingError(null);
+    const apiResponse = await axios
+      .post(`${BASE_URL}/booking`, payload, {
+        headers: {
+          "x-access-token": UserXAccessToken,
+        },
+      })
+      .then((res: any) => {
+        if (!res?.data?.err) {
+          console.log(res?.data);
+          setBookingError(null);
+        } else {
+          setBookingError(res?.data?.err);
+          console.log(res?.data?.err);
+        }
+        return res?.data;
+      })
+      .catch((error: any) => {
+        console.log(error?.request?.response);
+        let errorResponse = JSON.parse(error?.request?.response);
+        console.log(errorResponse?.message?.error?.description);
+        setBookingError(errorResponse?.message?.error?.description);
+      });
+    setLoading(false);
+    if (apiResponse) {
       console.log(apiResponse);
       setLoading(false);
 
@@ -247,20 +236,7 @@ function PropertyDetails() {
       };
       const paymentObject = new (window as any).Razorpay(options);
       paymentObject.open();
-    } catch (error) {
-      setBookingError("Amount is greater then maximum. Please low amount");
-      console.log(error);
-      setLoading(false);
     }
-    // const apiResponse = await fetch("http://3.111.11.219:3000/api/booking", {
-    //   method: "POST",
-    //   body: JSON.stringify(payload),
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //     "x-access-token":
-    //       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxYjUwNDZkODVjYWMyMjY5OGI1MGMxOSIsImlhdCI6MTY0MjYyMTk2NSwiZXhwIjoxNjQ1MjEzOTY1fQ.cz4e92ipsk1ruz0zG2_rO_nxfxVflLCMGX0aN13Nub8",
-    //   },
-    // }).then((t) => t.json());
   };
 
   const _getPropertyDetailById = (payload: any) => {
@@ -277,72 +253,20 @@ function PropertyDetails() {
 
   // Booking api call function
 
-  const _bookingPayMode = async (payload: any) => {
+  const _booking = (payload: any) => {
     setBookingError(null);
-    // const { data } = await bookingService.booking(payload);
-
-    const { data } = await bookingService.booking(payload);
-
-    if (!data?.error) {
-      console.log(data);
-      setBookingError(null);
-    } else {
-      setBookingError(data?.error);
-      console.log(data?.error);
-    }
-    return data;
-
-    // bookingApiCall.then((res: any) => {
-    //   if (!res?.data?.error) {
-    //     // console.log(res?.data?.message);
-    //     setSuccessBookingPopup(true);
-    //     console.log(res?.data?.data);
-    //   } else {
-    //     setSuccessBookingPopup(false);
-    //   }
-    // });
-    // bookingService
-    //   .booking(payload)
-    //   .then((res: any) => {
-    //     if (!res.data.error) {
-    //       return res.data.data;
-    //     }
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //   });
-    // try {
-    //   const data = await bookingService.booking(payload);
-    //   console.log(data);
-    //   return [data, null];
-    // } catch (error) {
-    //   console.log(error);
-    // }
-  };
-
-  const _booking = async (payload: any) => {
-    setBookingError(null);
-    const { data } = await bookingService.booking(payload);
-    if (!data?.error) {
-      // console.log(res?.data?.message);
-      setSuccessBookingPopup(true);
-      console.log(data);
-      setBookingError(null);
-    } else {
-      setSuccessBookingPopup(false);
-      setBookingError(data?.error);
-    }
-    return data;
-
-    // bookingApiCall.then((res: any) => {
-    //   if (!res?.data?.error) {
-    //     // console.log(res?.data?.message);
-    //     setSuccessBookingPopup(true);
-    //     console.log(res?.data?.data);
-    //   } else {
-    //     setSuccessBookingPopup(false);
-    //   }
-    // });
+    const bookingApiCall = bookingService.booking(payload);
+    bookingApiCall.then((res: any) => {
+      if (!res?.data?.error) {
+        // console.log(res?.data?.message);
+        setSuccessBookingPopup(true);
+        console.log(res?.data);
+        setBookingError(null);
+      } else {
+        setSuccessBookingPopup(false);
+        setBookingError(res?.data?.error);
+      }
+    });
   };
 
   // Authorize Booking api call function
@@ -358,6 +282,14 @@ function PropertyDetails() {
       }
     });
   };
+
+  const checkoutButton: any = useRef(null);
+
+  function handleClick() {
+    // textInput.current.focus();
+    // checkoutButton.click();
+    checkoutButton?.current.click();
+  }
 
   // Effects
   useEffect(() => {
@@ -431,7 +363,21 @@ function PropertyDetails() {
             <Link
               underline="hover"
               color="inherit"
-              href={`/propertieslist?serviceType=${propertyFilter.serviceType}`}
+              className="cursor-pointer"
+              // href={{
+              //   pathname: "/propertieslist",
+              //   query: { serviceType: `${propertyFilter.serviceType}` },
+              // }}
+              onClick={() => {
+                router.push({
+                  pathname: "/propertieslist",
+                  query: {
+                    serviceType: `${propertyFilter.serviceType}`,
+                    serviceTypeId,
+                  },
+                });
+              }}
+              // href={`/propertieslist?serviceType=${propertyFilter.serviceType}`}
             >
               {propertyFilter.serviceType === "VillasandBunglow" &&
                 `Villas & Bungalows`}
@@ -614,6 +560,7 @@ function PropertyDetails() {
                 handleClick={(handleClick: any) =>
                   handleCheckoutCard(handleClick)
                 }
+                forwardedRef={checkoutButton}
                 setUpdateFilter={setUpdateFilter}
                 detail={propertyDetail}
                 price={
@@ -635,66 +582,6 @@ function PropertyDetails() {
         </BodyWrapper>
       </LayoutWrapper>
 
-      {/* <FooterWrapper>
-        <Grid container spacing={2}>
-          <Grid item xs={6}>
-            {propertyFilter.serviceType &&
-            propertyFilter.serviceType != "Reece" ? (
-              <Typography
-                variant="h3"
-                component="h3"
-                color="#1F1F1F"
-                textAlign="left"
-                className="bottom-footer-date"
-              >
-                {`
-                ${moment(propertyFilter?.checkInDate).format(
-                  "DD MMM YYYY"
-                )} - ${moment(propertyFilter?.checkOutDate).format(
-                  "DD MMM YYYY"
-                )}
-                `}
-              </Typography>
-            ) : null}
-
-            <Typography
-              variant="h4"
-              component="h4"
-              color="#1F1F1F"
-              textAlign="left"
-              sx={{}}
-            >
-              {propertyDetail?.title}
-            </Typography>
-          </Grid>
-          <Grid
-            item
-            xs={6}
-            sx={{
-              display: "flex",
-              justifyContent: "flex-end",
-              alignItems: "center",
-            }}
-          >
-            {propertyFilter.serviceType &&
-            propertyFilter.serviceType == "FilmLocation" ? (
-              <Button>Download PDF</Button>
-            ) : null}
-
-            <Button>
-              {(propertyFilter?.serviceType &&
-                propertyFilter?.serviceType == "VillasandBunglow") ||
-              propertyFilter?.serviceType == "EventVenues"
-                ? "Book Now"
-                : propertyFilter?.serviceType == "FilmLocation" ||
-                  propertyFilter?.serviceType == "Reece"
-                ? "Reserve"
-                : null}
-            </Button>
-          </Grid>
-        </Grid>
-      </FooterWrapper> */}
-
       <div className="single-property-footer-bottom">
         <div className="footer-bottom-container">
           <div className="date-and-title">
@@ -712,21 +599,35 @@ function PropertyDetails() {
           </div>
           <div className="cta-btn">
             {propertyFilter.serviceType &&
-            propertyFilter.serviceType == "FilmLocation"
-              ? propertyDetail?.catalog && (
-                  <a href={propertyDetail?.catalog} download>
-                    Download PDF
-                  </a>
-                )
-              : null}
-            <Button disabled={formDisableControl || loading}>
+            propertyFilter.serviceType == "FilmLocation" ? (
+              // ? propertyDetail?.catalog && (
+              //     <a href={propertyDetail?.catalog} download>
+              //       Download PDF
+              //     </a>
+              //   )
+              <a
+                className="primary-button"
+                href={propertyDetail?.catalog}
+                download
+              >
+                Download PDF
+              </a>
+            ) : null}
+            <Button
+              onClick={handleClick}
+              disabled={formDisableControl || loading}
+            >
               {(propertyFilter?.serviceType &&
                 propertyFilter?.serviceType == "VillasandBunglow") ||
               propertyFilter?.serviceType == "EventVenues"
-                ? "Book Now"
+                ? !loading
+                  ? "Book Now"
+                  : "Booking..."
                 : propertyFilter?.serviceType == "FilmLocation" ||
                   propertyFilter?.serviceType == "Reece"
-                ? "Reserve"
+                ? !loading
+                  ? "Reserve"
+                  : "Reserving..."
                 : null}
             </Button>
           </div>
