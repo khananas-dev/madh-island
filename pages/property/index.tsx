@@ -234,10 +234,10 @@ function PropertyDetails() {
         prefill: {
           name: `${customer.firstName} ${customer.lastName}`,
           email: customer.emailId,
-          contact: Number(customer?.phoneNumber),
-          // phone_number: customer?.phoneNumber.includes("+")
-          //   ? `${customer?.phoneNumber}`
-          //   : `+91${customer?.phoneNumber}`,
+          // contact: Number(customer?.phoneNumber),
+          contact: customer?.phoneNumber.includes("+")
+            ? `${customer?.phoneNumber}`
+            : `+91${customer?.phoneNumber}`,
         },
       };
       const paymentObject = new (window as any).Razorpay(options);

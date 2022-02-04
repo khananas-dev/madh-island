@@ -156,7 +156,7 @@ function index(cardProps: SummaryCard) {
       numberOfGuests,
       productionName,
       productionHouseType,
-      bookingTime: moment(reeceBooking).minute(0),
+      bookingTime: moment(reeceBooking),
       reeceBooking,
     };
     // let testData = moment(reeceBooking).set("minute", 0);
