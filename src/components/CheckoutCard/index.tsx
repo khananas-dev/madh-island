@@ -156,10 +156,15 @@ function index(cardProps: SummaryCard) {
       numberOfGuests,
       productionName,
       productionHouseType,
-      bookingTime,
+      bookingTime: moment(reeceBooking).minute(0),
       reeceBooking,
     };
+    // let testData = moment(reeceBooking).set("minute", 0);
+    // console.log(testData);
+
+    console.log(payload);
     cardProps.handleClick(payload);
+
     console.log("nested");
   };
 
@@ -327,7 +332,6 @@ function index(cardProps: SummaryCard) {
              
            )}
         </Formik> */}
-      {JSON.stringify(dataValidateError)}
       <Card
         style={{
           padding: 16,
@@ -536,7 +540,7 @@ function index(cardProps: SummaryCard) {
               : "Book"
             : cardProps?.serviceType?.serviceType == "FilmLocation" ||
               cardProps?.serviceType?.serviceType == "Reece"
-            ? !loading
+            ? loading
               ? "Reserving..."
               : "Reserve"
             : null}

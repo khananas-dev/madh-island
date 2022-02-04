@@ -26,4 +26,11 @@ export class BookingService {
     }
     return axios.post(`${BASE_URL}/booking/authorize`, payload);
   }
+
+  recceBooking(payload: any) {
+    if (xAccessToken) {
+      axios.defaults.headers.common["x-access-token"] = xAccessToken();
+    }
+    return axios.post(`${BASE_URL}/recce`, payload);
+  }
 }

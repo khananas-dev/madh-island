@@ -88,7 +88,7 @@ function VMICarousel({ imgList }: any) {
         {imgList &&
           imgList.map((item: any, index: number) => (
             <div className="img-wrapper">
-              <img src={item?.img} height={250} alt="Picture of the author" />
+              <img src={item?.imageUrl} height={250} alt={item?.title} />
             </div>
           ))}
       </Slider>

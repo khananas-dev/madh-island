@@ -22,6 +22,7 @@ export const userData = () => {
           firstName: JSON.parse(user)?.firstName,
           lastName: JSON.parse(user)?.lastName,
           emailId: JSON.parse(user)?.emailId,
+          phoneNumber: JSON.parse(user)?.phoneNumber,
         };
       }
       console.log(data);

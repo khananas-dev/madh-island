@@ -28,6 +28,7 @@ import BookingSuccessIcon from "../../public/success-booking.png";
 import { userData, xAccessToken } from "../../src/utils/getAccessToken";
 import axios from "axios";
 import { BASE_URL } from "../../src/constants/apiConfig";
+import es from "date-fns/esm/locale/es/index.js";
 
 function PropertyDetails() {
   // interface
@@ -35,6 +36,7 @@ function PropertyDetails() {
     firstName: string;
     lastName: string;
     emailId: string;
+    phoneNumber: any;
   }
 
   // States
@@ -120,9 +122,8 @@ function PropertyDetails() {
         case "Reece":
           bookingDataObject = {
             propertyId: id,
-            serviceCategoryId: serviceTypeId,
             customerId,
-            reeceBooking,
+            visitTime: reeceBooking,
             productionName,
             productionHouseType,
           };
@@ -185,7 +186,7 @@ function PropertyDetails() {
       firstName: customerData?.firstName,
       lastName: customerData?.lastName,
       emailId: customerData?.emailId,
-      // phoneNumber: customerData?.phoneNumber,
+      phoneNumber: customerData?.phoneNumber,
     };
     // apiResponse = await _bookingPayMode(payload);
     setBookingError(null);
@@ -208,8 +209,12 @@ function PropertyDetails() {
       .catch((error: any) => {
         console.log(error?.request?.response);
         let errorResponse = JSON.parse(error?.request?.response);
-        console.log(errorResponse?.message?.error?.description);
-        setBookingError(errorResponse?.message?.error?.description);
+        if (errorResponse?.message?.error) {
+          console.log(errorResponse?.message?.error?.description);
+          setBookingError(errorResponse?.message?.error?.description);
+        } else {
+          setBookingError(errorResponse?.message);
+        }
       });
     setLoading(false);
     if (apiResponse) {
@@ -229,9 +234,10 @@ function PropertyDetails() {
         prefill: {
           name: `${customer.firstName} ${customer.lastName}`,
           email: customer.emailId,
-          // phone_number: customer.phoneNumber.includes("+")
-          //   ? `${customer.phoneNumber}`
-          //   : `+91${customer.phoneNumber}`,
+          contact: Number(customer?.phoneNumber),
+          // phone_number: customer?.phoneNumber.includes("+")
+          //   ? `${customer?.phoneNumber}`
+          //   : `+91${customer?.phoneNumber}`,
         },
       };
       const paymentObject = new (window as any).Razorpay(options);
@@ -291,6 +297,21 @@ function PropertyDetails() {
     checkoutButton?.current.click();
   }
 
+  const _recceBooking = (payload: any) => {
+    setBookingError(null);
+    const recceBookingApiCall = bookingService.recceBooking(payload);
+    recceBookingApiCall.then((res: any) => {
+      if (!res?.data?.error) {
+        setSuccessBookingPopup(true);
+        console.log(res?.data);
+        setBookingError(null);
+      } else {
+        setSuccessBookingPopup(false);
+        setBookingError(res?.data?.error);
+      }
+    });
+  };
+
   // Effects
   useEffect(() => {
     const searchFilters = getStoreFilters();
@@ -344,6 +365,8 @@ function PropertyDetails() {
         propertyFilter?.serviceType == "EventVenues"
       ) {
         showRazorpay(bookingData);
+      } else if (propertyFilter?.serviceType == "Reece") {
+        _recceBooking(bookingData);
       } else {
         _booking(bookingData);
       }
@@ -599,20 +622,17 @@ function PropertyDetails() {
           </div>
           <div className="cta-btn">
             {propertyFilter.serviceType &&
-            propertyFilter.serviceType == "FilmLocation" ? (
-              // ? propertyDetail?.catalog && (
-              //     <a href={propertyDetail?.catalog} download>
-              //       Download PDF
-              //     </a>
-              //   )
-              <a
-                className="primary-button"
-                href={propertyDetail?.catalog}
-                download
-              >
-                Download PDF
-              </a>
-            ) : null}
+            propertyFilter.serviceType == "FilmLocation"
+              ? propertyDetail?.catalog && (
+                  <a
+                    className="primary-button"
+                    href={propertyDetail?.catalog}
+                    download
+                  >
+                    Download PDF
+                  </a>
+                )
+              : null}
             <Button
               onClick={handleClick}
               disabled={formDisableControl || loading}

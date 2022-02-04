@@ -107,34 +107,33 @@ function ImageGallery({ imageList }: any) {
         sx={{
           display: {
             xs: "none",
-            sm: "block",
+            md: "block",
           },
         }}
       >
         <div className="img-gallery">
           <div className="grid-container">
-            {itemData?.slice(0, 3)?.map((item: any, index: number) => (
+            {imageList?.slice(0, 3)?.map((item: any, index: number) => (
               <div className={`item${index + 1}`}>
                 <img
                   onClick={() => {
                     openLightbox(index);
                   }}
-                  src={item?.img}
-                  alt=""
+                  src={item?.imageUrl}
+                  alt={item?.title}
                 />
               </div>
             ))}
           </div>
           {imageList?.length > 3 ? (
             <a className="viewAll" onClick={() => setIsOpen(true)}>
-              + <span>{itemData?.length} photos</span>
+              + <span>{imageList?.length} photos</span>
             </a>
           ) : null}
         </div>
       </Box>
       <Box
         sx={{
-          height: "250px",
           display: {
             md: "none",
 
@@ -142,7 +141,7 @@ function ImageGallery({ imageList }: any) {
           },
         }}
       >
-        <VMICarousel imgList={itemData} />
+        <VMICarousel imgList={imageList} />
       </Box>
 
       <ReactBnbGallery

@@ -101,7 +101,7 @@ const Otp = ({
   }, [payLoad]);
 
   return (
-    <LoginCard>
+    <>
       <Box
         sx={{
           display: "flex",
@@ -280,7 +280,7 @@ const Otp = ({
           </Form>
         )}
       </Formik>
-    </LoginCard>
+    </>
   );
 };
 
